@@ -28,7 +28,112 @@
     <!-- Hero Section -->
     <section class="my-14 prose">
         <div class="max-w-[54rem] mx-auto">
-            <div>{credence}</div>
+            <h1>Credence - markdown compiler for blogs &amp; project Documentation 🚀</h1>
+<p><strong>Credence</strong> is a  <strong>Markdown-powered</strong> static site generator designed for <strong>modern blogs and project documentation</strong>. It combines <strong>the simplicity of Markdown, the power of Tailwind CSS, and a flexible build system</strong> to deliver stunning, high-performance sites with minimal effort.</p>
+<h2><strong>Why Choose Credence?</strong></h2>
+<p>✅ <strong>Markdown-First</strong> – Write content in Markdown, and let Credence handle the rest.<br>
+✅ <strong>Tailwind CSS Integration</strong> – Get beautiful, responsive layouts out of the box.<br>
+✅ <strong>Ultra-Fast Builds</strong> – Optimized for speed, efficiency, and low overhead.<br>
+✅ <strong>Pluggable UI</strong> – Use Tailwind, CSS, or custom themes—<strong>your choice</strong>.<br>
+✅ <strong>Live Reload &amp; Watch Mode</strong> – Instant preview while editing.<br>
+✅ <strong>SEO-Optimized</strong> – Clean, accessible, and search-engine friendly.<br>
+✅ <strong>Dev-Friendly Syntax Highlighting</strong> – Custom <strong>highlight.js</strong> themes for code blocks.</p>
+<h3><strong>The Vision</strong></h3>
+<p>Credence is built to <strong>super easy and fast</strong>. Whether you’re documenting a project, writing a technical blog, or building a knowledge base— Credence makes it effortless.</p>
+<h3><strong>Get Started</strong></h3>
+<pre><code class="language-sh">npm i -g credence
+<span class="hljs-built_in">cd</span> my-blog
+credence
+</code></pre>
+<p>📖 <strong>Docs:</strong> <a href="https://github.com/CodeDynasty-foo/credence">credence.dev</a></p>
+<p><strong>Build. Document. Publish.</strong> The <strong>Credence way.</strong> 🚀</p>
+<h3>Using comments</h3>
+<pre><code class="language-markdown">/<span class="hljs-emphasis">*@credence-[/index.html]-[Credence]
+
+### first clone the repo
+  git clone credence
+  ### running build command
+  npm run build
+*</span>/
+</code></pre>
+<h3>Using md files</h3>
+<pre><code class="language-markdown">&lt;!-- @credence-[/docs.html]-[documentation] --&gt;
+
+<span class="hljs-section"># Credence Command-Line Interface (CLI) Documentation</span>
+
+The <span class="hljs-strong">**Credence CLI**</span> is a robust tool designed to streamline and automate tasks associated with the Credence application suite. This document details its installation, usage, available commands, and developer guidelines.
+
+<span class="hljs-section">## Table of Contents</span>
+<span class="hljs-emphasis">*/
+</span></code></pre>
+<h3><strong>About credence 🚀</strong></h3>
+<ol>
+<li>
+<p><strong>Markdown-Powered, But Smarter</strong> 📝</p>
+<ul>
+<li>Unlike most static site generators, <strong>Credence</strong> doesn’t just convert Markdown to HTML—it <strong>understands context</strong>.</li>
+<li>It allows <strong>nested Markdown inside HTML elements</strong>, solving limitations seen in other generators like Hugo and Docusaurus.</li>
+</ul>
+</li>
+<li>
+<p><strong>Tailwind, But on Your Terms</strong> 🎨</p>
+<ul>
+<li>You’re not <strong>forced</strong> into Tailwind, but if you enable it, <strong>Credence intelligently processes styles</strong> while avoiding unnecessary bloat.</li>
+<li>It scans <strong>Markdown, HTML, and even component files</strong> to ensure only the needed styles make it into your final build.</li>
+</ul>
+</li>
+<li>
+<p><strong>Live Reload That Actually Works</strong> 🔄</p>
+<ul>
+<li>Credence’s <strong>watch mode</strong> goes beyond just reloading pages—it can <strong>retry connections</strong>, detect stale caches, and ensure that <strong>your development experience is smooth</strong> even when working with large projects.</li>
+</ul>
+</li>
+<li>
+<p><strong>No More Ugly Typography</strong> 🎭</p>
+<ul>
+<li>By default, <strong>Credence applies optimized typography settings</strong> so Markdown-based content looks <strong>professional and polished</strong> right out of the box.</li>
+<li>No need for <strong>extra CSS</strong> just to make text readable like in other generators.</li>
+</ul>
+</li>
+<li>
+<p><strong>Intelligent Asset Handling</strong> 📦</p>
+<ul>
+<li>Automatically <strong>copies, optimizes, and references assets</strong> like images, fonts, and stylesheets, ensuring they’re efficiently bundled.</li>
+<li>Works even when running in a serverless environment or blob storage.</li>
+</ul>
+</li>
+<li>
+<p><strong>Code Highlighting That Feels Right</strong> 💻</p>
+<ul>
+<li>Uses <strong>highlight.js with custom themes</strong>, ensuring code snippets are <strong>visually pleasing and readable</strong>.</li>
+</ul>
+</li>
+<li>
+<p><strong>CLI That Doesn’t Get in Your Way</strong> 🛠️</p>
+<ul>
+<li>Runs in <strong>zero-config mode</strong> by default but lets <strong>power users tweak every aspect</strong> via an easy-to-use CLI.</li>
+<li>Supports <strong>auto-detection of project structures</strong>, so <strong>you don’t have to manually set up folders</strong> every time.</li>
+</ul>
+</li>
+<li>
+<p><strong>Fast, Even at Scale</strong> ⚡</p>
+<ul>
+<li><strong>Batch processes file changes</strong> to avoid unnecessary rebuilds.</li>
+<li>Can <strong>handle thousands of Markdown files</strong> without slowing down, making it a solid choice for <strong>large-scale documentation</strong>.</li>
+</ul>
+</li>
+<li>
+<p><strong>SEO &amp; Accessibility Built-In</strong> 🌍</p>
+<ul>
+<li>Generates <strong>clean, semantic HTML</strong> optimized for search engines.</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>Designed to be focused on <strong>speed, developer experience, and flexibility</strong>.</p>
+</blockquote>
+<p><img src="https://images.unsplash.com/photo-1556740758-90de374c12ad?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1000&amp;q=80" alt="img"></p>
+
         </div>
     </section>
     <!-- Footer -->

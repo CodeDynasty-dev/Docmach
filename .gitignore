@@ -16,4 +16,3 @@ fly.toml
 .vscode
 websites-templates
 dist
-node_modules

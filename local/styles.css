@@ -1,0 +1,158 @@
+
+.red {
+  border: 1px red solid;
+}
+.red-a {
+  border: 1px red solid;
+}
+
+.red-a * {
+  border: 1px red solid;
+}
+
+body {
+  margin: 0; 
+  color: white;
+}
+
+a {
+  color: inherit;
+}
+
+
+
+.prose {
+  max-width: none; /* Ensure it doesn't get constrained */
+  font-family: 'Comic Sans MS', cursive, sans-serif
+}
+
+.prose p {
+  margin-bottom: 1rem;
+}
+
+.prose h1, 
+.prose h2, 
+.prose h3, 
+.prose h4 {
+  font-weight: bold;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem; 
+}
+
+.prose h1 {
+  font-size: 2rem; /* Adjust as needed */
+}
+
+.prose h2 {
+  font-size: 1.75rem;
+}
+
+.prose h3 {
+  font-size: 1.5rem;
+}
+
+.prose h4 {
+  font-size: 1.25rem;
+}
+
+.prose a {
+  color: #2563eb; /* Tailwind blue-600 */
+  text-decoration: underline;
+}
+
+.prose ul, .prose ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+}
+
+.prose blockquote {
+  border-left: 4px solid #d1d5db; /* Tailwind gray-300 */
+  padding-left: 1rem;
+  font-style: italic;
+  color: #6b7280; /* Tailwind gray-600 */
+}
+
+.prose code { 
+ background-color: #1f2937; /* Tailwind gray-800 */
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-family: monospace;
+}
+
+.prose pre {
+  background-color: #1f2937; /* Tailwind gray-800 */
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;  
+}
+
+.prose pre code {
+  background-color: transparent;
+  color: #f3f4f6; 
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.prose img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid #e5e7eb; /* Tailwind gray-300 */
+  margin: 2rem 0;
+}
+ 
+ 
+
+/* Custom Theme for highlight.js */
+.hljs {
+  display: block;
+  padding: 0.5em;
+  background: #f5f5f5;
+  color: #333;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #777;
+  font-style: italic;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal {
+  color: #f39c12;
+}
+.hljs-name {
+  color: #7ed07e;
+}
+.hljs-attribute,
+.hljs-meta {
+  color: #f08d49;
+}
+.hljs-number,
+.hljs-regexp,
+.hljs-link {
+  color: #d36363;
+}
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-subst {
+  color: #f2ca27;
+}
+.hljs-title,
+.hljs-section {
+  color: #7ed07e;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}

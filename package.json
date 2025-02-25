@@ -58,8 +58,8 @@
   },
   "credence": {
     "input_directory": ".",
-    "output_directory": "dist",
-    "base_html_file": "docs/index.html",
-    "assets_to_copy": "./docs"
+    "output_directory": "docs",
+    "base_html_file": "local/index.html",
+    "assets_to_copy": "./local"
   }
 }

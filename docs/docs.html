@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Credence</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="bundle.css">
+    <link rel="stylesheet" href="styles.css"> 
+</head>
+<body class="w-full bg-[#171717]">
+    <!-- Header -->
+    <nav class="bg-white shadow-md py-4 text-black">
+        <div class="container mx-auto flex items-center justify-between px-6">
+            <a href="/" class="flex items-center space-x-2">
+                <img src="assets/img/favicon.png" class="w-10">
+                <span class="text-2xl font-bold text-gray-800">redence</span>
+            </a>
+            <div class="hidden md:flex space-x-6">
+                <a href="docs.html" class="text-gray-700 hover:text-gray-900">Docs</a>
+                <a href="https://github.com/CodeDynasty-foo/credence" class="text-gray-700 hover:text-gray-900">Github</a>
+                <a href="x.html" class="text-gray-700 hover:text-gray-900">Contact on X</a>
+            </div>
+        </div>
+    </nav>
+ 
+
+    <!-- Hero Section -->
+    <section class="my-14 prose">
+        <div class="max-w-[54rem] mx-auto">
+            <h1>Credence Command-Line Interface (CLI) Documentation</h1>
+<p>The <strong>Credence CLI</strong> is a robust tool designed to streamline and automate tasks associated with the Credence application suite. This document details its installation, usage, available commands, and developer guidelines.</p>
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#basic-usage">Basic Usage</a></li>
+<li><a href="#available-commands">Available Commands</a>
+<ul>
+<li><a href="#app-builder">App Builder</a></li>
+<li><a href="#macro">Macro</a></li>
+<li><a href="#patch-management">Patch Management</a>
+<ul>
+<li><a href="#standard-patch">Standard Patch</a></li>
+<li><a href="#docker-patch">Docker Patch</a></li>
+</ul>
+</li>
+<li><a href="#template-handling">Template Handling</a></li>
+<li><a href="#pages-management">Pages Management</a></li>
+<li><a href="#metabase-integration">Metabase Integration</a></li>
+</ul>
+</li>
+<li><a href="#developer-guidelines">Developer Guidelines</a>
+<ul>
+<li><a href="#template-development">Template Development</a></li>
+<li><a href="#patch-development">Patch Development</a></li>
+</ul>
+</li>
+<li><a href="#changelog">Changelog</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ol>
+<h2>Installation</h2>
+<p>Before installing the Credence CLI, ensure your system meets these prerequisites:</p>
+<ul>
+<li><strong>Node.js:</strong> Version 14 or higher is required. Download from <a href="https://nodejs.org/">nodejs.org</a>.</li>
+<li><strong>Oracle Instant Client:</strong> Version 19.9 or higher (if applicable). Download from <a href="https://www.oracle.com/database/technologies/instant-client.html">Oracle</a>.</li>
+</ul>
+<p>Install the CLI globally using npm:</p>
+<pre><code class="language-sh">npm install -g credence-cli
+</code></pre>
+<h2>Basic Usage</h2>
+<p>After installation, run the CLI using the <code>credence</code> command in your terminal:</p>
+<pre><code class="language-sh">credence &lt;<span class="hljs-built_in">command</span>&gt; [options]
+</code></pre>
+<p>For a list of available commands and options, run:</p>
+<pre><code class="language-sh">credence --<span class="hljs-built_in">help</span>
+</code></pre>
+<h2>Available Commands</h2>
+<h3>App Builder</h3>
+<p>Use the App Builder command to scaffold new applications using predefined templates:</p>
+<pre><code class="language-sh">credence app create &lt;app-name&gt;
+</code></pre>
+<h3>Macro</h3>
+<p>Execute reusable code snippets or configurations with the Macro command:</p>
+<pre><code class="language-sh">credence macro run &lt;macro-name&gt;
+</code></pre>
+<h3>Patch Management</h3>
+<p>Manage patches for your application with these commands:</p>
+<h4>Standard Patch</h4>
+<p>Generate a standard patch to update your application:</p>
+<pre><code class="language-sh">credence patch generate --standard
+</code></pre>
+<h4>Docker Patch</h4>
+<p>Create a patch optimized for Docker deployments:</p>
+<pre><code class="language-sh">credence patch generate --docker
+</code></pre>
+<h3>Template Handling</h3>
+<p>Manage HTML and Markdown templates used for generating pages:</p>
+<pre><code class="language-sh">credence template list
+credence template apply &lt;template-name&gt; &lt;target-file&gt;
+</code></pre>
+<h3>Pages Management</h3>
+<p>Extract and generate pages based on content files that include special <code>@credence</code> markers:</p>
+<pre><code class="language-sh">credence pages extract
+credence pages generate
+</code></pre>
+<h3>Metabase Integration</h3>
+<p>Integrate and manage Metabase configurations for data visualization:</p>
+<pre><code class="language-sh">credence metabase <span class="hljs-built_in">sync</span>
+</code></pre>
+<h2>Developer Guidelines</h2>
+<h3>Template Development</h3>
+<ul>
+<li>
+<p>Place your template files in the <code>/templates</code> directory.</p>
+</li>
+<li>
+<p>Use the appropriate placeholders for dynamic content.</p>
+</li>
+<li>
+<p>Validate templates by running:</p>
+<pre><code class="language-sh">credence template <span class="hljs-built_in">test</span>
+</code></pre>
+</li>
+</ul>
+<h3>Patch Development</h3>
+<p>When developing patches, follow these guidelines:</p>
+<ul>
+<li>
+<p><strong>General Guidelines:</strong></p>
+<ul>
+<li>Always run tests after applying a patch.</li>
+<li>Backup your configuration files before generating new patches.</li>
+</ul>
+</li>
+<li>
+<p><strong>Database Scripts:</strong></p>
+<ul>
+<li>Ensure scripts are idempotent and well-documented.</li>
+</ul>
+</li>
+<li>
+<p><strong>Manual Scripts:</strong></p>
+<ul>
+<li>Provide clear instructions within the generated patch documentation.</li>
+</ul>
+</li>
+</ul>
+<h2>Changelog</h2>
+<p>Maintain a detailed changelog that documents:</p>
+<ul>
+<li>New features</li>
+<li>Bug fixes</li>
+<li>Performance improvements</li>
+<li>Breaking changes</li>
+</ul>
+<p>Check the <a href="CHANGELOG.md">CHANGELOG.md</a> for complete details.</p>
+<h2>FAQ</h2>
+<p><strong>Q:</strong> How do I report an issue?<br>
+<strong>A:</strong> Report issues on our <a href="https://github.com/yourrepo/credence-cli/issues">GitHub repository</a>.</p>
+<p><strong>Q:</strong> Can I contribute to the Credence CLI?<br>
+<strong>A:</strong> Absolutely! Please refer to our <a href="CONTRIBUTING.md">contribution guidelines</a>.</p>
+<hr>
+<p><strong>This documentation is part of the Credence CLI repository. For the latest updates, see our <a href="CHANGELOG.md">release notes</a>.</strong></p>
+ <h1>Credence Command-Line Interface (CLI) Documentation</h1>
+<p>The <strong>Credence CLI</strong> is a robust tool designed to streamline and automate tasks associated with the Credence application suite. This document details its installation, usage, available commands, and developer guidelines.</p>
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#basic-usage">Basic Usage</a></li>
+<li><a href="#available-commands">Available Commands</a>
+<ul>
+<li><a href="#app-builder">App Builder</a></li>
+<li><a href="#macro">Macro</a></li>
+<li><a href="#patch-management">Patch Management</a>
+<ul>
+<li><a href="#standard-patch">Standard Patch</a></li>
+<li><a href="#docker-patch">Docker Patch</a></li>
+</ul>
+</li>
+<li><a href="#template-handling">Template Handling</a></li>
+<li><a href="#pages-management">Pages Management</a></li>
+<li><a href="#metabase-integration">Metabase Integration</a></li>
+</ul>
+</li>
+<li><a href="#developer-guidelines">Developer Guidelines</a>
+<ul>
+<li><a href="#template-development">Template Development</a></li>
+<li><a href="#patch-development">Patch Development</a></li>
+</ul>
+</li>
+<li><a href="#changelog">Changelog</a></li>
+<li><a href="#faq">FAQ</a></li>
+</ol>
+<h2>Installation</h2>
+<p>Before installing the Credence CLI, ensure your system meets these prerequisites:</p>
+<ul>
+<li><strong>Node.js:</strong> Version 14 or higher is required. Download from <a href="https://nodejs.org/">nodejs.org</a>.</li>
+<li><strong>Oracle Instant Client:</strong> Version 19.9 or higher (if applicable). Download from <a href="https://www.oracle.com/database/technologies/instant-client.html">Oracle</a>.</li>
+</ul>
+<p>Install the CLI globally using npm:</p>
+<pre><code class="language-sh">npm install -g credence-cli
+</code></pre>
+<h2>Basic Usage</h2>
+<p>After installation, run the CLI using the <code>credence</code> command in your terminal:</p>
+<pre><code class="language-sh">credence &lt;<span class="hljs-built_in">command</span>&gt; [options]
+</code></pre>
+<p>For a list of available commands and options, run:</p>
+<pre><code class="language-sh">credence --<span class="hljs-built_in">help</span>
+</code></pre>
+<h2>Available Commands</h2>
+<h3>App Builder</h3>
+<p>Use the App Builder command to scaffold new applications using predefined templates:</p>
+<pre><code class="language-sh">credence app create &lt;app-name&gt;
+</code></pre>
+<h3>Macro</h3>
+<p>Execute reusable code snippets or configurations with the Macro command:</p>
+<pre><code class="language-sh">credence macro run &lt;macro-name&gt;
+</code></pre>
+<h3>Patch Management</h3>
+<p>Manage patches for your application with these commands:</p>
+<h4>Standard Patch</h4>
+<p>Generate a standard patch to update your application:</p>
+<pre><code class="language-sh">credence patch generate --standard
+</code></pre>
+<h4>Docker Patch</h4>
+<p>Create a patch optimized for Docker deployments:</p>
+<pre><code class="language-sh">credence patch generate --docker
+</code></pre>
+<h3>Template Handling</h3>
+<p>Manage HTML and Markdown templates used for generating pages:</p>
+<pre><code class="language-sh">credence template list
+credence template apply &lt;template-name&gt; &lt;target-file&gt;
+</code></pre>
+<h3>Pages Management</h3>
+<p>Extract and generate pages based on content files that include special <code>@credence</code> markers:</p>
+<pre><code class="language-sh">credence pages extract
+credence pages generate
+</code></pre>
+<h3>Metabase Integration</h3>
+<p>Integrate and manage Metabase configurations for data visualization:</p>
+<pre><code class="language-sh">credence metabase <span class="hljs-built_in">sync</span>
+</code></pre>
+<h2>Developer Guidelines</h2>
+<h3>Template Development</h3>
+<ul>
+<li>
+<p>Place your template files in the <code>/templates</code> directory.</p>
+</li>
+<li>
+<p>Use the appropriate placeholders for dynamic content.</p>
+</li>
+<li>
+<p>Validate templates by running:</p>
+<pre><code class="language-sh">credence template <span class="hljs-built_in">test</span>
+</code></pre>
+</li>
+</ul>
+<h3>Patch Development</h3>
+<p>When developing patches, follow these guidelines:</p>
+<ul>
+<li>
+<p><strong>General Guidelines:</strong></p>
+<ul>
+<li>Always run tests after applying a patch.</li>
+<li>Backup your configuration files before generating new patches.</li>
+</ul>
+</li>
+<li>
+<p><strong>Database Scripts:</strong></p>
+<ul>
+<li>Ensure scripts are idempotent and well-documented.</li>
+</ul>
+</li>
+<li>
+<p><strong>Manual Scripts:</strong></p>
+<ul>
+<li>Provide clear instructions within the generated patch documentation.</li>
+</ul>
+</li>
+</ul>
+<h2>Changelog</h2>
+<p>Maintain a detailed changelog that documents:</p>
+<ul>
+<li>New features</li>
+<li>Bug fixes</li>
+<li>Performance improvements</li>
+<li>Breaking changes</li>
+</ul>
+<p>Check the <a href="CHANGELOG.md">CHANGELOG.md</a> for complete details.</p>
+<h2>FAQ</h2>
+<p><strong>Q:</strong> How do I report an issue?<br>
+<strong>A:</strong> Report issues on our <a href="https://github.com/yourrepo/credence-cli/issues">GitHub repository</a>.</p>
+<p><strong>Q:</strong> Can I contribute to the Credence CLI?<br>
+<strong>A:</strong> Absolutely! Please refer to our <a href="CONTRIBUTING.md">contribution guidelines</a>.</p>
+<hr>
+<p><strong>This documentation is part of the Credence CLI repository. For the latest updates, see our <a href="CHANGELOG.md">release notes</a>.</strong></p>
+
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-10">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 px-6">
+            <div>
+                <h2 class="text-2xl font-bold">Credence</h2>
+            </div>
+            <div>
+                <h3 class="text-xl font-semibold border-b pb-2 mb-2">Examples</h3>
+                <ul class="space-y-1">
+                    <li><a href="#" class="hover:underline">Luxury</a></li>
+                    <li><a href="#" class="hover:underline">Sport Wear</a></li>
+                    <li><a href="#" class="hover:underline">Men's Shoes</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-xl font-semibold border-b pb-2 mb-2">Further Info</h3>
+                <ul class="space-y-1">
+                    <li><a href="#" class="hover:underline">Docs 6</a></li>
+                    <li><a href="#" class="hover:underline">Github</a></li>
+                    <li><a href="#" class="hover:underline">Contact on X</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center mt-6 text-gray-400">&copy; 2025 Credence</div>
+    </footer>
+</body>
+</html>
+
+
+
