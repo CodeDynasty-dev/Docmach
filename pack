@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+#!/bin/bash
+
+ 
+echo "" 
+echo  "Packing Credence ...."
+tsc --emitDeclarationOnly
+npm pack
+mv **.tgz ~/zips/
+
