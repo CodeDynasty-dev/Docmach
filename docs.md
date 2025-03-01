@@ -16,7 +16,7 @@ The **Credence CLI** is a robust tool designed to streamline and automate tasks 
      - [Docker Patch](#docker-patch)
    - [Template Handling](#template-handling)
    - [Pages Management](#pages-management)
-   - [Metabase Integration](#metabase-integration)
+   - [Metabases Integration](#metabase-integration)
 4. [Developer Guidelines](#developer-guidelines)
    - [Template Development](#template-development)
    - [Patch Development](#patch-development)

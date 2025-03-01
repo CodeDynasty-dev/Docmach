@@ -23,7 +23,7 @@ a {
 
 .prose {
   max-width: none; /* Ensure it doesn't get constrained */
-  font-family: 'Comic Sans MS', cursive, sans-serif
+  font-family:  sans-serif
 }
 
 .prose p {
