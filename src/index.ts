@@ -14,7 +14,7 @@ import { exec } from "child_process";
 // Define the path to your package.json file
 const packageJsonPath = path.join(cwd(), "package.json");
 
-const port = process.argv[2] || 8080;
+const port =  4000;
 const root = path.resolve(process.argv[3] || process.cwd());
 let config = {
   "docs-directory": root,
@@ -53,7 +53,7 @@ const liveReloadScript = `
     };
      socket.onclose = function() {
         console.warn("Live reload connection lost. Attempting to reconnect...");
-      setInterval(connect, 2000);
+      setInterval(connect, 1000);
       };
   };
   connect();

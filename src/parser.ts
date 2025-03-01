@@ -219,8 +219,8 @@ for (const file in data) {
       outputPath,
       base_html
         .replace(
-          "<title> <%= title %></title>",
-          `<title>${data[file].title}</title>`,
+          "<%= title %>",
+          `${data[file].title}`,
         )
         .replace(" <%= content %>", data[file].html.join(" ")),
     );
