@@ -1,27 +1,11 @@
-<!-- @credence-[/docs.html]-[documentation] -->
+<!-- @credence-[/blog.html]-[documentation] -->
 
 # Credence Command-Line Interface (CLI) Documentation
 
 The **Credence CLI** is a robust tool designed to streamline and automate tasks associated with the Credence application suite. This document details its installation, usage, available commands, and developer guidelines.
 
-## Table of Contents
-
-1. [Installation](#installation)
-2. [Basic Usage](#basic-usage)
-3. [Available Commands](#available-commands)
-   - [App Builder](#app-builder)
-   - [Macro](#macro)
-   - [Patch Management](#patch-management)
-     - [Standard Patch](#standard-patch)
-     - [Docker Patch](#docker-patch)
-   - [Template Handling](#template-handling)
-   - [Pages Management](#pages-management)
-   - [Metabases Integration](#metabase-integration)
-4. [Developer Guidelines](#developer-guidelines)
-   - [Template Development](#template-development)
-   - [Patch Development](#patch-development)
-5. [Changelog](#changelog)
-6. [FAQ](#faq)
+![img](https://i0.wp.com/miniextensions.com/wp-content/uploads/sites/5/2020/04/icons.001-2.png?resize=700%2C350&ssl=1)
+![img](https://florian-dahlitz.de/media/articles/build-a-markdown-to-html-conversion-pipeline-using-python/thumbnail-m.webp) 
 
 ## Installation
 
@@ -31,6 +15,8 @@ Before installing the Credence CLI, ensure your system meets these prerequisites
 - **Oracle Instant Client:** Version 19.9 or higher (if applicable). Download from [Oracle](https://www.oracle.com/database/technologies/instant-client.html).
 
 Install the CLI globally using npm:
+
+
 
 ```sh
 npm install -g credence-cli

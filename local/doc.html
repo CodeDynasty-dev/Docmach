@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Documentation - Credence</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="bundle.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#0A0A0A] min-h-screen flex">
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 fixed h-screen bg-[#161616] border-r border-white/10 overflow-y-auto">
+        <div class="p-6">
+            <div class="flex items-center gap-3 mb-8">
+                <a href="/">
+
+                    <div class="h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center">
+                        <span class="text-lg font-bold text-white">C</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-white">Credence Docs</h1>
+                </a>
+            </div>
+            
+            <!-- Documentation Navigation -->
+            <nav class="space-y-8">
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Getting Started</h2>
+                    <ul class="space-y-2">
+                        <li><a href="#introduction" class="text-gray-300 hover:text-blue-400 block transition-colors">Introduction</a></li>
+                        <li><a href="#installation" class="text-gray-300 hover:text-blue-400 block transition-colors">Installation</a></li>
+                        <li><a href="#quickstart" class="text-gray-300 hover:text-blue-400 block transition-colors">Quick Start</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Core Concepts</h2>
+                    <ul class="space-y-2">
+                        <li><a href="#markdown" class="text-gray-300 hover:text-blue-400 block transition-colors">Markdown Syntax</a></li>
+                        <li><a href="#configuration" class="text-gray-300 hover:text-blue-400 block transition-colors">Configuration</a></li>
+                        <li><a href="#templates" class="text-gray-300 hover:text-blue-400 block transition-colors">Templates</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Advanced</h2>
+                    <ul class="space-y-2 cursor-not-allowed pointer-events-none">
+                        <li><a href="#plugins" class="text-gray-300 hover:text-blue-400 block transition-colors">Plugins</a></li>
+                        <li><a href="#api" class="text-gray-300 hover:text-blue-400 block transition-colors">API Reference</a></li>
+                        <li><a href="#deployment" class="text-gray-300 hover:text-blue-400 block transition-colors">Deployment</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-64 flex-1 min-h-screen">
+        <!-- Top Navigation -->
+        <nav class="sticky top-0 bg-[#161616]/80 backdrop-blur-lg border-b border-white/10 z-50">
+            <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <button class="text-gray-400 hover:text-white md:hidden">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div class="relative">
+                        <input type="search" 
+                               placeholder="Search documentation..." 
+                               class="w-64 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="https://github.com/CodeDynasty-dev/Credence" 
+                       class="text-gray-400 hover:text-white transition-colors">
+                        GitHub
+                    </a>
+                    <a href="/" class="text-gray-400 hover:text-white transition-colors">Home</a>
+                </div>
+            </div>
+        </nav>
+        <!-- Documentation Content -->
+        <div class="container mx-auto px-6 py-12 max-w-4xl">
+            <div class="prose prose-invert max-w-none">
+              {credence}
+            </div>
+            </div>
+    </main>
+</body>
+</html>
+
+
+

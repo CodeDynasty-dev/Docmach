@@ -143,8 +143,7 @@ function buildCSS() {
       if (err) {
         reject("CSS compilation error:" + String(err));
       } else {
-        resolve(undefined);
-        // console.log("building css");
+        resolve(undefined); 
       }
     });
   });
@@ -152,8 +151,8 @@ function buildCSS() {
 
 const onFileChange = async (file: string) => {
   const ran = await parseCredenceFIles(config, file);
+  broadcastReload();
   if (!ran) return;
-  // console.log(file);
   await buildCSS();
   broadcastReload();
 };
@@ -166,9 +165,9 @@ chokidar.watch(config.input_directory, {
 }).on(
   "all",
   async (_, file) => {
-    try {
+    try { 
       if (
-        (path.join(cwd(), file)).includes(config.output_directory) &&
+        (path.join(cwd(), file)).includes(path.resolve(cwd(), config.output_directory)+"/") &&
         Boolean(await open(path.join(cwd(), file)))
       ) return;
     } catch {}

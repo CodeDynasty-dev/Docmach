@@ -1,194 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Credence</title>
+    <title>Documentation - Credence</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="bundle.css">
-    <link rel="stylesheet" href="styles.css"> 
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body class="w-full bg-[#171717]">
-    <!-- Header -->
-    <nav class="bg-white shadow-md py-4 text-black">
-        <div class="container mx-auto flex items-center justify-between px-6">
-            <a href="/" class="flex items-center space-x-2">
-                <img src="assets/img/favicon.png" class="w-10">
-                <span class="text-2xl font-bold text-gray-800">redence</span>
-            </a>
-            <div class="hidden md:flex space-x-6">
-                <a href="docs.html" class="text-gray-700 hover:text-gray-900">Docs</a>
-                <a href="https://github.com/CodeDynasty-foo/credence" class="text-gray-700 hover:text-gray-900">Github</a>
-                <a href="x.html" class="text-gray-700 hover:text-gray-900">Contact on X</a>
-            </div>
-        </div>
-    </nav>
- 
+<body class="bg-[#0A0A0A] min-h-screen flex">
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 fixed h-screen bg-[#161616] border-r border-white/10 overflow-y-auto">
+        <div class="p-6">
+            <div class="flex items-center gap-3 mb-8">
+                <a href="/">
 
-    <!-- Hero Section -->
-    <section class="my-14 prose">
-        <div class="max-w-[54rem] mx-auto">
-            <h1>Credence Command-Line Interface (CLI) Documentation</h1>
-<p>The <strong>Credence CLI</strong> is a robust tool designed to streamline and automate tasks associated with the Credence application suite. This document details its installation, usage, available commands, and developer guidelines.</p>
-<h2>Table of Contents</h2>
+                    <div class="h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center">
+                        <span class="text-lg font-bold text-white">C</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-white">Credence Docs</h1>
+                </a>
+            </div>
+            
+            <!-- Documentation Navigation -->
+            <nav class="space-y-8">
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Getting Started</h2>
+                    <ul class="space-y-2">
+                        <li><a href="#introduction" class="text-gray-300 hover:text-blue-400 block transition-colors">Introduction</a></li>
+                        <li><a href="#installation" class="text-gray-300 hover:text-blue-400 block transition-colors">Installation</a></li>
+                        <li><a href="#quickstart" class="text-gray-300 hover:text-blue-400 block transition-colors">Quick Start</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Core Concepts</h2>
+                    <ul class="space-y-2">
+                        <li><a href="#markdown" class="text-gray-300 hover:text-blue-400 block transition-colors">Markdown Syntax</a></li>
+                        <li><a href="#configuration" class="text-gray-300 hover:text-blue-400 block transition-colors">Configuration</a></li>
+                        <li><a href="#templates" class="text-gray-300 hover:text-blue-400 block transition-colors">Templates</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Advanced</h2>
+                    <ul class="space-y-2 cursor-not-allowed pointer-events-none">
+                        <li><a href="#plugins" class="text-gray-300 hover:text-blue-400 block transition-colors">Plugins</a></li>
+                        <li><a href="#api" class="text-gray-300 hover:text-blue-400 block transition-colors">API Reference</a></li>
+                        <li><a href="#deployment" class="text-gray-300 hover:text-blue-400 block transition-colors">Deployment</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-64 flex-1 min-h-screen">
+        <!-- Top Navigation -->
+        <nav class="sticky top-0 bg-[#161616]/80 backdrop-blur-lg border-b border-white/10 z-50">
+            <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <button class="text-gray-400 hover:text-white md:hidden">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div class="relative">
+                        <input type="search" 
+                               placeholder="Search documentation..." 
+                               class="w-64 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="https://github.com/CodeDynasty-dev/Credence" 
+                       class="text-gray-400 hover:text-white transition-colors">
+                        GitHub
+                    </a>
+                    <a href="/" class="text-gray-400 hover:text-white transition-colors">Home</a>
+                </div>
+            </div>
+        </nav>
+        <!-- Documentation Content -->
+        <div class="container mx-auto px-6 py-12 max-w-4xl">
+            <div class="prose prose-invert max-w-none">
+              <h1>Credence - markdown compiler for blogs &amp; project Documentation 🚀</h1>
+<p><strong>Credence</strong> is a  <strong>Markdown-powered</strong> static site generator designed for <strong>modern blogs and project documentation</strong>. It combines <strong>the simplicity of Markdown, the power of Tailwind CSS, and a flexible build system</strong> to deliver stunning, high-performance sites with minimal effort.</p>
+<h2><strong>Why Choose Credence?</strong></h2>
+<p>✅ <strong>Markdown-First</strong> – Write content in Markdown, and let Credence handle the rest.<br>
+✅ <strong>Tailwind CSS Integration</strong> – Get beautiful, responsive layouts out of the box.<br>
+✅ <strong>Ultra-Fast Builds</strong> – Optimized for speed, efficiency, and low overhead.<br>
+✅ <strong>Pluggable UI</strong> – Use Tailwind, CSS, or custom themes—<strong>your choice</strong>.<br>
+✅ <strong>Live Reload &amp; Watch Mode</strong> – Instant preview while editing.<br>
+✅ <strong>SEO-Optimized</strong> – Clean, accessible, and search-engine friendly.<br>
+✅ <strong>Dev-Friendly Syntax Highlighting</strong> – Custom <strong>highlight.js</strong> themes for code blocks.</p>
+<h3><strong>Get Started</strong></h3>
+<pre><code class="language-sh">
+npm i -g credence
+<span class="hljs-built_in">cd</span> my-blog
+credence
+</code></pre>
+<br>
+<br> 
+<p><strong>How Credence works</strong> 🚀</p>
+<h4>Credence parses the credence headers on every text based files in your input folder, recursively to extracts md and html text.</h4>
+<p><strong>Parts of  a credence header</strong></p>
+<p>@credence — output file ---- page title</p>
+<p>syntax</p>
+<pre><code>/*@credence-[/index.html]-[Credence]
+</code></pre>
+<h1>Usage</h1>
+<h3>Using inline-docs (comments style)</h3>
+<pre><code class="language-markdown">/<span class="hljs-emphasis">*@credence-[/index.html]-[Credence]
+
+### first clone the repo
+  git clone credence
+  ### running build command
+  npm run build
+*</span>/
+</code></pre>
+<h3>Using md files (comment header)</h3>
+<pre><code class="language-markdown">&lt;!-- @credence-[/docs.html]-[documentation] --&gt;
+
+<span class="hljs-section"># Credence Command-Line Interface (CLI) Documentation</span>
+
+The <span class="hljs-strong">**Credence CLI**</span> is a robust tool designed to streamline and automate tasks associated with the Credence application suite. This document details its installation, usage, available commands, and developer guidelines.
+
+<span class="hljs-section">## Table of Contents</span>
+</code></pre>
+<h3><strong>About credence 🚀</strong></h3>
 <ol>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#basic-usage">Basic Usage</a></li>
-<li><a href="#available-commands">Available Commands</a>
+<li>
+<p><strong>Markdown-Powered, But Smarter</strong> 📝</p>
 <ul>
-<li><a href="#app-builder">App Builder</a></li>
-<li><a href="#macro">Macro</a></li>
-<li><a href="#patch-management">Patch Management</a>
-<ul>
-<li><a href="#standard-patch">Standard Patch</a></li>
-<li><a href="#docker-patch">Docker Patch</a></li>
+<li>Unlike most static site generators, <strong>Credence</strong> doesn’t just convert Markdown to HTML—it <strong>understands context</strong>.</li>
+<li>It allows <strong>nested Markdown inside HTML elements</strong>, solving limitations seen in other generators like Hugo and Docusaurus.</li>
 </ul>
 </li>
-<li><a href="#template-handling">Template Handling</a></li>
-<li><a href="#pages-management">Pages Management</a></li>
-<li><a href="#metabase-integration">Metabases Integration</a></li>
-</ul>
-</li>
-<li><a href="#developer-guidelines">Developer Guidelines</a>
+<li>
+<p><strong>Tailwind, But on Your Terms</strong> 🎨</p>
 <ul>
-<li><a href="#template-development">Template Development</a></li>
-<li><a href="#patch-development">Patch Development</a></li>
+<li>You’re not <strong>forced</strong> into Tailwind, but if you enable it, <strong>Credence intelligently processes styles</strong> while avoiding unnecessary bloat.</li>
+<li>It scans <strong>Markdown, HTML, and even component files</strong> to ensure only the needed styles make it into your final build.</li>
 </ul>
 </li>
-<li><a href="#changelog">Changelog</a></li>
-<li><a href="#faq">FAQ</a></li>
+<li>
+<p><strong>Live Reload That Actually Works</strong> 🔄</p>
+<ul>
+<li>Credence’s <strong>watch mode</strong> goes beyond just reloading pages—it can <strong>retry connections</strong>, detect stale caches, and ensure that <strong>your development experience is smooth</strong> even when working with large projects.</li>
+</ul>
+</li>
+<li>
+<p><strong>No More Ugly Typography</strong> 🎭</p>
+<ul>
+<li>By default, <strong>Credence applies optimized typography settings</strong> so Markdown-based content looks <strong>professional and polished</strong> right out of the box.</li>
+<li>No need for <strong>extra CSS</strong> just to make text readable like in other generators.</li>
+</ul>
+</li>
+<li>
+<p><strong>Intelligent Asset Handling</strong> 📦</p>
+<ul>
+<li>Automatically <strong>copies, optimizes, and references assets</strong> like images, fonts, and stylesheets, ensuring they’re efficiently bundled.</li>
+<li>Works even when running in a serverless environment or blob storage.</li>
+</ul>
+</li>
+<li>
+<p><strong>Code Highlighting That Feels Right</strong> 💻</p>
+<ul>
+<li>Uses <strong>highlight.js with custom themes</strong>, ensuring code snippets are <strong>visually pleasing and readable</strong>.</li>
+</ul>
+</li>
+<li>
+<p><strong>CLI That Doesn’t Get in Your Way</strong> 🛠️</p>
+<ul>
+<li>Runs in <strong>zero-config mode</strong> by default but lets <strong>power users tweak every aspect</strong> via an easy-to-use CLI.</li>
+<li>Supports <strong>auto-detection of project structures</strong>, so <strong>you don’t have to manually set up folders</strong> every time.</li>
+</ul>
+</li>
+<li>
+<p><strong>Fast, Even at Scale</strong> ⚡</p>
+<ul>
+<li><strong>Batch processes file changes</strong> to avoid unnecessary rebuilds.</li>
+<li>Can <strong>handle thousands of Markdown files</strong> without slowing down, making it a solid choice for <strong>large-scale documentation</strong>.</li>
+</ul>
+</li>
+<li>
+<p><strong>SEO &amp; Accessibility Built-In</strong> 🌍</p>
+<ul>
+<li>Generates <strong>clean, semantic HTML</strong> optimized for search engines.</li>
+</ul>
+</li>
 </ol>
-<h2>Installation</h2>
-<p>Before installing the Credence CLI, ensure your system meets these prerequisites:</p>
-<ul>
-<li><strong>Node.js:</strong> Version 14 or higher is required. Download from <a href="https://nodejs.org/">nodejs.org</a>.</li>
-<li><strong>Oracle Instant Client:</strong> Version 19.9 or higher (if applicable). Download from <a href="https://www.oracle.com/database/technologies/instant-client.html">Oracle</a>.</li>
-</ul>
-<p>Install the CLI globally using npm:</p>
-<pre><code class="language-sh">npm install -g credence-cli
+<blockquote>
+<p>Designed to be focused on <strong>speed, developer experience, and flexibility</strong>.</p>
+</blockquote>
+<pre><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;credence&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;input_directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;.&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;output_directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docs/&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;base_html_file&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;local/index.html&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;assets_to_copy&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./local&quot;</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
 </code></pre>
-<h2>Basic Usage</h2>
-<p>After installation, run the CLI using the <code>credence</code> command in your terminal:</p>
-<pre><code class="language-sh">credence &lt;<span class="hljs-built_in">command</span>&gt; [options]
-</code></pre>
-<p>For a list of available commands and options, run:</p>
-<pre><code class="language-sh">credence --<span class="hljs-built_in">help</span>
-</code></pre>
-<h2>Available Commands</h2>
-<h3>App Builder</h3>
-<p>Use the App Builder command to scaffold new applications using predefined templates:</p>
-<pre><code class="language-sh">credence app create &lt;app-name&gt;
-</code></pre>
-<h3>Macro</h3>
-<p>Execute reusable code snippets or configurations with the Macro command:</p>
-<pre><code class="language-sh">credence macro run &lt;macro-name&gt;
-</code></pre>
-<h3>Patch Management</h3>
-<p>Manage patches for your application with these commands:</p>
-<h4>Standard Patch</h4>
-<p>Generate a standard patch to update your application:</p>
-<pre><code class="language-sh">credence patch generate --standard
-</code></pre>
-<h4>Docker Patch</h4>
-<p>Create a patch optimized for Docker deployments:</p>
-<pre><code class="language-sh">credence patch generate --docker
-</code></pre>
-<h3>Template Handling</h3>
-<p>Manage HTML and Markdown templates used for generating pages:</p>
-<pre><code class="language-sh">credence template list
-credence template apply &lt;template-name&gt; &lt;target-file&gt;
-</code></pre>
-<h3>Pages Management</h3>
-<p>Extract and generate pages based on content files that include special <code>@credence</code> markers:</p>
-<pre><code class="language-sh">credence pages extract
-credence pages generate
-</code></pre>
-<h3>Metabase Integration</h3>
-<p>Integrate and manage Metabase configurations for data visualization:</p>
-<pre><code class="language-sh">credence metabase <span class="hljs-built_in">sync</span>
-</code></pre>
-<h2>Developer Guidelines</h2>
-<h3>Template Development</h3>
-<ul>
-<li>
-<p>Place your template files in the <code>/templates</code> directory.</p>
-</li>
-<li>
-<p>Use the appropriate placeholders for dynamic content.</p>
-</li>
-<li>
-<p>Validate templates by running:</p>
-<pre><code class="language-sh">credence template <span class="hljs-built_in">test</span>
-</code></pre>
-</li>
-</ul>
-<h3>Patch Development</h3>
-<p>When developing patches, follow these guidelines:</p>
-<ul>
-<li>
-<p><strong>General Guidelines:</strong></p>
-<ul>
-<li>Always run tests after applying a patch.</li>
-<li>Backup your configuration files before generating new patches.</li>
-</ul>
-</li>
-<li>
-<p><strong>Database Scripts:</strong></p>
-<ul>
-<li>Ensure scripts are idempotent and well-documented.</li>
-</ul>
-</li>
-<li>
-<p><strong>Manual Scripts:</strong></p>
-<ul>
-<li>Provide clear instructions within the generated patch documentation.</li>
-</ul>
-</li>
-</ul>
-<h2>Changelog</h2>
-<p>Maintain a detailed changelog that documents:</p>
-<ul>
-<li>New features</li>
-<li>Bug fixes</li>
-<li>Performance improvements</li>
-<li>Breaking changes</li>
-</ul>
-<p>Check the <a href="CHANGELOG.md">CHANGELOG.md</a> for complete details.</p>
-<h2>FAQ</h2>
-<p><strong>Q:</strong> How do I report an issue?<br>
-<strong>A:</strong> Report issues on our <a href="https://github.com/yourrepo/credence-cli/issues">GitHub repository</a>.</p>
-<p><strong>Q:</strong> Can I contribute to the Credence CLI?<br>
-<strong>A:</strong> Absolutely! Please refer to our <a href="CONTRIBUTING.md">contribution guidelines</a>.</p>
-<hr>
-<p><strong>This documentation is part of the Credence CLI repository. For the latest updates, see our <a href="CHANGELOG.md">release notes</a>.</strong></p>
 
-        </div>
-    </section>
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-10">
-        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 px-6">
-            <div>
-                <h2 class="text-2xl font-bold">Credence</h2>
             </div>
-            <div>
-                <h3 class="text-xl font-semibold border-b pb-2 mb-2">Examples</h3>
-                <ul class="space-y-1">
-                    <li><a href="#" class="hover:underline">Luxury</a></li>
-                    <li><a href="#" class="hover:underline">Sport Wear</a></li>
-                    <li><a href="#" class="hover:underline">Men's Shoes</a></li>
-                </ul>
             </div>
-            <div>
-                <h3 class="text-xl font-semibold border-b pb-2 mb-2">Further Info</h3>
-                <ul class="space-y-1">
-                    <li><a href="#" class="hover:underline">Docs 6</a></li>
-                    <li><a href="#" class="hover:underline">Github</a></li>
-                    <li><a href="#" class="hover:underline">Contact on X</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="text-center mt-6 text-gray-400">&copy; 2025 Credence</div>
-    </footer>
+    </main>
 </body>
 </html>
 

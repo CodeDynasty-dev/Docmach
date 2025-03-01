@@ -1,4 +1,4 @@
-<!-- @credence-[/index.html]-[Credence] -->
+<!-- @credence-[/docs.html]-[Credence] -->
 
 # Credence - markdown compiler for blogs & project Documentation 🚀  
 
@@ -13,24 +13,34 @@
 ✅ **Live Reload & Watch Mode** – Instant preview while editing.  
 ✅ **SEO-Optimized** – Clean, accessible, and search-engine friendly.  
 ✅ **Dev-Friendly Syntax Highlighting** – Custom **highlight.js** themes for code blocks.
-
-### **The Vision**  
-
-Credence is built to **super easy and fast**. Whether you're documenting a project, writing a technical blog, or building a knowledge base— Credence makes it effortless.  
-
+ 
 ### **Get Started**  
 
 ```sh
+
 npm i -g credence
 cd my-blog
 credence
 ```
+<br>
+<br> 
 
-📖 **Docs:** [credence.dev](https://github.com/CodeDynasty-foo/credence)  
+**How Credence works** 🚀
 
-**Build. Document. Publish.** The **Credence way.** 🚀
+#### Credence parses the credence headers on every text based files in your input folder, recursively to extracts md and html text.
 
-### Using comments
+**Parts of  a credence header**
+
+@credence --- output file ---- page title
+
+ syntax
+ ```
+/*@credence-[/index.html]-[Credence]
+```
+
+# Usage
+
+### Using inline-docs (comments style)
 
 ```markdown
 /*@credence-[/index.html]-[Credence]
@@ -42,7 +52,8 @@ credence
 */
 ```
 
-### Using md files
+
+### Using md files (comment header)
 
 ```markdown
 <!-- @credence-[/docs.html]-[documentation] -->
@@ -52,7 +63,6 @@ credence
 The **Credence CLI** is a robust tool designed to streamline and automate tasks associated with the Credence application suite. This document details its installation, usage, available commands, and developer guidelines.
 
 ## Table of Contents
-*/
 ```
 
 ### **About credence 🚀**  
@@ -91,5 +101,14 @@ The **Credence CLI** is a robust tool designed to streamline and automate tasks 
    - Generates **clean, semantic HTML** optimized for search engines.  
 
 > Designed to be focused on **speed, developer experience, and flexibility**.  
-
-![img](https://images.unsplash.com/photo-1556740758-90de374c12ad?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80)
+ 
+```json
+{
+  "credence": {
+    "input_directory": ".",
+    "output_directory": "docs/",
+    "base_html_file": "local/index.html",
+    "assets_to_copy": "./local"
+  }
+}
+```

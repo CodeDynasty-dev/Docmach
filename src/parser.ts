@@ -227,7 +227,7 @@ export const parseCredenceFIles = async (config: configType, file?: string) => {
           "<title>{credence}</title>",
           `<title>${data[file].title}</title>`,
         )
-        .replace("<div>{credence}</div>", data[file].html.join(" ")),
+        .replace("{credence}", data[file].html.join(" ")),
     );
   }
   return files;
