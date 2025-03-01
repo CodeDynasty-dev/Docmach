@@ -26,5 +26,5 @@
     // "outDir": "tests/dist",
     "stripInternal": true
   },
-  "include": ["src"]
+  "include": ["src", "new.ts"]
 }

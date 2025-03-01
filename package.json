@@ -1,7 +1,7 @@
 {
   "name": "credence",
   "version": "1.0.0",
-  "description": "credence - A fast, seamless and minimalist framework for Node, Deno and Bun.js. Embrace the speed and elegance of the next-gen server-side experience.",
+  "description": "Credence - markdown compiler for blogs & project Documentation 🚀",
   "main": "dist/index.js",
   "type": "module",
   "files": [
@@ -10,26 +10,26 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fridaycandour/credence.git"
+    "url": "git+https://github.com/CodeDynasty-dev/Credence.git"
   },
   "keywords": [
     "ssg",
     "documentation",
+    "Blogging",
+    "markdown",
     "web",
     "framework",
     "fast",
     "simple",
-    "bunjs",
-    "nodejs",
-    "denojs",
+    "CLI",
     "expressive"
   ],
   "author": "fridaycandour fridaycandours@gmail.com",
   "license": "Apache",
   "bugs": {
-    "url": "https://github.com/fridaycandour/credence/issues"
+    "url": "https://github.com/CodeDynasty-dev/Credence/issues"
   },
-  "homepage": "https://github.com/fridaycandour/credence#readme",
+  "homepage": "https://github.com/CodeDynasty-dev/Credence#readme",
   "scripts": {
     "compile": "bun bundle.ts",
     "bun": "bun --watch tests/app.ts",
@@ -44,22 +44,23 @@
   "private": false,
   "devDependencies": {
     "@types/bun": "^1.1.8",
+    "@types/esprima": "^4.0.6",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^20.11.16"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.0.8",
     "chokidar": "^4.0.3",
+    "esprima": "^4.0.1",
     "highlight.js": "^11.11.1",
-    "isbinaryfile": "^5.0.4",
     "markdown-it": "^14.1.0",
     "mime": "^4.0.6",
     "ws": "^8.18.1"
   },
   "credence": {
-    "input_directory": ".",
-    "output_directory": "docs",
-    "base_html_file": "local/doc.html",
-    "assets_to_copy": "./local"
+    "docs-directory": ".",
+    "build-directory": "docs",
+    "default-template": "local/doc.html",
+    "assets-folder": "./local"
   }
 }

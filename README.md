@@ -14,7 +14,7 @@
 ✅ **SEO-Optimized** – Clean, accessible, and search-engine friendly.  
 ✅ **Dev-Friendly Syntax Highlighting** – Custom **highlight.js** themes for code blocks.
  
-### **Get Started**  
+### **Get Started**    
 
 ```sh
 
@@ -41,6 +41,23 @@ credence
 # Usage
 
 ### Using inline-docs (comments style)
+
+```markdown
+/**
+ * @title   Add Function
+ * @type    function
+ * @description Adds two numbers and returns the result.
+ * @tags    math, utility
+ *
+ * @param {number} a The first number.
+ * @param {number} b The second number.
+ * @returns {number} The sum of `a` and `b`.
+ */
+function add(a, b) {
+  return a + b;
+}
+
+```
 
 ```markdown
 /*@credence-[/index.html]-[Credence]
@@ -102,13 +119,4 @@ The **Credence CLI** is a robust tool designed to streamline and automate tasks 
 
 > Designed to be focused on **speed, developer experience, and flexibility**.  
  
-```json
-{
-  "credence": {
-    "input_directory": ".",
-    "output_directory": "docs/",
-    "base_html_file": "local/index.html",
-    "assets_to_copy": "./local"
-  }
-}
-```
+ 

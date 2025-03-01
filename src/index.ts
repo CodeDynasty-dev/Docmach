@@ -17,11 +17,10 @@ const packageJsonPath = path.join(cwd(), "package.json");
 const port = process.argv[2] || 8080;
 const root = path.resolve(process.argv[3] || process.cwd());
 let config = {
-  "input_directory": root,
-  "output_directory": "./dist",
-  "base_html_file": "",
-  "root_element_ID": "app",
-  "assets_to_copy": "",
+  "docs-directory": root,
+  "build-directory": "./dist",
+  "default-template": "", 
+  "assets-folder": "",
 };
 
 try {
@@ -54,7 +53,7 @@ const liveReloadScript = `
     };
      socket.onclose = function() {
         console.warn("Live reload connection lost. Attempting to reconnect...");
-      setTimeout(connect, 3000);
+      setInterval(connect, 2000);
       };
   };
   connect();
@@ -65,7 +64,7 @@ const liveReloadScript = `
 // Create an HTTP server.
 const server = http.createServer(async (req, res) => {
   // Resolve file path relative to the root directory.
-  let filePath = path.join(cwd(), config.output_directory, req.url!);
+  let filePath = path.join(cwd(), config["build-directory"], req.url!);
   // If the URL ends with '/' serve index.html
   if (req.url?.endsWith("/")) {
     filePath = path.join(filePath, "/index.html");
@@ -99,9 +98,9 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-await rmdir(path.resolve(cwd(), config.output_directory), { recursive: true })
+await rmdir(path.resolve(cwd(), config["build-directory"]), { recursive: true })
   .catch((_e) => {});
-await mkdir(config.output_directory).catch((_e) => {});
+await mkdir(config["build-directory"]).catch((_e) => {});
 
 // Start the HTTP server.
 server.listen(port, () => {
@@ -124,13 +123,13 @@ function broadcastReload() {
 const getCSSCommand = async () => {
   if (await exists("./tailwind.config.js")) {
     return `npx tailwindcss -c tailwind.config.js -o ${
-      path.join(config.output_directory, "/bundle.css")
+      path.join(config["build-directory"], "/bundle.css")
     }`;
   }
   if (await exists("./postcss.config.js")) {
     return `npx postcss ${
-      path.join(config.input_directory, "/styles.css")
-    } -o ${path.join(config.output_directory, "/bundle.css")}`;
+      path.join(config["docs-directory"], "/styles.css")
+    } -o ${path.join(config["build-directory"], "/bundle.css")}`;
   }
   return "";
 };
@@ -160,14 +159,14 @@ const onFileChange = async (file: string) => {
 await parseCredenceFIles(config);
 await buildCSS();
 
-chokidar.watch(config.input_directory, {
+chokidar.watch(config["docs-directory"], {
   ignoreInitial: true,
 }).on(
   "all",
   async (_, file) => {
     try { 
       if (
-        (path.join(cwd(), file)).includes(path.resolve(cwd(), config.output_directory)+"/") &&
+        (path.join(cwd(), file)).includes(path.resolve(cwd(), config["build-directory"])+"/") &&
         Boolean(await open(path.join(cwd(), file)))
       ) return;
     } catch {}
