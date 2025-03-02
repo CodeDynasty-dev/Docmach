@@ -6,8 +6,11 @@
   "type": "module",
   "files": [
     "dist/index.d.ts",
-    "dist/index.js"
+    "dist/index.js",
+    "dist/parser.d.ts",
+    "dist/parser.js"
   ],
+  "bin": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CodeDynasty-dev/Credence.git"
@@ -31,11 +34,10 @@
   },
   "homepage": "https://github.com/CodeDynasty-dev/Credence#readme",
   "scripts": {
-    "compile": "bun bundle.ts",
-    "bun": "bun --watch tests/app.ts",
-    "dev": "node --watch --experimental-strip-types tests/app.ts",
-    "watch": "tsc tests/*.ts --target esnext --watch",
-    "build": "bun bundle.ts"
+    "watch": "tsc  --watch",
+    "dev": "node --experimental_transform-types --watch dist/index.js",
+    "build": "tsc && ./pack",
+    "compile": "tsc && ./pack"
   },
   "engines": {
     "node": ">=14.0.0",
@@ -56,11 +58,5 @@
     "markdown-it": "^14.1.0",
     "mime": "^4.0.6",
     "ws": "^8.18.1"
-  },
-  "credence": {
-    "docs-directory": ".",
-    "build-directory": "docs",
-    "default-template": "local/doc.html",
-    "assets-folder": "./local"
   }
 }

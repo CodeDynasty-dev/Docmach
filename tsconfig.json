@@ -4,14 +4,12 @@
     "lib": ["esnext", "dom", "dom.iterable"],
     "target": "ESNext",
     "module": "ESNext",
-    "moduleDetection": "force",
-    "allowJs": true,
-    "allowImportingTsExtensions": true,
+    "moduleDetection": "force", 
     // Bundler mode
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "declaration": true,
-    "noEmit": true,
+    // "noEmit": true,
     // Best practices
     "strict": true,
     "skipLibCheck": true,

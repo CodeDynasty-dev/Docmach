@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import http from "http";
-import { exists, mkdir, open, readFile, rmdir, stat } from "node:fs/promises";
+import { mkdir, open, readFile, rmdir, stat } from "node:fs/promises";
 import path from "path";
-import WebSocket from "ws";
+import { WebSocketServer } from "ws";
 import chokidar from "chokidar";
-import { parseCredenceFIles } from "./parser.ts";
+import { parseCredenceFIles } from "./parser.js";
 import { cwd } from "process";
 import Mime from "mime/lite";
 import { createReadStream } from "node:fs";
@@ -18,9 +18,10 @@ const port =  4000;
 const root = path.resolve(process.argv[3] || process.cwd());
 let config = {
   "docs-directory": root,
-  "build-directory": "./dist",
+  "build-directory": "./credence-build",
   "default-template": "", 
   "assets-folder": "",
+  root,
 };
 
 try {
@@ -61,6 +62,29 @@ const liveReloadScript = `
 </script>
 `;
 
+function logHttpError(
+  method: string,
+  url: string,
+  statusCode: number,
+  message: string,
+  error?: any
+): void {
+  const errorLog = { 
+    method,
+    url,
+    statusCode,
+    message,
+    error,
+  };
+
+  console.error(
+    `[${errorLog.method} ${errorLog.url} - ${errorLog.statusCode}: ${errorLog.message}`
+  );
+  if (errorLog.error) {
+    console.error("Error Details:", String(errorLog.error));
+  }
+}
+
 // Create an HTTP server.
 const server = http.createServer(async (req, res) => {
   // Resolve file path relative to the root directory.
@@ -90,9 +114,8 @@ const server = http.createServer(async (req, res) => {
     const stream = createReadStream(filePath, { autoClose: true });
     res.writeHead(200, { "Content-Type": contentType });
     stream.pipe(res);
-  } catch (error) {
-    console.log(String(error));
-
+  } catch (error) { 
+    logHttpError(req.method!, req.url!, 500, "Server Error");
     res.writeHead(500, { "Content-Type": "text/plain" });
     return res.end("500 Server Error");
   }
@@ -108,8 +131,7 @@ server.listen(port, () => {
 });
 
 // Set up WebSocket server on the same HTTP server.
-// @ts-expect-error
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocketServer({ server });
 function broadcastReload() {
   wss.clients.forEach(
     (client: { readyState: number; send: (arg0: string) => void }) => {
@@ -121,16 +143,21 @@ function broadcastReload() {
 }
 
 const getCSSCommand = async () => {
-  if (await exists("./tailwind.config.js")) {
-    return `npx tailwindcss -c tailwind.config.js -o ${
-      path.join(config["build-directory"], "/bundle.css")
-    }`;
-  }
-  if (await exists("./postcss.config.js")) {
-    return `npx postcss ${
-      path.join(config["docs-directory"], "/styles.css")
-    } -o ${path.join(config["build-directory"], "/bundle.css")}`;
-  }
+  try {
+    
+    if (await open("./tailwind.config.js")) {
+      return `npx tailwindcss -c tailwind.config.js -o ${
+        path.join(config["build-directory"], "/bundle.css")
+        }`;
+      }
+      if (await open("./postcss.config.js")) {
+        return `npx postcss ${
+          path.join(config["docs-directory"], "/styles.css")
+          } -o ${path.join(config["build-directory"], "/bundle.css")}`;
+        }
+      } catch (error) {
+        
+      }
   return "";
 };
 

@@ -5,7 +5,14 @@ TODO tasks
 3. generate html   ✅
 4.  identifier inputs   ✅
 6. extra config from package.json   ✅
-5. build the cli
+5. build the cli   ✅
+6. optimization
+7. test
+8. publish
+9. documentation
+10 add plugin system
+11. add more templates
+12. add more options   
 */
 import { cp, open, opendir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -19,6 +26,7 @@ type configType = {
   "build-directory": string;
   "default-template": string; 
   "assets-folder": string;
+  "root": string;
 };
 
 // Initialize markdown-it
@@ -84,32 +92,34 @@ async function containsSyntax(file: string): Promise<boolean> {
   }
 }
 
-export async function getTextFiles(source: string): Promise<string[]> {
+export async function getTextFiles(source: string, config: configType): Promise<string[]> {
   const output: string[] = [];
-  source = source ? path.resolve(cwd(), source) : cwd();
-
   try {
+  source = source ? path.resolve(cwd(), source) : cwd();
     const dir = await opendir(source);
-
     for await (const dirent of dir) {
       const filename = path.resolve(source, dirent.name);
       if (dirent.isFile()) {
         const hasSyntax = await containsSyntax(filename);
-
         if (hasSyntax) {
           output.push(filename);
         }
       } else if (
         dirent.isDirectory() && !["node_modules", ".git"].includes(dirent.name)
       ) {
-        const nestedFiles = await getTextFiles(filename);
+        const nestedFiles = await getTextFiles(filename, config);
         output.push(...nestedFiles);
       }
     }
-  } catch (error) {
-    console.error(`Error reading directory: ${source}`, error);
+  } catch {
+    console.error(`Error reading directory: ${source.slice(0, 50)}...`);
+    if (config["docs-directory"] === config["root"]) {
+      console.warn(
+        "Please specify credence `docs-directory` key is set in your `package.json` file.",
+      );
+      
+    }
   }
-
   return output;
 }
 export async function getTextFile(source: string): Promise<string[]> {
@@ -179,7 +189,7 @@ const getList = async (config: configType, file?: string) => {
   if (file && !file.includes(config["docs-directory"])) {
     return await getTextFile(file);
   }
-  return getTextFiles(config["docs-directory"] || cwd());
+  return getTextFiles(config["docs-directory"] || cwd(), config);
 };
 
 function ensureFileSync(filePath: string) {
