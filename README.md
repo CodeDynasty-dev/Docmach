@@ -1,24 +1,23 @@
-<!-- @credence-[/docs.html]-[Credence] -->
+<!-- @credence-[/docs/introduction.html]-[Credence] -->
 
 # Credence - markdown compiler for blogs & project Documentation 🚀  
 
-**Credence** is a  **Markdown-powered** static site generator designed for **modern blogs and project documentation**. It combines **the simplicity of Markdown, the power of Tailwind CSS, and a flexible build system** to deliver stunning, high-performance sites with minimal effort.  
+**Credence** is a  **Markdown-powered** static site generator designed for **modern blogs and project documentation**. It integrates **the simplicity of Markdown and Tailwind CSS** to generate sites with minimal effort.  
 
 ## **Why Choose Credence?**  
 
-✅ **Markdown-First** – Write content in Markdown, and let Credence handle the rest.  
-✅ **Tailwind CSS Integration** – Get beautiful, responsive layouts out of the box.  
-✅ **Ultra-Fast Builds** – Optimized for speed, efficiency, and low overhead.  
+✅ **Markdown-First** – Write Markdown, and let Credence handle the rest.  
+✅ **Tailwind CSS Integration** – inbuilt tailwind css compiler. <br>
+✅ **Ultra-Fast Builds** – Optimized for speed.  
 ✅ **Pluggable UI** – Use Tailwind, CSS, or custom themes—**your choice**.  
-✅ **Live Reload & Watch Mode** – Instant preview while editing.  
-✅ **SEO-Optimized** – Clean, accessible, and search-engine friendly.  
-✅ **Dev-Friendly Syntax Highlighting** – Custom **highlight.js** themes for code blocks.
+✅ **Live Reload & Watch Mode** – Instant preview while editing.
  
 ### **Get Started**    
 
 ```sh
 
 npm i -g credence
+mkdir my-blog
 cd my-blog
 credence
 ```
@@ -73,7 +72,7 @@ function add(a, b) {
 ### Using md files (comment header)
 
 ```markdown
-<!-- @credence-[/docs.html]-[documentation] -->
+<!-- @credence-[/docs/introduction.html]-[documentation] -->
 
 # Credence Command-Line Interface (CLI) Documentation
 

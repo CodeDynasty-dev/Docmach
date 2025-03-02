@@ -12,6 +12,7 @@ import path from "node:path";
 import { cwd } from "node:process";
 import MarkdownIt from "markdown-it";
 import hljs from "highlight.js";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 
 type configType = {
   "docs-directory": string;
@@ -180,9 +181,19 @@ const getList = async (config: configType, file?: string) => {
   }
   return getTextFiles(config["docs-directory"] || cwd());
 };
+
+function ensureFileSync(filePath: string) {
+  const dir = path.dirname(filePath);
+  if (! existsSync(dir)) {
+     mkdirSync(dir, { recursive: true });
+  }
+     writeFileSync(filePath, ''); 
+}
+
 export const parseCredenceFIles = async (config: configType, file?: string) => {
   const files = await getList(config, file);
-  if (files.length === 0) return; 
+  if (files.length === 0) return;  
+  
   const data = await parseFiles(files);
   let base_html = `<!DOCTYPE html>
 <html lang="en">
@@ -212,18 +223,21 @@ for (const file in data) {
       if (template) {
         base_html = await readFile( template , { encoding: "utf-8" });
       }
-    } catch (error) {
-      console.error("failed to load template " + template+".");
-    }
-    await writeFile(  
-      outputPath,
-      base_html
+    ensureFileSync(outputPath);
+      await writeFile(  
+        outputPath,
+        base_html
         .replace(
           "<%= title %>",
           `${data[file].title}`,
         )
         .replace(" <%= content %>", data[file].html.join(" ")),
-    );
+      );
+  } catch (error) {
+    console.log(error);
+    
+      console.error("failed to load template " + template+".");
+    }
   }
   return files;
 };
