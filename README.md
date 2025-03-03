@@ -15,7 +15,6 @@
 ### **Get Started**    
 
 ```sh
-
 npm i -g credence
 mkdir my-blog
 cd my-blog
@@ -108,6 +107,17 @@ The **Credence CLI** is a robust tool designed to streamline and automate tasks 
 7. **CLI That Doesn’t Get in Your Way** 🛠️  
    - Runs in **zero-config mode** by default but lets **power users tweak every aspect** via an easy-to-use CLI.  
    - Supports **auto-detection of project structures**, so **you don’t have to manually set up folders** every time.  
+
+8. **Fast, Even at Scale** ⚡  
+   - **Batch processes file changes** to avoid unnecessary rebuilds.  
+   - Can **handle thousands of Markdown files** without slowing down, making it a solid choice for **large-scale documentation**.  
+
+9. **SEO & Accessibility Built-In** 🌍  
+   - Generates **clean, semantic HTML** optimized for search engines.  
+
+> Designed to be focused on **speed, developer experience, and flexibility**.  
+ 
+ 
 
 8. **Fast, Even at Scale** ⚡  
    - **Batch processes file changes** to avoid unnecessary rebuilds.  

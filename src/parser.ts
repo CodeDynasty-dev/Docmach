@@ -241,7 +241,7 @@ for (const file in data) {
           "<%= title %>",
           `${data[file].title}`,
         )
-        .replace(" <%= content %>", data[file].html.join(" ")),
+        .replace("<%= content %>", data[file].html.join(" ")),
       );
   } catch (error) {
     console.log(error);

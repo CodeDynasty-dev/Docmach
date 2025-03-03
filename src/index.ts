@@ -200,3 +200,5 @@ chokidar.watch(config["docs-directory"], {
     onFileChange(file);
   },
 );
+
+console.log("Watching for changes...");
