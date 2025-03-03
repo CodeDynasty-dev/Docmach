@@ -43,21 +43,22 @@ try {
 const liveReloadScript = `
 <script>
   (function() {
-  const connect = ()=> {
     var protocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
     var address = protocol + location.host;
+  const connect = ()=> {
     var socket = new WebSocket(address);
     socket.onmessage = function(msg) {
       if (msg.data === 'reload') {
         window.location.reload();
         }
     };
-     socket.onclose = function() {
-        console.warn("Live reload connection lost. Attempting to reconnect...");
-      setInterval(connect, 1000);
-      };
-  };
-  connect();
+    return socket;
+    };
+ const socket = connect();
+    socket.onclose = function() {
+       console.warn("Live reload connection lost. Attempting to reconnect...");
+       window.location.reload();
+     };
   })();
 </script>
 `;
