@@ -93,6 +93,26 @@ Default is the root directory.</p>
 <p><code>build-directory</code> | The directory where the generated static site will be placed. Default is <code>docs</code>.</p>
 <p><code>default-template</code> | The path to the base html file that will be used to generate the static site. Default is <code>local/index.html</code>.</p>
 <p><code>assets-folder</code> | The path to the directory containing assets that should be copied to the output directory. Default is <code>./local</code>.</p>
+ <h1>Credence Configuration</h1>
+<h4>Credence configuration is done in the <code>package.json</code> file. The configuration is done under the <code>credence</code> key.</h4>
+<h4>Configuration Options</h4>
+<pre><code class="language-json"><span class="hljs-comment">// package.json</span>
+...
+<span class="hljs-attr">&quot;credence&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;.&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docs&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;default-template&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;local/index.html&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./local&quot;</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+...
+</code></pre>
+ <h3>Options Descriptions</h3>
+<hr>
+<p><code>docs-directory</code> | The directory where the markdown files are located.
+Default is the root directory.</p>
+<p><code>build-directory</code> | The directory where the generated static site will be placed. Default is <code>docs</code>.</p>
+<p><code>default-template</code> | The path to the base html file that will be used to generate the static site. Default is <code>local/index.html</code>.</p>
+<p><code>assets-folder</code> | The path to the directory containing assets that should be copied to the output directory. Default is <code>./local</code>.</p>
 
             </div>
             </div>
