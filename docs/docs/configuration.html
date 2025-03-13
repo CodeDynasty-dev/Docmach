@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/bundle.css">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="bundle.css">
+    <link rel="stylesheet" href="styles.css">
     <base href="/">
 </head>
 <body class="bg-[#0A0A0A]">
@@ -29,15 +29,15 @@
                 <div>
                     <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Getting Started</h2>
                     <ul class="space-y-2">
-                        <li><a href="/docs/introduction.html" class="text-gray-300 hover:text-blue-400 block transition-colors">Introduction</a></li> 
-                        <li><a href="/docs/quickstart.html" class="text-gray-300 hover:text-blue-400 block transition-colors">Quick Start</a></li>
+                        <li><a href="docs/introduction.html" class="text-gray-300 hover:text-blue-400 block transition-colors">Introduction</a></li> 
+                        <li><a href="docs/quickstart.html" class="text-gray-300 hover:text-blue-400 block transition-colors">Quick Start</a></li>
                     </ul>
                 </div>
                 
                 <div>
                     <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Core Concepts</h2>
                     <ul class="space-y-2">
-                        <li><a href="/docs/configuration.html" class="text-gray-300 hover:text-blue-400 block transition-colors">Configuration</a></li>
+                        <li><a href="docs/configuration.html" class="text-gray-300 hover:text-blue-400 block transition-colors">Configuration</a></li>
                         <li><a href="#markdown" class="text-gray-300 hover:text-blue-400 block transition-colors">Credence Syntax</a></li>
                     </ul>
                 </div> 
@@ -58,7 +58,7 @@
     <nav class="max-w-[98vw] fixed top-8 left-1/2 transform -translate-x-1/2 backdrop-blur-lg bg-white/10 rounded-full px-8 py-4 z-50">
         <div class="flex items-center space-x-6 md:space-x-8 ">
             <a href="/" class="text-white hover:text-blue-400 transition-colors">Home</a>
-            <a href="/docs/introduction.html" class="text-white hover:text-blue-400 transition-colors">Docs</a>
+            <a href="docs/introduction.html" class="text-white hover:text-blue-400 transition-colors">Docs</a>
             <div class="aspect-[1/1] h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer transform hover:scale-110 transition-transform">
                 <span class="text-lg font-bold text-white">C</span>
             </div>
@@ -68,13 +68,33 @@
                                class="w-64 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
             <a href="https://github.com/CodeDynasty-dev/Credence" class="text-white hover:text-blue-400 transition-colors">GitHub</a>
-            <a href="/blog.html" class="text-white hover:text-blue-400 transition-colors">Blog</a>
+            <a href="blog.html" class="text-white hover:text-blue-400 transition-colors">Blog</a>
         </div>
     </nav>
         <!-- Documentation Content -->
         <div class="container mx-auto px-6 py-12 max-w-5xl mt-16">
             <div class="prose prose-invert max-w-none mx-auto md:mx-0">
                <h1>Credence Configuration</h1>
+<h4>Credence configuration is done in the <code>package.json</code> file. The configuration is done under the <code>credence</code> key.</h4>
+<h4>Configuration Options</h4>
+<pre><code class="language-json"><span class="hljs-comment">// package.json</span>
+...
+<span class="hljs-attr">&quot;credence&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;.&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docs&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;default-template&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;local/index.html&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./local&quot;</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+...
+</code></pre>
+ <h3>Options Descriptions</h3>
+<hr>
+<p><code>docs-directory</code> | The directory where the markdown files are located.
+Default is the root directory.</p>
+<p><code>build-directory</code> | The directory where the generated static site will be placed. Default is <code>docs</code>.</p>
+<p><code>default-template</code> | The path to the base html file that will be used to generate the static site. Default is <code>local/index.html</code>.</p>
+<p><code>assets-folder</code> | The path to the directory containing assets that should be copied to the output directory. Default is <code>./local</code>.</p>
+ <h1>Credence Configuration</h1>
 <h4>Credence configuration is done in the <code>package.json</code> file. The configuration is done under the <code>credence</code> key.</h4>
 <h4>Configuration Options</h4>
 <pre><code class="language-json"><span class="hljs-comment">// package.json</span>
@@ -123,15 +143,15 @@ Default is the root directory.</p>
                     <div class="space-y-4">
                         <h3 class="text-white font-semibold">Documentation</h3>
                         <ul class="space-y-2">
-                            <li><a href="/docs/quickstart.html" class="text-gray-400 hover:text-blue-400 transition-colors">Quick Start</a></li>
-                            <li><a href="/docs/introduction.html" class="text-gray-400 hover:text-blue-400 transition-colors">Documentation</a></li>
+                            <li><a href="docs/quickstart.html" class="text-gray-400 hover:text-blue-400 transition-colors">Quick Start</a></li>
+                            <li><a href="docs/introduction.html" class="text-gray-400 hover:text-blue-400 transition-colors">Documentation</a></li>
                         </ul>
                     </div>
                     <div class="space-y-4">
                         <h3 class="text-white font-semibold">Resources</h3>
                         <ul class="space-y-2">
-                            <li><a href="/blog" class="text-gray-400 hover:text-blue-400 transition-colors">Blog</a></li>
-                            <li><a href="/examples.html" class="text-gray-400 hover:text-blue-400 transition-colors">Examples</a></li>
+                            <li><a href="blog" class="text-gray-400 hover:text-blue-400 transition-colors">Blog</a></li>
+                            <li><a href="examples.html" class="text-gray-400 hover:text-blue-400 transition-colors">Examples</a></li>
                         </ul>
                     </div>
                     <div class="space-y-4">
