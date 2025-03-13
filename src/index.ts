@@ -1,4 +1,18 @@
-#!/usr/bin/env node
+#!/usr/bin / env node
+
+/*!
+ * Caron dimonio, con occhi di bragia
+ * loro accennando, tutte le raccoglie;
+ * batte col remo qualunque s’adagia 
+ *
+ * Charon the demon, with the eyes of glede,
+ * Beckoning to them, collects them all together,
+ * Beats with his oar whoever lags behind
+ *          
+ *          Dante - The Divine Comedy (Canto III)
+ */
+
+
 
 import http from "http";
 import { mkdir, open, readFile, rmdir, stat } from "node:fs/promises";
