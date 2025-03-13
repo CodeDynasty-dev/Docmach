@@ -15,7 +15,7 @@
 <aside class="w-64 fixed h-screen bg-[#161616] border-r border-white/10 overflow-y-auto hidden md:grid">
         <div class="p-6">
             <div class="flex items-center gap-3 mb-8">
-                <a href="/" class="flex gap-4">
+                <a href="../index.html" class="flex gap-4">
                     <div class="h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center">
                         <span class="text-lg font-bold text-white">C</span>
                     </div>
@@ -56,7 +56,7 @@
             <!-- Floating Navigation -->
     <nav class="max-w-[98vw] fixed top-8 left-1/2 transform -translate-x-1/2 backdrop-blur-lg bg-white/10 rounded-full px-8 py-4 z-50">
         <div class="flex items-center space-x-6 md:space-x-8 ">
-            <a href="/" class="text-white hover:text-blue-400 transition-colors">Home</a>
+            <a href="../index.html" class="text-white hover:text-blue-400 transition-colors">Home</a>
             <a href="docs/introduction.html" class="text-white hover:text-blue-400 transition-colors">Docs</a>
             <div class="aspect-[1/1] h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer transform hover:scale-110 transition-transform">
                 <span class="text-lg font-bold text-white">C</span>
@@ -74,26 +74,6 @@
         <div class="container mx-auto px-6 py-12 max-w-5xl mt-16">
             <div class="prose prose-invert max-w-none mx-auto md:mx-0">
                <h1>Credence Configuration</h1>
-<h4>Credence configuration is done in the <code>package.json</code> file. The configuration is done under the <code>credence</code> key.</h4>
-<h4>Configuration Options</h4>
-<pre><code class="language-json"><span class="hljs-comment">// package.json</span>
-...
-<span class="hljs-attr">&quot;credence&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;.&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docs&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;default-template&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;local/index.html&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./local&quot;</span>
-<span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
-...
-</code></pre>
- <h3>Options Descriptions</h3>
-<hr>
-<p><code>docs-directory</code> | The directory where the markdown files are located.
-Default is the root directory.</p>
-<p><code>build-directory</code> | The directory where the generated static site will be placed. Default is <code>docs</code>.</p>
-<p><code>default-template</code> | The path to the base html file that will be used to generate the static site. Default is <code>local/index.html</code>.</p>
-<p><code>assets-folder</code> | The path to the directory containing assets that should be copied to the output directory. Default is <code>./local</code>.</p>
- <h1>Credence Configuration</h1>
 <h4>Credence configuration is done in the <code>package.json</code> file. The configuration is done under the <code>credence</code> key.</h4>
 <h4>Configuration Options</h4>
 <pre><code class="language-json"><span class="hljs-comment">// package.json</span>
