@@ -14,10 +14,8 @@
     "assets-folder": "./local"
   },
   ...
-  ```   
+  ```
 */
-
-
 
 /*@credence-[/docs/configuration.html]-[Credence Configuration]
 ### Options Descriptions
@@ -46,7 +44,6 @@
 
 */
 
-
 /*@credence-[/docs/quickstart.html]-[Credence Quickstart]
 ## Quickstart
 #### Get started with Credence in a few simple steps.
@@ -68,7 +65,7 @@
 5. **Open your browser and navigate to `http://localhost:4000`**
 
 
-<div class="container mx-auto px-6 py-8 max-w-4xl border-t border-white/10"> 
+<div class="container mx-auto px-6 py-8 max-w-4xl border-t border-white/10">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Previous Post -->
         <a href="#" class="group relative overflow-hidden rounded-xl bg-white/5 p-6 transition-all hover:bg-white/10">
@@ -83,10 +80,10 @@
                     <h3 class="text-lg font-medium text-white group-hover:text-blue-400 transition-colors">Getting Started with Credence</h3>
                 </div>
             </div>
-        </a> 
+        </a>
         <a href="#" class="group relative overflow-hidden rounded-xl bg-white/5 p-6 transition-all hover:bg-white/10">
             <div class="flex items-center gap-4 justify-end">
-                <div>  
+                <div>
                     <p class="text-sm text-gray-400 text-right">Next</p>
                     <h3 class="text-lg font-medium text-white group-hover:text-blue-400 transition-colors">Advanced Configuration</h3>
                 </div>
@@ -96,7 +93,7 @@
                     </svg>
                 </div>
             </div>
-        </a>  
+        </a>
     </div>
 </div>
 */

@@ -12,9 +12,9 @@ TODO tasks
 9. documentation
 10 add plugin system
 11. add more templates
-12. add more options   
+12. add more options
 */
-import { cp, open, opendir, readFile, writeFile } from "node:fs/promises";
+import {  opendir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
 import MarkdownIt from "markdown-it";
@@ -24,7 +24,7 @@ import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 type configType = {
   "docs-directory": string;
   "build-directory": string;
-  "default-template": string; 
+  "default-template": string;
   "assets-folder": string;
   "root": string;
 };
@@ -49,42 +49,44 @@ interface CredenceComment {
   title?: string;
   template?: string;
 }
-function extractCredenceData(text: string) { 
-  const regex = /\/\*\s*@credence-\[([^\]]+)\](?:-\[([^\]]+)\])?(?:-\[([^\]]+)\])?\s*([\s\S]*?)\*\//g;
+function extractCredenceData(text: string) {
+  const regex =
+    /\/\*\s*@credence-\[([^\]]+)\](?:-\[([^\]]+)\])?(?:-\[([^\]]+)\])?\s*([\s\S]*?)\*\//g;
   const comments: CredenceComment[] = [];
   let match;
-  while ((match = regex.exec(text)) !== null) { 
+  while ((match = regex.exec(text)) !== null) {
     const [_, path, title, templateFile, markdownContent] = match;
     comments.push({
       path,
-      title: title || '',
-      template: templateFile || '',
-      content: markdownContent.trim()
+      title: title || "",
+      template: templateFile || "",
+      content: markdownContent.trim(),
     });
-  } 
+  }
   return comments;
 }
 
- 
 function extractCredenceDataMD(text: string) {
-  const regex =  /<!--\s*@credence-\[([^\]]+)\](?:-\[([^\]]+)\])?(?:-\[([^\]]+)\])?\s*-->\n?([\s\S]*)/;
+  const regex =
+    /<!--\s*@credence-\[([^\]]+)\](?:-\[([^\]]+)\])?(?:-\[([^\]]+)\])?\s*-->\n?([\s\S]*)/;
   const match = text.match(regex);
-  if (!match) return {}; 
+  if (!match) return {};
   const [_, path, title, templateFile, markdownContent] = match;
-   return ({
-      path,
-      title: title || "",
-      template: templateFile||"",
-      content: markdownContent.trim()
-    });  
+  return ({
+    path,
+    title: title || "",
+    template: templateFile || "",
+    content: markdownContent.trim(),
+  });
 }
 
-const allowedFiles =/(.js|.ts|.md|.mdk|.markdown)/
+const allowedFiles = /(.js|.ts|.md|.mdk|.markdown)/;
 async function containsSyntax(file: string): Promise<boolean> {
-  if (!allowedFiles.test(file)) 
+  if (!allowedFiles.test(file)) {
     return false;
-    try {
-    const text = await readFile(file, { encoding: "utf8" }); 
+  }
+  try {
+    const text = await readFile(file, { encoding: "utf8" });
     return text.includes("@credence-[");
   } catch (error) {
     console.error(`Error processing file ${file}:`, error);
@@ -92,10 +94,13 @@ async function containsSyntax(file: string): Promise<boolean> {
   }
 }
 
-export async function getTextFiles(source: string, config: configType): Promise<string[]> {
+export async function getTextFiles(
+  source: string,
+  config: configType,
+): Promise<string[]> {
   const output: string[] = [];
   try {
-  source = source ? path.resolve(cwd(), source) : cwd();
+    source = source ? path.resolve(cwd(), source) : cwd();
     const dir = await opendir(source);
     for await (const dirent of dir) {
       const filename = path.resolve(source, dirent.name);
@@ -117,7 +122,6 @@ export async function getTextFiles(source: string, config: configType): Promise<
       console.warn(
         "Please specify credence `docs-directory` key is set in your `package.json` file.",
       );
-      
     }
   }
   return output;
@@ -138,8 +142,10 @@ export async function getTextFile(source: string): Promise<string[]> {
 }
 
 async function parseFiles(files: string[]) {
-  const data: Record<string, { path: string; title: string; html: string[]; template?: string }> =
-    {};
+  const data: Record<
+    string,
+    { path: string; title: string; html: string[]; template?: string }
+  > = {};
   for (const file of files) {
     try {
       // Read the file content
@@ -147,10 +153,10 @@ async function parseFiles(files: string[]) {
       // Determine the file extension
       const ext = path.extname(file).toLowerCase();
       if (ext === ".md" || ext === ".markdown" || ext === ".mkd") {
-        const match = extractCredenceDataMD(content); 
+        const match = extractCredenceDataMD(content);
         if (match.path) {
           if (!data[match.path]) {
-            data[match.path] = { html: [], path: "", title: "", template:"" };
+            data[match.path] = { html: [], path: "", title: "", template: "" };
           }
           const html = md.render(match.content);
           data[match.path].path = match.path;
@@ -161,11 +167,16 @@ async function parseFiles(files: string[]) {
           data[match.path].html.push(html);
         }
       } else {
-        const matches = extractCredenceData(content); 
+        const matches = extractCredenceData(content);
         for (const match of matches) {
           if (match.path) {
             if (!data[match.path]) {
-              data[match.path] = { html: [], path: "", title: "",template:"" };
+              data[match.path] = {
+                html: [],
+                path: "",
+                title: "",
+                template: "",
+              };
             }
             const html = md.render(match.content);
             data[match.path].path = match.path;
@@ -194,16 +205,15 @@ const getList = async (config: configType, file?: string) => {
 
 function ensureFileSync(filePath: string) {
   const dir = path.dirname(filePath);
-  if (! existsSync(dir)) {
-     mkdirSync(dir, { recursive: true });
+  if (!existsSync(dir)) {
+    mkdirSync(dir, { recursive: true });
   }
-     writeFileSync(filePath, ''); 
+  writeFileSync(filePath, "");
 }
 
 export const parseCredenceFIles = async (config: configType, file?: string) => {
   const files = await getList(config, file);
-  if (files.length === 0) return;  
-  
+  if (files.length === 0) return;
   const data = await parseFiles(files);
   let base_html = `<!DOCTYPE html>
 <html lang="en">
@@ -217,36 +227,35 @@ export const parseCredenceFIles = async (config: configType, file?: string) => {
     <div> <%= content %></div>
 </body>
 </html>`;
-if (config["assets-folder"] && await open(config["assets-folder"])) {
-  const sourceDir = path.join(cwd(), config["assets-folder"]);
-  const destinationDir = path.join(cwd(), config["build-directory"]);
-  await cp(sourceDir, destinationDir, {
-    recursive: true,
-    force: true,
-    preserveTimestamps: true,
-  });
-}
-for (const file in data) {
-  const outputPath = path.join(cwd(), config["build-directory"], file);
-  const template = data[file].template || config["default-template"];
-  try {
+  // if (config["assets-folder"] && await open(config["assets-folder"])) {
+  //   const sourceDir = path.join(cwd(), config["assets-folder"]);
+  //   const destinationDir = path.join(cwd(), config["build-directory"]);
+  //   await cp(sourceDir, destinationDir, {
+  //     recursive: true,
+  //     force: true,
+  //     preserveTimestamps: true,
+  //   });
+  // }
+  for (const file in data) {
+    const outputPath = path.join(cwd(), config["build-directory"], file);
+    const template = data[file].template || config["default-template"];
+    try {
       if (template) {
-        base_html = await readFile( template , { encoding: "utf-8" });
+        base_html = await readFile(template, { encoding: "utf-8" });
       }
-    ensureFileSync(outputPath);
-      await writeFile(  
+      ensureFileSync(outputPath);
+      await writeFile(
         outputPath,
         base_html
-        .replace(
-          "<%= title %>",
-          `${data[file].title}`,
-        )
-        .replace("<%= content %>", data[file].html.join(" ")),
+          .replace(
+            "<%= title %>",
+            `${data[file].title}`,
+          )
+          .replace("<%= content %>", data[file].html.join(" ")),
       );
-  } catch (error) {
-    console.log(error);
-    
-      console.error("failed to load template " + template+".");
+    } catch (error) {
+      console.log(error);
+      console.error("failed to load template " + template + ".");
     }
   }
   return files;

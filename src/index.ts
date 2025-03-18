@@ -1,21 +1,19 @@
-#!/usr/bin / env node
+#!/usr/bin/env node
 
 /*!
  * Caron dimonio, con occhi di bragia
  * loro accennando, tutte le raccoglie;
- * batte col remo qualunque s’adagia 
+ * batte col remo qualunque s’adagia
  *
  * Charon the demon, with the eyes of glede,
  * Beckoning to them, collects them all together,
  * Beats with his oar whoever lags behind
- *          
+ *
  *          Dante - The Divine Comedy (Canto III)
  */
 
-
-
 import http from "http";
-import { mkdir, open, readFile, rmdir, stat } from "node:fs/promises";
+import { cp, mkdir, open, readFile, rmdir, stat } from "node:fs/promises";
 import path from "path";
 import { WebSocketServer } from "ws";
 import chokidar from "chokidar";
@@ -28,12 +26,12 @@ import { exec } from "child_process";
 // Define the path to your package.json file
 const packageJsonPath = path.join(cwd(), "package.json");
 
-const port =  4000;
+const port = 4000;
 const root = path.resolve(process.argv[3] || process.cwd());
 let config = {
   "docs-directory": root,
   "build-directory": "./credence-build",
-  "default-template": "", 
+  "default-template": "",
   "assets-folder": "",
   root,
 };
@@ -82,9 +80,9 @@ function logHttpError(
   url: string,
   statusCode: number,
   message: string,
-  error?: any
+  error?: any,
 ): void {
-  const errorLog = { 
+  const errorLog = {
     method,
     url,
     statusCode,
@@ -93,7 +91,7 @@ function logHttpError(
   };
 
   console.error(
-    `[${errorLog.method} ${errorLog.url} - ${errorLog.statusCode}: ${errorLog.message}`
+    `[${errorLog.method} ${errorLog.url} - ${errorLog.statusCode}: ${errorLog.message}`,
   );
   if (errorLog.error) {
     console.error("Error Details:", String(errorLog.error));
@@ -129,7 +127,7 @@ const server = http.createServer(async (req, res) => {
     const stream = createReadStream(filePath, { autoClose: true });
     res.writeHead(200, { "Content-Type": contentType });
     stream.pipe(res);
-  } catch (error) { 
+  } catch (error) {
     logHttpError(req.method!, req.url!, 500, "Server Error");
     res.writeHead(500, { "Content-Type": "text/plain" });
     return res.end("500 Server Error");
@@ -159,20 +157,18 @@ function broadcastReload() {
 
 const getCSSCommand = async () => {
   try {
-    
     if (await open("./tailwind.config.js")) {
       return `npx tailwindcss -c tailwind.config.js -o ${
         path.join(config["build-directory"], "/bundle.css")
-        }`;
-      }
-      if (await open("./postcss.config.js")) {
-        return `npx postcss ${
-          path.join(config["docs-directory"], "/styles.css")
-          } -o ${path.join(config["build-directory"], "/bundle.css")}`;
-        }
-      } catch (error) {
-        
-      }
+      }`;
+    }
+    if (await open("./postcss.config.js")) {
+      return `npx postcss ${
+        path.join(config["docs-directory"], "/styles.css")
+      } -o ${path.join(config["build-directory"], "/bundle.css")}`;
+    }
+  } catch (error) {
+  }
   return "";
 };
 
@@ -184,13 +180,22 @@ function buildCSS() {
       if (err) {
         reject("CSS compilation error:" + String(err));
       } else {
-        resolve(undefined); 
+        resolve(undefined);
       }
     });
   });
 }
 
 const onFileChange = async (file: string) => {
+  if (config["assets-folder"] && await open(config["assets-folder"])) {
+    const sourceDir = path.join(cwd(), config["assets-folder"]);
+    const destinationDir = path.join(cwd(), config["build-directory"]);
+    await cp(sourceDir, destinationDir, {
+      recursive: true,
+      force: true,
+      preserveTimestamps: true,
+    });
+  }
   const ran = await parseCredenceFIles(config, file);
   broadcastReload();
   if (!ran) return;
@@ -206,9 +211,11 @@ chokidar.watch(config["docs-directory"], {
 }).on(
   "all",
   async (_, file) => {
-    try { 
+    try {
       if (
-        (path.join(cwd(), file)).includes(path.resolve(cwd(), config["build-directory"])+"/") &&
+        (path.join(cwd(), file)).includes(
+          path.resolve(cwd(), config["build-directory"]) + "/",
+        ) &&
         Boolean(await open(path.join(cwd(), file)))
       ) return;
     } catch {}
