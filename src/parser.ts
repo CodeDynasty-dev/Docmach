@@ -1,6 +1,6 @@
 /*
 TODO tasks
-1. loop all files and get check for credence content then save the list of files  ✅
+1. loop all files and get check for docmach content then save the list of files  ✅
 2. parse each files and keep the extracted content to the data variable   ✅
 3. generate html   ✅
 4.  identifier inputs   ✅
@@ -45,16 +45,16 @@ const md = new MarkdownIt({
     return ""; // use external default escaping
   },
 });
-interface CredenceComment {
+interface DocmachComment {
   path: string;
   content: string;
   title?: string;
   template?: string;
 }
-function extractCredenceData(text: string) {
+function extractDocmachData(text: string) {
   const regex =
-    /\/\*\s*@credence-\[([^\]]+)\](?:-\[([^\]]+)\])?(?:-\[([^\]]+)\])?\s*([\s\S]*?)\*\//g;
-  const comments: CredenceComment[] = [];
+    /\/\*\s*@docmach-\[([^\]]+)\](?:-\[([^\]]+)\])?(?:-\[([^\]]+)\])?\s*([\s\S]*?)\*\//g;
+  const comments: DocmachComment[] = [];
   let match;
   while ((match = regex.exec(text)) !== null) {
     const [_, path, title, templateFile, markdownContent] = match;
@@ -68,9 +68,9 @@ function extractCredenceData(text: string) {
   return comments;
 }
 
-function extractCredenceDataMD(text: string) {
+function extractDocmachDataMD(text: string) {
   const regex =
-    /<!--\s*@credence-\[([^\]]+)\](?:-\[([^\]]+)\])?(?:-\[([^\]]+)\])?\s*-->\n?([\s\S]*)/;
+    /<!--\s*@docmach-\[([^\]]+)\](?:-\[([^\]]+)\])?(?:-\[([^\]]+)\])?\s*-->\n?([\s\S]*)/;
   const match = text.match(regex);
   if (!match) return {};
   const [_, path, title, templateFile, markdownContent] = match;
@@ -89,7 +89,7 @@ async function containsSyntax(file: string): Promise<boolean> {
   }
   try {
     const text = await readFile(file, { encoding: "utf8" });
-    return text.includes("@credence-[");
+    return text.includes("@docmach-[");
   } catch (error) {
     console.error(`Error processing file ${file}:`, error);
     return false;
@@ -122,7 +122,7 @@ export async function getTextFiles(
     console.error(`Error reading directory: ${source.slice(0, 50)}...`);
     if (config["docs-directory"] === config["root"]) {
       console.warn(
-        "Please specify credence `docs-directory` key is set in your `package.json` file.",
+        "Please specify docmach `docs-directory` key is set in your `package.json` file.",
       );
     }
   }
@@ -155,7 +155,7 @@ async function parseFiles(files: string[]) {
       // Determine the file extension
       const ext = path.extname(file).toLowerCase();
       if (ext === ".md" || ext === ".markdown" || ext === ".mkd") {
-        const match = extractCredenceDataMD(content);
+        const match = extractDocmachDataMD(content);
         if (match.path) {
           if (!data[match.path]) {
             data[match.path] = { html: [], path: "", title: "", template: "" };
@@ -169,7 +169,7 @@ async function parseFiles(files: string[]) {
           data[match.path].html.push(html);
         }
       } else {
-        const matches = extractCredenceData(content);
+        const matches = extractDocmachData(content);
         for (const match of matches) {
           if (match.path) {
             if (!data[match.path]) {
@@ -252,7 +252,7 @@ async function copyChangedFiles(sourceDir: string, destinationDir: string): Prom
 }
 
 
-export const parseCredenceFIles = async (config: configType, file?: string) => {
+export const parseDocmachFIles = async (config: configType, file?: string) => {
   if (config["assets-folder"] && await open(config["assets-folder"])) {
     const sourceDir = path.join(cwd(), config["assets-folder"]);
     const destinationDir = path.join(cwd(), config["build-directory"]);

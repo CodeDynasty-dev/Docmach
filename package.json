@@ -1,7 +1,7 @@
 {
-  "name": "credence",
+  "name": "docmach",
   "version": "1.0.0",
-  "description": "Credence - markdown compiler for blogs & project Documentation 🚀",
+  "description": "Docmach - markdown compiler for blogs & project Documentation 🚀",
   "main": "dist/index.js",
   "type": "module",
   "files": [
@@ -11,11 +11,11 @@
     "dist/parser.js"
   ],
   "bin": {
-    "credence": "./dist/index.js"
+    "docmach": "./dist/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CodeDynasty-dev/Credence.git"
+    "url": "git+https://github.com/CodeDynasty-dev/Docmach.git"
   },
   "keywords": [
     "ssg",
@@ -37,9 +37,9 @@
   },
   "license": "Apache",
   "bugs": {
-    "url": "https://github.com/CodeDynasty-dev/Credence/issues"
+    "url": "https://github.com/CodeDynasty-dev/Docmach/issues"
   },
-  "homepage": "https://github.com/CodeDynasty-dev/Credence#readme",
+  "homepage": "https://github.com/CodeDynasty-dev/Docmach#readme",
   "scripts": {
     "watch": "tsc  --watch",
     "dev": "node --experimental_transform-types --watch --inspect dist/index.js",
@@ -67,7 +67,7 @@
     "mime": "^4.0.6",
     "ws": "^8.18.1"
   },
-  "credence": {
+  "docmach": {
     "docs-directory": ".",
     "build-directory": "docs",
     "default-template": "local/doc.html",

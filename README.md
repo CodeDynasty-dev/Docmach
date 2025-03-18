@@ -1,12 +1,12 @@
-<!-- @credence-[/docs/introduction.html]-[Credence] -->
+<!-- @docmach-[/docs/introduction.html]-[Docmach] -->
 
-# Credence - markdown compiler for blogs & project Documentation 🚀  
+# Docmach - markdown compiler for blogs & project Documentation 🚀  
 
-**Credence** is a  **Markdown-powered** static site generator designed for **modern blogs and project documentation**. It integrates **the simplicity of Markdown and Tailwind CSS** to generate sites with minimal effort.  
+**Docmach** is a  **Markdown-powered** static site generator designed for **modern blogs and project documentation**. It integrates **the simplicity of Markdown and Tailwind CSS** to generate sites with minimal effort.  
 
-## **Why Choose Credence?**  
+## **Why Choose Docmach?**  
 
-✅ **Markdown-First** – Write Markdown, and let Credence handle the rest.  
+✅ **Markdown-First** – Write Markdown, and let Docmach handle the rest.  
 ✅ **Tailwind CSS Integration** – inbuilt tailwind css compiler. <br>
 ✅ **Ultra-Fast Builds** – Optimized for speed.  
 ✅ **Pluggable UI** – Use Tailwind, CSS, or custom themes—**your choice**.  
@@ -15,25 +15,25 @@
 ### **Get Started**    
 
 ```sh
-npm i -g credence
+npm i -g docmach
 mkdir my-blog
 cd my-blog
-credence
+docmach
 ```
 <br>
 <br> 
 
-**How Credence works** 🚀
+**How Docmach works** 🚀
 
-#### Credence parses the credence headers on every text based files in your input folder, recursively to extracts md and html text.
+#### Docmach parses the docmach headers on every text based files in your input folder, recursively to extracts md and html text.
 
-**Parts of  a credence header**
+**Parts of  a docmach header**
 
-@credence --- output file ---- page title
+@docmach --- output file ---- page title
 
  syntax
  ```
-/*@credence-[/index.html]-[Credence]
+/*@docmach-[/index.html]-[Docmach]
 ```
 
 # Usage
@@ -58,10 +58,10 @@ function add(a, b) {
 ```
 
 ```markdown
-/*@credence-[/index.html]-[Credence]
+/*@docmach-[/index.html]-[Docmach]
 
 ### first clone the repo
-  git clone credence
+  git clone docmach
   ### running build command
   npm run build
 */
@@ -71,30 +71,30 @@ function add(a, b) {
 ### Using md files (comment header)
 
 ```markdown
-<!-- @credence-[/docs/introduction.html]-[documentation] -->
+<!-- @docmach-[/docs/introduction.html]-[documentation] -->
 
-# Credence Command-Line Interface (CLI) Documentation
+# Docmach Command-Line Interface (CLI) Documentation
 
-The **Credence CLI** is a robust tool designed to streamline and automate tasks associated with the Credence application suite. This document details its installation, usage, available commands, and developer guidelines.
+The **Docmach CLI** is a robust tool designed to streamline and automate tasks associated with the Docmach application suite. This document details its installation, usage, available commands, and developer guidelines.
 
 ## Table of Contents
 ```
 
-### **About credence 🚀**  
+### **About docmach 🚀**  
 
 1. **Markdown-Powered, But Smarter** 📝  
-   - Unlike most static site generators, **Credence** doesn't just convert Markdown to HTML—it **understands context**.  
+   - Unlike most static site generators, **Docmach** doesn't just convert Markdown to HTML—it **understands context**.  
    - It allows **nested Markdown inside HTML elements**, solving limitations seen in other generators like Hugo and Docusaurus.  
 
 2. **Tailwind, But on Your Terms** 🎨  
-   - You’re not **forced** into Tailwind, but if you enable it, **Credence intelligently processes styles** while avoiding unnecessary bloat.  
+   - You’re not **forced** into Tailwind, but if you enable it, **Docmach intelligently processes styles** while avoiding unnecessary bloat.  
    - It scans **Markdown, HTML, and even component files** to ensure only the needed styles make it into your final build.  
 
 3. **Live Reload That Actually Works** 🔄  
-   - Credence’s **watch mode** goes beyond just reloading pages—it can **retry connections**, detect stale caches, and ensure that **your development experience is smooth** even when working with large projects.  
+   - Docmach’s **watch mode** goes beyond just reloading pages—it can **retry connections**, detect stale caches, and ensure that **your development experience is smooth** even when working with large projects.  
 
 4. **No More Ugly Typography** 🎭  
-   - By default, **Credence applies optimized typography settings** so Markdown-based content looks **professional and polished** right out of the box.  
+   - By default, **Docmach applies optimized typography settings** so Markdown-based content looks **professional and polished** right out of the box.  
    - No need for **extra CSS** just to make text readable like in other generators.  
 
 5. **Intelligent Asset Handling** 📦  

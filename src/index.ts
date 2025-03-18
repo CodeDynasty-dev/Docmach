@@ -25,7 +25,7 @@ import { WebSocketServer } from "ws";
 import chokidar from "chokidar";
 import Mime from "mime/lite";
 // files
-import { parseCredenceFIles } from "./parser.js";
+import { parseDocmachFIles } from "./parser.js";
 
  async function findAvailablePort(port = 4000) {
   while (await isPortInUse(port)) port++;
@@ -57,7 +57,7 @@ const packageJsonPath =join(cwd(), "package.json");
 const root =resolve(process.argv[3] || process.cwd());
 let config = {
   "docs-directory": root,
-  "build-directory": "./credence-build",
+  "build-directory": "./docmach-build",
   "default-template": "",
   "assets-folder": "",
   root,
@@ -66,11 +66,11 @@ let config = {
 try {
   const data = await readFile(packageJsonPath, "utf8");
   const p = JSON.parse(data);
-  const credenceConfig = p.credence;
-  if (credenceConfig) {
-    config = Object.assign(config, credenceConfig);
+  const docmachConfig = p.docmach;
+  if (docmachConfig) {
+    config = Object.assign(config, docmachConfig);
   } else {
-    console.warn("No credence configuration found in package.json.");
+    console.warn("No docmach configuration found in package.json.");
   }
 } catch (_e) {
   console.error("Error reading package.json:", _e);
@@ -167,7 +167,7 @@ await mkdir(config["build-directory"]).catch((_e) => {});
 const port = await findAvailablePort();
 // Start the HTTP server.
 server.listen(port, () => {
-  console.log(`Credence compiling at http://localhost:${port}`);
+  console.log(`Docmach compiling at http://localhost:${port}`);
 });
 
 // Set up WebSocket server on the same HTTP server.
@@ -214,16 +214,16 @@ function buildCSS() {
 }
 
 const onFileChange = async (file: string) => {
-  const ran = await parseCredenceFIles(config, file);
+  const ran = await parseDocmachFIles(config, file);
   broadcastReload();
   if (!ran) return;
   await buildCSS();
   broadcastReload();
 };
 
-const ran = await parseCredenceFIles(config);
+const ran = await parseDocmachFIles(config);
 if (!ran) {
-  console.warn("No Credence syntax detected!");
+  console.warn("No Docmach syntax detected!");
 }
 await buildCSS();
 
