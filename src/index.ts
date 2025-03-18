@@ -13,7 +13,7 @@
  */
 
 import http from "http";
-import { cp, mkdir, open, readFile, rmdir, stat } from "node:fs/promises";
+import { cp, mkdir, open, readFile, rm,  stat } from "node:fs/promises";
 import path from "path";
 import { WebSocketServer } from "ws";
 import chokidar from "chokidar";
@@ -22,11 +22,33 @@ import { cwd } from "process";
 import Mime from "mime/lite";
 import { createReadStream } from "node:fs";
 import { exec } from "child_process";
+import net from "net";
+
+ async function findAvailablePort(port = 4000) {
+  while (await isPortInUse(port)) port++;
+  return port;
+}
+function isPortInUse(port: number) {
+  return new Promise((resolve) => {
+    const server = net.createServer();
+    server.once("error", (err: any) => {
+      if (err.code === "EADDRINUSE") {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+    server.once("listening", () => {
+      server.close();
+      resolve(false);
+    });
+    server.listen(port);
+  });
+}
 
 // Define the path to your package.json file
 const packageJsonPath = path.join(cwd(), "package.json");
-
-const port = 4000;
+ 
 const root = path.resolve(process.argv[3] || process.cwd());
 let config = {
   "docs-directory": root,
@@ -134,10 +156,10 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-await rmdir(path.resolve(cwd(), config["build-directory"]), { recursive: true })
+await rm(path.resolve(cwd(), config["build-directory"]), { recursive: true })
   .catch((_e) => {});
 await mkdir(config["build-directory"]).catch((_e) => {});
-
+const port = await findAvailablePort();
 // Start the HTTP server.
 server.listen(port, () => {
   console.log(`Credence compiling at http://localhost:${port}`);
