@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title> Credence</title> 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="../bundle.css">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body class="bg-[#0A0A0A]">
+    <div class="">
+ 
+    <!-- Sidebar Navigation -->
+<aside class="w-64 fixed h-screen bg-[#161616] border-r border-white/10 overflow-y-auto hidden md:grid">
+        <div class="p-6">
+            <div class="flex items-center gap-3 mb-8">
+                <a href="../index.html" class="flex gap-4">
+                    <div class="h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center">
+                        <span class="text-lg font-bold text-white">C</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-white">Credence Docs</h1>
+                </a>
+            </div>
+            
+            <!-- Documentation Navigation -->
+            <nav class="space-y-8">
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Getting Started</h2>
+                    <ul class="space-y-2">
+                        <li><a href="/docs/introduction.html" class="text-gray-300 hover:text-blue-400 block transition-colors">Introduction</a></li> 
+                        <li><a href="/docs/quickstart.html" class="text-gray-300 hover:text-blue-400 block transition-colors">Quick Start</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Core Concepts</h2>
+                    <ul class="space-y-2">
+                        <li><a href="/docs/configuration.html" class="text-gray-300 hover:text-blue-400 block transition-colors">Configuration</a></li>
+                        <li><a href="#markdown" class="text-gray-300 hover:text-blue-400 block transition-colors">Credence Syntax</a></li>
+                    </ul>
+                </div> 
+                <div class="opacity-[0.6] cursor-not-allowed" title="Coming Soon">
+                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Advanced</h2>
+                    <ul class="space-y-2  pointer-events-none">
+                        <li><a href="#plugins" class="text-gray-300 hover:text-blue-400 block transition-colors">Plugins</a></li> 
+                        <li><a href="#deployment" class="text-gray-300 hover:text-blue-400 block transition-colors">Deployment</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="md:ml-64 flex-1 pt-16 min-h-screen" >
+            <!-- Floating Navigation -->
+    <nav class="max-w-[98vw] fixed top-8 left-1/2 transform -translate-x-1/2 backdrop-blur-lg bg-white/10 rounded-full px-8 py-4 z-50">
+        <div class="flex items-center space-x-6 md:space-x-8 ">
+            <a href="../index.html" class="text-white hover:text-blue-400 transition-colors">Home</a>
+            <a href="../docs/introduction.html" class="text-white hover:text-blue-400 transition-colors">Docs</a>
+            <div class="aspect-[1/1] h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer transform hover:scale-110 transition-transform">
+                <span class="text-lg font-bold text-white">C</span>
+            </div>
+                <div class="relative hidden md:grid">
+                        <input type="search" 
+                               placeholder="Search documentation..." 
+                               class="w-64 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+            <a href="https://github.com/CodeDynasty-dev/Credence" class="text-white hover:text-blue-400 transition-colors">GitHub</a>
+            <a href="../blog.html" class="text-white hover:text-blue-400 transition-colors">Blog</a>
+        </div>
+    </nav>
+        <!-- Documentation Content -->
+        <div class="container mx-auto px-6 py-12 max-w-5xl mt-16">
+            <div class="prose prose-invert max-w-none mx-auto md:mx-0">
+               <h1>Credence - markdown compiler for blogs &amp; project Documentation 🚀</h1>
+<p><strong>Credence</strong> is a  <strong>Markdown-powered</strong> static site generator designed for <strong>modern blogs and project documentation</strong>. It integrates <strong>the simplicity of Markdown and Tailwind CSS</strong> to generate sites with minimal effort.</p>
+<h2><strong>Why Choose Credence?</strong></h2>
+<p>✅ <strong>Markdown-First</strong> – Write Markdown, and let Credence handle the rest.<br>
+✅ <strong>Tailwind CSS Integration</strong> – inbuilt tailwind css compiler. <br>
+✅ <strong>Ultra-Fast Builds</strong> – Optimized for speed.<br>
+✅ <strong>Pluggable UI</strong> – Use Tailwind, CSS, or custom themes—<strong>your choice</strong>.<br>
+✅ <strong>Live Reload &amp; Watch Mode</strong> – Instant preview while editing.</p>
+<h3><strong>Get Started</strong></h3>
+<pre><code class="language-sh">npm i -g credence
+<span class="hljs-built_in">mkdir</span> my-blog
+<span class="hljs-built_in">cd</span> my-blog
+credence
+</code></pre>
+<br>
+<br> 
+<p><strong>How Credence works</strong> 🚀</p>
+<h4>Credence parses the credence headers on every text based files in your input folder, recursively to extracts md and html text.</h4>
+<p><strong>Parts of  a credence header</strong></p>
+<p>@credence — output file ---- page title</p>
+<p>syntax</p>
+<pre><code>/*@credence-[/index.html]-[Credence]
+</code></pre>
+<h1>Usage</h1>
+<h3>Using inline-docs (comments style)</h3>
+<pre><code class="language-markdown">/**
+<span class="hljs-bullet"> *</span> @title   Add Function
+<span class="hljs-bullet"> *</span> @type    function
+<span class="hljs-bullet"> *</span> @description Adds two numbers and returns the result.
+<span class="hljs-bullet"> *</span> @tags    math, utility
+
+<span class="hljs-bullet"> *</span> @param {number} a The first number.
+<span class="hljs-bullet"> *</span> @param {number} b The second number.
+<span class="hljs-bullet"> *</span> @returns {number} The sum of <span class="hljs-code">`a`</span> and <span class="hljs-code">`b`</span>.
+ <span class="hljs-emphasis">*/
+function add(a, b) {
+  return a + b;
+}
+
+</span></code></pre>
+<pre><code class="language-markdown">/<span class="hljs-emphasis">*@credence-[/index.html]-[Credence]
+
+### first clone the repo
+  git clone credence
+  ### running build command
+  npm run build
+*</span>/
+</code></pre>
+<h3>Using md files (comment header)</h3>
+<pre><code class="language-markdown">&lt;!-- @credence-[/docs/introduction.html]-[documentation] --&gt;
+
+<span class="hljs-section"># Credence Command-Line Interface (CLI) Documentation</span>
+
+The <span class="hljs-strong">**Credence CLI**</span> is a robust tool designed to streamline and automate tasks associated with the Credence application suite. This document details its installation, usage, available commands, and developer guidelines.
+
+<span class="hljs-section">## Table of Contents</span>
+</code></pre>
+<h3><strong>About credence 🚀</strong></h3>
+<ol>
+<li>
+<p><strong>Markdown-Powered, But Smarter</strong> 📝</p>
+<ul>
+<li>Unlike most static site generators, <strong>Credence</strong> doesn’t just convert Markdown to HTML—it <strong>understands context</strong>.</li>
+<li>It allows <strong>nested Markdown inside HTML elements</strong>, solving limitations seen in other generators like Hugo and Docusaurus.</li>
+</ul>
+</li>
+<li>
+<p><strong>Tailwind, But on Your Terms</strong> 🎨</p>
+<ul>
+<li>You’re not <strong>forced</strong> into Tailwind, but if you enable it, <strong>Credence intelligently processes styles</strong> while avoiding unnecessary bloat.</li>
+<li>It scans <strong>Markdown, HTML, and even component files</strong> to ensure only the needed styles make it into your final build.</li>
+</ul>
+</li>
+<li>
+<p><strong>Live Reload That Actually Works</strong> 🔄</p>
+<ul>
+<li>Credence’s <strong>watch mode</strong> goes beyond just reloading pages—it can <strong>retry connections</strong>, detect stale caches, and ensure that <strong>your development experience is smooth</strong> even when working with large projects.</li>
+</ul>
+</li>
+<li>
+<p><strong>No More Ugly Typography</strong> 🎭</p>
+<ul>
+<li>By default, <strong>Credence applies optimized typography settings</strong> so Markdown-based content looks <strong>professional and polished</strong> right out of the box.</li>
+<li>No need for <strong>extra CSS</strong> just to make text readable like in other generators.</li>
+</ul>
+</li>
+<li>
+<p><strong>Intelligent Asset Handling</strong> 📦</p>
+<ul>
+<li>Automatically <strong>copies, optimizes, and references assets</strong> like images, fonts, and stylesheets, ensuring they’re efficiently bundled.</li>
+<li>Works even when running in a serverless environment or blob storage.</li>
+</ul>
+</li>
+<li>
+<p><strong>Code Highlighting That Feels Right</strong> 💻</p>
+<ul>
+<li>Uses <strong>highlight.js with custom themes</strong>, ensuring code snippets are <strong>visually pleasing and readable</strong>.</li>
+</ul>
+</li>
+<li>
+<p><strong>CLI That Doesn’t Get in Your Way</strong> 🛠️</p>
+<ul>
+<li>Runs in <strong>zero-config mode</strong> by default but lets <strong>power users tweak every aspect</strong> via an easy-to-use CLI.</li>
+<li>Supports <strong>auto-detection of project structures</strong>, so <strong>you don’t have to manually set up folders</strong> every time.</li>
+</ul>
+</li>
+<li>
+<p><strong>Fast, Even at Scale</strong> ⚡</p>
+<ul>
+<li><strong>Batch processes file changes</strong> to avoid unnecessary rebuilds.</li>
+<li>Can <strong>handle thousands of Markdown files</strong> without slowing down, making it a solid choice for <strong>large-scale documentation</strong>.</li>
+</ul>
+</li>
+<li>
+<p><strong>SEO &amp; Accessibility Built-In</strong> 🌍</p>
+<ul>
+<li>Generates <strong>clean, semantic HTML</strong> optimized for search engines.</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>Designed to be focused on <strong>speed, developer experience, and flexibility</strong>.</p>
+</blockquote>
+<ol start="8">
+<li>
+<p><strong>Fast, Even at Scale</strong> ⚡</p>
+<ul>
+<li><strong>Batch processes file changes</strong> to avoid unnecessary rebuilds.</li>
+<li>Can <strong>handle thousands of Markdown files</strong> without slowing down, making it a solid choice for <strong>large-scale documentation</strong>.</li>
+</ul>
+</li>
+<li>
+<p><strong>SEO &amp; Accessibility Built-In</strong> 🌍</p>
+<ul>
+<li>Generates <strong>clean, semantic HTML</strong> optimized for search engines.</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>Designed to be focused on <strong>speed, developer experience, and flexibility</strong>.</p>
+</blockquote>
+
+            </div>
+            </div>
+
+    </main>
+</div>
+        <!-- Footer -->
+    <footer class="relative overflow-hidden border-t border-white/10 bg-gradient-to-b from-[#1A1A1A] to-[#0A0A0A]">
+        <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div class="container mx-auto px-6 py-16 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-start gap-12">
+                <!-- Brand Section -->
+                <div class="space-y-6 md:w-1/3">
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 bg-blue-500 rounded-full flex items-center justify-center">
+                            <span class="text-xl font-bold text-white">C</span>
+                        </div>
+                        <h2 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+                            Credence
+                        </h2>
+                    </div>
+                    <p class="text-gray-400">Transform your documentation into an immersive experience with our modern markdown compiler.</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8 md:w-2/3">
+                    <div class="space-y-4">
+                        <h3 class="text-white font-semibold">Documentation</h3>
+                        <ul class="space-y-2">
+                            <li><a href="docs/quickstart.html" class="text-gray-400 hover:text-blue-400 transition-colors">Quick Start</a></li>
+                            <li><a href="docs/introduction.html" class="text-gray-400 hover:text-blue-400 transition-colors">Documentation</a></li>
+                        </ul>
+                    </div>
+                    <div class="space-y-4">
+                        <h3 class="text-white font-semibold">Resources</h3>
+                        <ul class="space-y-2">
+                            <li><a href="blog" class="text-gray-400 hover:text-blue-400 transition-colors">Blog</a></li>
+                            <li><a href="examples.html" class="text-gray-400 hover:text-blue-400 transition-colors">Examples</a></li>
+                        </ul>
+                    </div>
+                    <div class="space-y-4">
+                        <h3 class="text-white font-semibold">Connect</h3>
+                        <ul class="space-y-2">
+                            <li><a href="https://github.com/CodeDynasty-dev/Credence" class="text-gray-400 hover:text-blue-400 transition-colors inline-flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                                </svg>
+                                GitHub
+                            </a></li>
+                            <li><a href="https://x.com/codedynasty" class="text-gray-400 hover:text-blue-400 transition-colors inline-flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                                </svg>
+                                Twitter
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-400 text-sm">&copy; 2025 Credence. All rights reserved.</p>
+                <div class="flex items-center gap-6">
+                    <a href="/privacy" class="text-gray-400 hover:text-blue-400 text-sm transition-colors">Privacy Policy</a>
+                    <a href="/terms" class="text-gray-400 hover:text-blue-400 text-sm transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+
+
+
