@@ -13,13 +13,15 @@ TODO tasks
 10 add plugin system
 11. add more templates
 12. add more options
-*/
-import {  opendir, readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
-import { cwd } from "node:process";
+*/ 
+import {Dirent , createReadStream,  createWriteStream, existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { opendir,  writeFile,  mkdir, open, readFile,   stat, readdir , utimes } from 'fs/promises';
+import { pipeline } from 'stream/promises';
 import MarkdownIt from "markdown-it";
+import { cwd } from "node:process";
 import hljs from "highlight.js";
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { join } from 'path';
+import path from "node:path";
 
 type configType = {
   "docs-directory": string;
@@ -211,7 +213,51 @@ function ensureFileSync(filePath: string) {
   writeFileSync(filePath, "");
 }
 
+async function copyChangedFiles(sourceDir: string, destinationDir: string): Promise<void> {
+    async function processFile(srcPath: string, destPath: string): Promise<void> {
+        try {
+            const srcStat = await stat(srcPath);
+            let shouldCopy = true;
+            try {
+                const destStat = await stat(destPath);
+                if (srcStat.mtimeMs <= destStat.mtimeMs) {
+                    shouldCopy = false;  
+                }
+            } catch (err: any) {
+                if (err.code !== 'ENOENT') throw err;  
+            }
+            if (shouldCopy) { 
+                await pipeline(createReadStream(srcPath), createWriteStream(destPath));
+                await utimes(destPath, srcStat.atime, srcStat.mtime); 
+            }
+        } catch (error) {
+            console.error(`Error processing file ${srcPath}:`, error);
+        }
+    }
+
+    async function processDirectory(src: string, dest: string): Promise<void> {
+        await mkdir(dest, { recursive: true });
+        const entries: Dirent[] = await readdir(src, { withFileTypes: true });
+        await Promise.all(entries.map(async (entry) => {
+            const srcPath = join(src, entry.name);
+            const destPath = join(dest, entry.name);
+            if (entry.isDirectory()) {
+                return processDirectory(srcPath, destPath);
+            } else {
+                return processFile(srcPath, destPath);
+            }
+        }));
+    }
+    await processDirectory(sourceDir, destinationDir);
+}
+
+
 export const parseCredenceFIles = async (config: configType, file?: string) => {
+  if (config["assets-folder"] && await open(config["assets-folder"])) {
+    const sourceDir = path.join(cwd(), config["assets-folder"]);
+    const destinationDir = path.join(cwd(), config["build-directory"]);
+    await copyChangedFiles(sourceDir, destinationDir);
+  }
   const files = await getList(config, file);
   if (files.length === 0) return;
   const data = await parseFiles(files);
@@ -227,15 +273,6 @@ export const parseCredenceFIles = async (config: configType, file?: string) => {
     <div> <%= content %></div>
 </body>
 </html>`;
-  // if (config["assets-folder"] && await open(config["assets-folder"])) {
-  //   const sourceDir = path.join(cwd(), config["assets-folder"]);
-  //   const destinationDir = path.join(cwd(), config["build-directory"]);
-  //   await cp(sourceDir, destinationDir, {
-  //     recursive: true,
-  //     force: true,
-  //     preserveTimestamps: true,
-  //   });
-  // }
   for (const file in data) {
     const outputPath = path.join(cwd(), config["build-directory"], file);
     const template = data[file].template || config["default-template"];

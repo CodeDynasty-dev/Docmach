@@ -12,17 +12,20 @@
  *          Dante - The Divine Comedy (Canto III)
  */
 
+// native
+import { mkdir, open, readFile, rm,   stat } from 'fs/promises';
+import { join, resolve, extname } from 'path';
+import {createReadStream, } from "node:fs";;
+import { exec } from "child_process";
+import { cwd } from "process";
 import http from "http";
-import { cp, mkdir, open, readFile, rm,  stat } from "node:fs/promises";
-import path from "path";
+import net from "net";
+// packages
 import { WebSocketServer } from "ws";
 import chokidar from "chokidar";
-import { parseCredenceFIles } from "./parser.js";
-import { cwd } from "process";
 import Mime from "mime/lite";
-import { createReadStream } from "node:fs";
-import { exec } from "child_process";
-import net from "net";
+// files
+import { parseCredenceFIles } from "./parser.js";
 
  async function findAvailablePort(port = 4000) {
   while (await isPortInUse(port)) port++;
@@ -46,10 +49,12 @@ function isPortInUse(port: number) {
   });
 }
 
-// Define the path to your package.json file
-const packageJsonPath = path.join(cwd(), "package.json");
  
-const root = path.resolve(process.argv[3] || process.cwd());
+
+// Define the path to your package.json file
+const packageJsonPath =join(cwd(), "package.json");
+ 
+const root =resolve(process.argv[3] || process.cwd());
 let config = {
   "docs-directory": root,
   "build-directory": "./credence-build",
@@ -123,10 +128,10 @@ function logHttpError(
 // Create an HTTP server.
 const server = http.createServer(async (req, res) => {
   // Resolve file path relative to the root directory.
-  let filePath = path.join(cwd(), config["build-directory"], req.url!);
+  let filePath =join(cwd(), config["build-directory"], req.url!);
   // If the URL ends with '/' serve index.html
   if (req.url?.endsWith("/")) {
-    filePath = path.join(filePath, "/index.html");
+    filePath =join(filePath, "/index.html");
   }
   // console.log(req.url, filePath);
   try {
@@ -136,7 +141,7 @@ const server = http.createServer(async (req, res) => {
       return res.end("404 Not Found");
     }
     let content = await readFile(filePath, "utf8");
-    const ext = path.extname(filePath).toLowerCase();
+    const ext =extname(filePath).toLowerCase();
     const contentType = Mime.getType(ext) ?? "application/octet-stream";
     if (ext === ".html" || ext === ".htm") {
       if (content.includes("</body>")) {
@@ -156,7 +161,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-await rm(path.resolve(cwd(), config["build-directory"]), { recursive: true })
+await rm(resolve(cwd(), config["build-directory"]), { recursive: true })
   .catch((_e) => {});
 await mkdir(config["build-directory"]).catch((_e) => {});
 const port = await findAvailablePort();
@@ -181,13 +186,13 @@ const getCSSCommand = async () => {
   try {
     if (await open("./tailwind.config.js")) {
       return `npx tailwindcss -c tailwind.config.js -o ${
-        path.join(config["build-directory"], "/bundle.css")
+       join(config["build-directory"], "/bundle.css")
       }`;
     }
     if (await open("./postcss.config.js")) {
       return `npx postcss ${
-        path.join(config["docs-directory"], "/styles.css")
-      } -o ${path.join(config["build-directory"], "/bundle.css")}`;
+       join(config["docs-directory"], "/styles.css")
+      } -o ${join(config["build-directory"], "/bundle.css")}`;
     }
   } catch (error) {
   }
@@ -209,15 +214,6 @@ function buildCSS() {
 }
 
 const onFileChange = async (file: string) => {
-  if (config["assets-folder"] && await open(config["assets-folder"])) {
-    const sourceDir = path.join(cwd(), config["assets-folder"]);
-    const destinationDir = path.join(cwd(), config["build-directory"]);
-    await cp(sourceDir, destinationDir, {
-      recursive: true,
-      force: true,
-      preserveTimestamps: true,
-    });
-  }
   const ran = await parseCredenceFIles(config, file);
   broadcastReload();
   if (!ran) return;
@@ -225,7 +221,10 @@ const onFileChange = async (file: string) => {
   broadcastReload();
 };
 
-await parseCredenceFIles(config);
+const ran = await parseCredenceFIles(config);
+if (!ran) {
+  console.warn("No Credence syntax detected!");
+}
 await buildCSS();
 
 chokidar.watch(config["docs-directory"], {
@@ -235,10 +234,10 @@ chokidar.watch(config["docs-directory"], {
   async (_, file) => {
     try {
       if (
-        (path.join(cwd(), file)).includes(
-          path.resolve(cwd(), config["build-directory"]) + "/",
+        (join(cwd(), file)).includes(
+         resolve(cwd(), config["build-directory"]) + "/",
         ) &&
-        Boolean(await open(path.join(cwd(), file)))
+        Boolean(await open(join(cwd(), file)))
       ) return;
     } catch {}
     onFileChange(file);

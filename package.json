@@ -71,6 +71,6 @@
     "docs-directory": ".",
     "build-directory": "docs",
     "default-template": "local/doc.html",
-    "assets-folder": "local"
+    "assets-folder": "./local"
   }
 }
