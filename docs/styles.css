@@ -1,0 +1,254 @@
+.red {
+  border: 1px red solid;
+}
+.red-a {
+  border: 1px red solid;
+}
+
+.red-a * {
+  border: 1px red solid;
+}
+
+body {
+  margin: 0; 
+  color: white;
+}
+
+a {
+  color: inherit;
+}
+
+
+
+.prose {
+  max-width: 65ch;
+  color: #e5e7eb;
+  font-family:  sans-serif
+}
+
+.prose p {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+}
+
+.prose h1, 
+.prose h2, 
+.prose h3, 
+.prose h4 {
+  font-weight: bold;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem; 
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  color: white;
+  font-weight: 600;
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.prose h1 {
+  font-size: 2rem; /* Adjust as needed */
+}
+
+.prose h2 {
+  font-size: 1.75rem;
+}
+
+.prose h3 {
+  font-size: 1.5rem;
+}
+
+.prose h4 {
+  font-size: 1.25rem;
+}
+
+.prose a {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.prose a:hover {
+  text-decoration: underline;
+}
+
+.prose ul, .prose ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.625em;
+}
+
+.prose li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose blockquote {
+  border-left: 4px solid #d1d5db; /* Tailwind gray-300 */
+  padding-left: 1rem;
+  font-style: italic;
+  color: #6b7280; /* Tailwind gray-600 */
+}
+
+.prose code { 
+  background: #1e1e1e;
+  padding: 0.2em 0.4em;
+  border-radius: 0.375rem;
+  font-size: 0.875em;
+  font-family: monospace;
+}
+
+.prose pre {
+  background: #1e1e1e;
+  padding: 1em;
+  border-radius: 0.5rem;
+  overflow-x: auto;  
+}
+
+.prose pre code {
+  background-color: transparent;
+  color: #f3f4f6; 
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.prose img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid #e5e7eb; /* Tailwind gray-300 */
+  margin: 2rem 0;
+}
+ 
+ 
+
+/* Custom Theme for highlight.js */
+.hljs {
+  display: block;
+  padding: 0.5em;
+  background: #f5f5f5;
+  color: #333;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #777;
+  font-style: italic;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal {
+  color: #f39c12;
+}
+.hljs-name {
+  color: #7ed07e;
+}
+.hljs-attribute,
+.hljs-meta {
+  color: #f08d49;
+}
+.hljs-number,
+.hljs-regexp,
+.hljs-link {
+  color: #d36363;
+}
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-subst {
+  color: #f2ca27;
+}
+.hljs-title,
+.hljs-section {
+  color: #7ed07e;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+    --grid-size: 30px;
+}
+
+body {
+    font-family: 'Space Grotesk', sans-serif;
+    background-color: #0A0A0A;
+}
+
+.bg-grid-pattern {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
+}
+
+.perspective-1000 {
+    perspective: 1000px;
+}
+
+.rotate-y-12 {
+    transform: rotateY(12deg);
+}
+
+.code-window {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.window-content {
+    position: relative;
+    overflow: hidden;
+}
+
+.window-content::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        transparent 100%
+    );
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) translateY(-100%);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%);
+    }
+}
+
+/* Custom scrollbar for sidebar */
+aside::-webkit-scrollbar {
+    width: 4px;
+}
+
+aside::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+aside::-webkit-scrollbar-thumb {
+    background: #374151;
+    border-radius: 2px;
+}
