@@ -226,6 +226,7 @@ const onFileChange = debounce(async (file: string) => {
   const ran = await parseDocmachFIles(config, file);
   parsing = false;
   if (!ran) {  
+  await buildCSS();
   broadcastReload();
     return;
   }
