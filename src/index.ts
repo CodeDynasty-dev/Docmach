@@ -220,9 +220,11 @@ const debounce = (fn: Function, delay: number) => {
     timeoutId = setTimeout(() => fn(...args), delay);
   };
 };
-
+let parsing = false;
 const onFileChange = debounce(async (file: string) => {
+  parsing = true;
   const ran = await parseDocmachFIles(config, file);
+  parsing = false;
   if (!ran) {  
   broadcastReload();
     return;
@@ -242,6 +244,7 @@ chokidar.watch(config["docs-directory"], {
 }).on(
   "all",
   async (_, file) => {
+    if (parsing) return;
     try {
       if (
         (join(cwd(), file)).includes(
