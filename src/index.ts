@@ -213,13 +213,22 @@ function buildCSS() {
   });
 }
 
-const onFileChange = async (file: string) => {
+const debounce = (fn: Function, delay: number) => {
+  let timeoutId: ReturnType<typeof setTimeout>;
+  return (...args: any[]) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn(...args), delay);
+  };
+};
+
+const onFileChange = debounce(async (file: string) => {
   const ran = await parseDocmachFIles(config, file);
-  broadcastReload();
-  if (!ran) return;
+  if (!ran) { 
+    return;
+  }
   await buildCSS();
   broadcastReload();
-};
+}, 650);
 
 const ran = await parseDocmachFIles(config);
 if (!ran) {
