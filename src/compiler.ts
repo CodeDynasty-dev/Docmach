@@ -37,21 +37,48 @@ function cacheMapLimit(cacheMap: Map<any, any>): void {
     cacheMap.delete(firstKey);
   }
 }
+function parseParams(paramsStr: string): Record<string, string | number | object> {
+  const params: Record<string, string | number | object> = {};
+  const regex = /(\w+):\s*(\{[^}]*\}|\S[^;]*)/g; // Match full objects or single values
+  let match;
 
-async function parseParams(paramsStr: string): Promise<Params> {
-  return Object.fromEntries(
-    paramsStr.split(";").map((pair) => {
-      const [key, value] = pair.split(":").map((str) => str.trim());
-      return [key, isNaN(Number(value)) ? value : Number(value)];
-    }),
-  );
+  while ((match = regex.exec(paramsStr)) !== null) {
+    let key = match[1].trim();
+    let value: any = match[2].trim();
+
+    // If the value starts with `{`, parse as an object
+    if (value.startsWith("{") && value.endsWith("}")) {
+      try {
+        const objectEntries = value
+          .slice(1, -1) // Remove outer `{}`  
+          .split(/,\s?(?=\w+:)/) // Split by `;` but only at key-value boundaries
+          .map((pair: string) => {
+            const [k, ...vParts] = pair.split(":").map((s) => s.trim());
+            const v = vParts.join(":"); // Preserve `http://` in values  
+            return [k, isNaN(Number(v)) ? v : Number(v)];
+          });
+
+        value = Object.fromEntries(objectEntries);
+      } catch (error) {
+        console.error("Error parsing object parameters:", error);
+      }
+    } else {
+      value = isNaN(Number(value)) ? value : Number(value);
+    }
+
+    params[key] = value;
+  }
+
+  return params;
 }
+
+
 
 async function streamFile(filePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
     let data = "";
     const stream = createReadStream(filePath, { encoding: "utf8" });
-    stream.on("data", (chunk: string) => (data += chunk));
+    stream.on("data", (chunk: string | Buffer) => (data += chunk.toString()));
     stream.on("end", () => resolve(data));
     stream.on("error", reject);
   });

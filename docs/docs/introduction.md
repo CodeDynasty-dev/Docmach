@@ -127,6 +127,9 @@ The **Docmach CLI** is a robust tool designed to streamline and automate tasks a
    - Generates **clean, semantic HTML** optimized for search engines.  
 
 > Designed to be focused on **speed, developer experience, and flexibility**.  
- 
+
+<docmach type="function" file="fragments/doc-nav.js" 
+params="prev: {link: /, text: Get stated }; next: {link: /docs/quickstart.html, text: Quickstart };" 
+/> 
 <docmach type="fragment" file="fragments/doc-sidebar-end.html"   />
 <docmach type="fragment" file="fragments/footer.html" />
