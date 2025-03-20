@@ -256,8 +256,7 @@ chokidar.watch(root, {
         file.includes(config["build-directory"]) &&
         Boolean(await open(file))
       ) return;
-    } catch {}
-    console.log(file);
+    } catch {} 
     onFileChange(file);
   },
 );
