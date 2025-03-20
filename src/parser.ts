@@ -128,10 +128,13 @@ async function parseFiles(files: string[], config: configType) {
 }
 
 const getList = async (config: configType, file?: string) => {
-  if (file && (!allowedFiles.test(file) || !file.includes(config["docs-directory"]))) return [];
+  if (
+    file &&
+    (!allowedFiles.test(file) || !file.includes(config["docs-directory"]))
+  ) return [];
   if (file) {
     return await getTextFile(file);
-  } 
+  }
   return getTextFiles(config["docs-directory"] || cwd(), config);
 };
 
@@ -178,10 +181,13 @@ async function copyChangedFiles(
 
 export const parseDocmachFIles = async (config: configType, file?: string) => {
   const files = await getList(config, file);
-  if (files.length === 0) { 
+  if (files.length === 0) {
     if (file) {
-      // check 
-      if (config["assets-folder"] && file.startsWith(config["assets-folder"]) && await open(file)) {
+      // check
+      if (
+        config["assets-folder"] && file.startsWith(config["assets-folder"]) &&
+        await open(file)
+      ) {
         const sourceDir = path.relative(cwd(), config["assets-folder"]);
         const destinationDir = path.relative(cwd(), config["build-directory"]);
         await copyChangedFiles(sourceDir, destinationDir);

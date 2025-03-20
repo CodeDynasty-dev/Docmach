@@ -209,15 +209,19 @@ function buildCSS() {
   });
 }
 
-const debounce = (fn: Function, delay: number) => {
-  let timeoutId: ReturnType<typeof setTimeout>;
+const throttle = (fn: Function, delay: number) => {
+  let lastCall = 0;
   return (...args: any[]) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn(...args), delay);
+    const now = Date.now();
+    if (now - lastCall >= delay) {
+      fn(...args);
+      lastCall = now;
+    }
   };
 };
+
 let parsing = false;
-const onFileChange = //debounce(
+const onFileChange = throttle(
   async (file: string) => {
     parsing = true;
     const ran = await parseDocmachFIles(config, file);
@@ -229,8 +233,9 @@ const onFileChange = //debounce(
     }
     await buildCSS();
     broadcastReload();
-  };
-//, 250);
+  },
+  250,
+);
 
 const ran = await parseDocmachFIles(config);
 if (!ran) {
@@ -240,6 +245,7 @@ await buildCSS();
 
 chokidar.watch(root, {
   ignoreInitial: true,
+  ignored: [".git", "node_modules"],
   // awaitWriteFinish: true,
 }).on(
   "all",
