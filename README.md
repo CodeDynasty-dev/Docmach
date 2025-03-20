@@ -11,6 +11,8 @@
 - **Performance Optimized** – Fast build times and optimized output
 - **Simple Configuration** – Minimal setup required to get started
 
+[See more](https://docmach.codedynasty.dev/)
+
 ##  Installation
 
 ```sh
