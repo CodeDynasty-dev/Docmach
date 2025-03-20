@@ -33,8 +33,10 @@
     <!-- Featured Post -->
     <section class="py-16 relative">
         <div class="container mx-auto px-6">
-            <div class="bg-[#161616] rounded-xl p-8 hover:bg-[#1a1a1a] transition-all duration-300 border border-white/5">
-                <div class="flex flex-col md:flex-row gap-8">
+            <a href="/post.html">
+
+                <div class="bg-[#161616] rounded-xl p-8 hover:bg-[#1a1a1a] transition-all duration-300 border border-white/5 ">
+                    <div class="flex flex-col md:flex-row gap-8">
                     <div class="md:w-2/3 space-y-4">
                         <div class="flex items-center gap-3">
                             <span class="px-3 py-1 bg-orange-500/10 text-orange-400 rounded-full text-sm">Featured</span>
@@ -56,20 +58,10 @@
                     </div>
                 </div>
             </div>
+        </a>
         </div>
     </section>
-
-    <!-- Categories -->
-    <section class="py-12">
-        <div class="container mx-auto px-6">
-            <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-                <button class="px-4 py-2 bg-orange-500 text-white rounded-full whitespace-nowrap">All Posts</button>
-                <button class="px-4 py-2 bg-[#161616] text-gray-300 rounded-full hover:bg-[#1a1a1a] whitespace-nowrap">Tutorials</button>
-                <button class="px-4 py-2 bg-[#161616] text-gray-300 rounded-full hover:bg-[#1a1a1a] whitespace-nowrap">Updates</button>
-                <button class="px-4 py-2 bg-[#161616] text-gray-300 rounded-full hover:bg-[#1a1a1a] whitespace-nowrap">Case Studies</button>
-            </div>
-        </div>
-    </section>
+ 
 
     <!-- Latest Posts Grid -->
     <section class="py-16">
@@ -78,13 +70,17 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Post Card -->
                 <article class="bg-[#161616] rounded-lg overflow-hidden hover:transform hover:scale-[1.02] transition-all duration-300">
-                    <div class="aspect-[16/9] bg-[#1a1a1a]"></div>
+                    <div class="aspect-[16/9] bg-[#1a1a1a]">  
+                        <div class="aspect-[16/9] rounded-lg bg-gradient-to-br from-orange-500 to-purple-600 flex items-center justify-center">
+                            <span class="text-4xl">📝</span>
+                        </div>
+                    </div> 
                     <div class="p-6 space-y-4">
                         <div class="flex items-center gap-3">
                             <span class="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-sm">Tutorial</span>
                             <span class="text-gray-500 text-sm">Feb 28, 2025</span>
                         </div>
-                        <h3 class="text-xl font-bold text-white">Advanced Markdown Techniques in Docmach</h3>
+                        <h3 class="text-xl font-bold text-white">Getting Started with Docmach: A Comprehensive Guide</h3>
                         <p class="text-gray-400 line-clamp-2">Discover advanced markdown features and how to use them effectively in your documentation.</p>
                         <a href="/blog/advanced-markdown" class="text-orange-400 hover:text-orange-300 inline-flex items-center">
                             Read More
@@ -94,10 +90,6 @@
                         </a>
                     </div>
                 </article>
-
-                <!-- Repeat post card structure 2 more times with different content -->
-                ...
-
             </div>
             
             <!-- Load More Button -->
@@ -153,7 +145,7 @@
                         <h3 class="text-white font-semibold">Resources</h3>
                         <ul class="space-y-2">
                             <li><a href="blog.html" class="text-gray-400 hover:text-orange-400 transition-colors">Blog</a></li>
-                            <li><a href="examples.html" class="text-gray-400 hover:text-orange-400 transition-colors">Examples</a></li>
+                            <li><a href="https://github.com/CodeDynasty-dev/Docmach/tree/main/docs" class="text-gray-400 hover:text-orange-400 transition-colors">Examples</a></li>
                         </ul>
                     </div>
                     <div class="space-y-4">

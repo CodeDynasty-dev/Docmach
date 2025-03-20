@@ -1,4 +1,9 @@
-# Docmach: The Markdown-Powered Static Site Generator You Actually Want to Use
+<docmach type="fragment" file="fragments/head.html" params="title: introduction" />
+<docmach type="fragment" file="fragments/blog-start.html"  />
+
+
+
+# The Markdown-Powered Static Site Generator You Actually Want to Use
 
 **TL;DR**: Docmach is a fast static site generator that lets you write Markdown and get static sites with little config and less effort. It has built-in Tailwind CSS support, live reload, and custom templates that don't get in your way.
 
@@ -126,3 +131,6 @@ Give it a try and let me know what you think in the comments!
 ---
 
 *What static site generator pain points have you experienced? Are you looking for something simpler but still powerful?*
+
+<docmach type="fragment" file="fragments/blog-end.html" />
+<docmach type="fragment" file="fragments/footer.html" />
