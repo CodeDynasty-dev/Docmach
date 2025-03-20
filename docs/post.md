@@ -1,105 +1,128 @@
-<docmach type="fragment" file="fragments/head.html" params="title: getting started with docmach" />
+# Docmach: The Markdown-Powered Static Site Generator You Actually Want to Use
 
-# Getting Started with Docmach: A Developer's Best Friend
+**TL;DR**: Docmach is a fast static site generator that lets you write Markdown and get static sites with little config and less effort. It has built-in Tailwind CSS support, live reload, and custom templates that don't get in your way.
 
-As developers, we often find ourselves juggling between writing code and documenting it. What if there was a tool that could make this process seamless? That's where **Docmach** comes in as a modern markdown compiler that turns code comments and MD files into documentations or blog posts.
+## The Problem with Existing Static Site Generators
 
-![Docmach Banner](https://i0.wp.com/miniextensions.com/wp-content/uploads/sites/5/2020/04/icons.001-logo.png?resize=700%2C350&ssl=1)
+We've all been there. You want to create a simple blog or documentation site. You try the popular options:
 
-## The Problem with Documentation
+- **Docusaurus**: Configuration hell for basic customization
+- **Jekyll**: Ruby dependencies break on update
+- **Hugo**: Complex templating language you have to learn
+- **Gatsby/Next.js**: Overkill React setup for simple content
 
-We've all been there - you're in the flow of coding, and then comes the dreaded task of documentation. Traditional documentation tools are either:
-- Too complex to set up
-- Require learning new syntax
-- Need separate deployment pipelines
-- Don't integrate well with existing projects
+They all solve 80% of the problem but leave you fighting with the last 20%.
 
-## Documentation Made Simple
+## Enter Docmach
 
-Docmach takes a different approach. It's designed with developers in mind, focusing on simplicity and integration. Here's how you can get started in literally 30 seconds:
+**Docmach** is a Markdown-powered static site generator designed for modern blogs and project documentation. It integrates the simplicity of Markdown and Tailwind CSS to generate sites with minimal effort.
+
+What makes it different?
+
+## 1. Markdown-First, But Actually Usable
+
+Docmach doesn't just convert Markdown to HTML—it understands context. You can use Docmach tags that work just like HTML:
+
+```html
+<docmach 
+type="fragment" 
+file="template.html" 
+params="title=My Page; author=JohnDoe" 
+/>
+
+<!-- Yes this works, passed as function parameter -->
+<docmach 
+type="function" 
+file="author-bio.js" 
+params="title=My Page; author={name: JohnDoe, age: 24, date: 20th March 2015}" 
+/>
+```
+
+This means you can mix Markdown with templates, functions, and components—without the mess of custom syntax.
+
+## 2. Tailwind CSS That Just Works
+
+Tailwind CSS is built-in, but not forced. Want to use it? Great. Don't want to? That's fine too. 
+
+Docmach handles the compilation, optimization, and integration automatically. No need for complex PostCSS setups or fighting with purging.
+
+## 3. Live Reload That Doesn't Break
+
+The most frustrating part of many static site generators is the broken live reload. Docmach's watch mode goes beyond just refreshing the page—it can retry connections, detect stale caches, and ensure your development experience stays smooth.
+
+## 4. Two-Minute Setup
+
+Get started in seconds:
 
 ```bash
-# Install Docmach globally
-npm install -g docmach
+# Install
+npm i docmach -g
 
-# Run it in your project
+# Create project & start
+mkdir my-docs
+cd my-docs
 docmach
 ```
 
-That's it! No complex configuration, no new syntax to learn, and no separate deployment pipeline needed.
+No boilerplate, no starter templates to clone, no 15-step process. Just install and run.
 
-## Features That Make Sense
+## 5. Nothing is less simple
 
-### 1. Zero Configuration
-Drop it into any existing project and it just works. Docmach automatically detects your markdown files and turns them into beautiful HTML pages.
+Docmach offers two simple but powerful templating options:
 
-### 2. Live Preview
-See your changes in real-time as you write:
-```bash
-$ docmach # that's all
+### Fragment Templates (HTML with variables)
+
+```html
+<!-- template.html -->
+<html>
+   <head>
+      <title>{{ title }}</title>
+   </head>
+   <body>
+      <h2>{{ author }}</h2>
+   </body>
+</html>
 ```
 
-### 3. Write Docs Next to Your Code
-```javascript
-/*
-  @docmach-[auth.html]-[authentication documentation]
-  # User Authentication
-  This module handles user authentication using JWT
- */
-function authenticate(user) {
-    // Your code here
+### Function Templates (JavaScript power)
+
+```js
+// author-bio.js
+export default function (title, author) {
+   return `
+   <div>
+   <h1>by ${title}</h1>
+   <h3>by ${author.name}</h3>
+   <p>Aged: ${author.age}</p>
+   <p>On: ${author.date}</p>
+   </div>
+   `
 }
 ```
 
-### 4. Support for Any Text File
-Docmach isn't just for `.md` files. It works with:
-- Comments in your code in any programming language
-- Text files
-- README files
-- And more!
+No weird custom templating languages to learn. Just HTML and JavaScript.
 
-## Real-World Usage
+## Why Switch to Docmach
 
-Let's look at a real example. Say you have a React component:
+- **Speed**: Optimized for fast builds, even with thousands of Markdown files
+- **Developer Experience**: The CLI doesn't get in your way
+- **Flexibility**: Supports both simple blogs and complex documentation
+- **No Lock-in**: Your content stays as Markdown files you can move anywhere
+- **Clean Output**: Generates semantic HTML optimized for SEO
 
-```jsx
-// UserProfile.jsx
-
-/**
- * @docmach
- * # User Profile Component
- * Displays user information and handles profile updates
- * 
- * ## Props
- * - `user`: User object containing profile data
- * - `onUpdate`: Callback function for profile updates
- */
-function UserProfile({ user, onUpdate }) {
-    // Component code
-}
-```
-
-Docmach automatically extracts this documentation and creates a beautiful HTML page, all while keeping your docs close to your code.
-
-## Looking Ahead
-
-We're working on some exciting features:
-- Plugin system for extended functionality
-- Custom themes
-- Integration with popular documentation platforms
-
-## Get Started Today
-
-Ready to make documentation enjoyable? Install Docmach now:
+## Try It Now
 
 ```bash
-npm install -g docmach
+npm i docmach -g
+docmach
 ```
 
-Visit our [GitHub repository](https://github.com/CodeDynasty-dev/Docmach) to learn more or contribute to the project.
+Docmach is focused on speed, developer experience, and flexibility. It's the static site generator I wish existed years ago, so I built it.
 
+Give it a try and let me know what you think in the comments!
+
+> Docmach might not be feature-rich as others but it gets simple things done in no time.
+> Drop your feedback for future improvements in the issues.
 ---
-*Published on March 1, 2025 by The Docmach Team*
 
-
-<docmach type="fragment" file="fragments/footer.html" />
+*What static site generator pain points have you experienced? Are you looking for something simpler but still powerful?*

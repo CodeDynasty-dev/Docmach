@@ -26,8 +26,7 @@ import {
   mkdir,
   open,
   opendir,
-  readdir,
-  readFile,
+  readdir, 
   stat,
   utimes,
   writeFile,
@@ -45,17 +44,7 @@ type configType = {
   "assets-folder": string;
   "root": string;
 };
-
-async function containsSyntax(file: string): Promise<boolean> {
-  try {
-    const text = await readFile(file);
-    return text.includes("<docmach ");
-  } catch (error) {
-    console.error(`Error processing file ${file}:`, error);
-    return false;
-  }
-}
-
+ 
 const allowedFiles = /.md/;
 async function getTextFiles(
   source: string,
@@ -68,10 +57,7 @@ async function getTextFiles(
     for await (const dirent of dir) {
       const filename = path.resolve(source, dirent.name);
       if (dirent.isFile() && allowedFiles.test(filename)) {
-        const hasSyntax = await containsSyntax(filename);
-        if (hasSyntax) {
-          output.push(filename);
-        }
+        output.push(filename);
       } else if (
         dirent.isDirectory() && !["node_modules", ".git"].includes(dirent.name)
       ) {
@@ -83,7 +69,7 @@ async function getTextFiles(
     console.error(`Error reading directory: ${source.slice(0, 50)}...`);
     if (config["docs-directory"] === config["root"]) {
       console.warn(
-        "Please specify docmach `docs-directory` key is set in your `package.json` file.",
+        "Please specify docmach `docs-directory` key in your `package.json` file \n Currently set to'.'.",
       );
     }
   }
@@ -96,10 +82,7 @@ export async function getTextFile(source: string): Promise<string[]> {
   try {
     const filename = path.resolve(source, dirent);
     if (allowedFiles.test(dirent)) {
-      const hasSyntax = await containsSyntax(filename);
-      if (hasSyntax) {
-        output.push(filename);
-      }
+      output.push(filename);
     }
   } catch (error) {
     console.error(`Error reading file: ${source}`, error);

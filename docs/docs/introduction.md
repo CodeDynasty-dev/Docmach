@@ -1,135 +1,115 @@
 <docmach type="fragment" file="fragments/head.html" params="title: introduction" />
-<docmach type="fragment" file="fragments/doc-sidebar.html"   />
-# Docmach - markdown compiler for blogs & project Documentation 🚀  
+<docmach type="fragment" file="fragments/doc-sidebar.html" />
 
-**Docmach** is a  **Markdown-powered** static site generator designed for **modern blogs and project documentation**. It integrates **the simplicity of Markdown and Tailwind CSS** to generate sites with minimal effort.  
+# Docmach - Markdown Compiler for Blogs & Project Documentation
 
-## **Why Choose Docmach?**  
+**Docmach** is a **Markdown-powered** static site generator designed for **modern blogs and project documentation**. It integrates **the simplicity of Markdown and Tailwind CSS** to generate sites with minimal effort.
 
-✅ **Markdown-First** – Write Markdown, and let Docmach handle the rest.  
-✅ **Tailwind CSS Integration** – inbuilt tailwind css compiler. <br>
-✅ **Ultra-Fast Builds** – Optimized for speed.  
-✅ **Pluggable UI** – Use Tailwind, CSS, or custom themes—**your choice**.  
-✅ **Live Reload & Watch Mode** – Instant preview while editing.
- 
-### **Get Started**    
+## Why Choose Docmach
+
+- **Markdown-First** – Write Markdown, and let Docmach handle the rest
+- **Tailwind CSS Integration** – Built-in Tailwind CSS compiler for beautiful, responsive designs
+- **Ultra-Fast Builds** – Optimized for speed and performance
+- **Custom Themes** – Choose from available themes or create your own
+- **Live Reload & Watch Mode** – Instant preview while editing your content
+
+## Get Started
 
 ```sh
+# Install globally
 npm i -g docmach
+
+# Create a new project
 mkdir my-blog
 cd my-blog
 docmach
 ```
-<br>
-<br> 
 
-**How Docmach works** 🚀
+## How Docmach Works
 
-#### Docmach parses the docmach headers on every text based files in your input folder, recursively to extracts md and html text.
+Docmach parses all .md files in your input folder, extracting and processing Markdown and HTML content. It uses special Docmach tag to apply templates and functions.
 
-**Parts of  a docmach header**
+### Docmach Tag
 
-@docmach --- output file ---- page title
+Docmach tags work similarly to HTML tags:
 
- syntax
- ```
-/*@docmach-[/index.html]-[Docmach]
+```html
+<docmach 
+type="fragment" 
+file="template.html" 
+params="title=My Page; author=JohnDoe" 
+/>
+
+<!-- Function parameters example -->
+<docmach 
+type="function" 
+file="author-bio.js" 
+params="title=My Page; author={name: JohnDoe, age: 24, date: 20th March 2015}" 
+/>
 ```
 
-# Usage
+## Using Fragment Templates
 
-### Using inline-docs (comments style)
+Fragment templates allow you to create reusable HTML components:
 
-```markdown
-/**
- * @title   Add Function
- * @type    function
- * @description Adds two numbers and returns the result.
- * @tags    math, utility
+```html
+<!-- template.html -->
+<html>
+   <head>
+      <title>{{ title }}</title>
+   </head>
+   <body>
+      <h2>{{ author }}</h2>
+   </body>
+</html>
+```
 
- * @param {number} a The first number.
- * @param {number} b The second number.
- * @returns {number} The sum of `a` and `b`.
- */
-function add(a, b) {
-  return a + b;
+## Using Function Templates
+
+Function templates enable dynamic content generation:
+
+```js
+// in author-bio.js
+export default function (title, author) {
+   return `
+   <div>
+   <h1>by ${title}</h1>
+   <h3>by ${author.name}</h3>
+   <p>Aged: ${author.age}</p>
+   <p>On: ${author.date}</p>
+   </div>
+   `
 }
-
 ```
 
-```markdown
-/*@docmach-[/index.html]-[Docmach]
+## Configuration
 
-### first clone the repo
-  git clone docmach
-  ### running build command
-  npm run build
-*/
+Add the following to your `package.json` file:
+
+```json
+"docmach": {
+  "docs-directory": "./docs",
+  "build-directory": "./docmach",
+  "assets-folder": "./assets" 
+}
 ```
 
+## About Docmach
 
-### Using md files (comment header)
+- **Markdown-Powered, But Smarter** – Understands context and allows nested Markdown inside HTML elements
+- **Tailwind, But on Your Terms** – Not forced into Tailwind, but intelligently processes styles if enabled
+- **Live Reload That Actually Works** – Watch mode ensures smooth development experience even with large projects
+- **Optimized Typography** – Applies optimized typography settings for professional and polished content
+- **Intelligent Asset Handling** – Automatically copies, optimizes, and references assets
+- **Code Highlighting** – Uses highlight.js with custom themes for readable code snippets
+- **CLI That Doesn't Get in Your Way** – Zero-config mode by default with options for power users
+- **Fast, Even at Scale** – Batch processes file changes to avoid unnecessary rebuilds
+- **SEO & Accessibility Built-In** – Generates clean, semantic HTML optimized for search engines
 
-```markdown
-<!-- @docmach-[/docs/introduction.html]-[documentation] -->
-
-# Docmach Command-Line Interface (CLI) Documentation
-
-The **Docmach CLI** is a robust tool designed to streamline and automate tasks associated with the Docmach application suite. This document details its installation, usage, available commands, and developer guidelines.
-
-## Table of Contents
-```
-
-### **About docmach 🚀**  
-
-1. **Markdown-Powered, But Smarter** 📝  
-   - Unlike most static site generators, **Docmach** doesn't just convert Markdown to HTML—it **understands context**.  
-   - It allows **nested Markdown inside HTML elements**, solving limitations seen in other generators like Hugo and Docusaurus.  
-
-2. **Tailwind, But on Your Terms** 🎨  
-   - You’re not **forced** into Tailwind, but if you enable it, **Docmach intelligently processes styles** while avoiding unnecessary bloat.  
-   - It scans **Markdown, HTML, and even component files** to ensure only the needed styles make it into your final build.  
-
-3. **Live Reload That Actually Works** 🔄  
-   - Docmach’s **watch mode** goes beyond just reloading pages—it can **retry connections**, detect stale caches, and ensure that **your development experience is smooth** even when working with large projects.  
-
-4. **No More Ugly Typography** 🎭  
-   - By default, **Docmach applies optimized typography settings** so Markdown-based content looks **professional and polished** right out of the box.  
-   - No need for **extra CSS** just to make text readable like in other generators.  
-
-5. **Intelligent Asset Handling** 📦  
-   - Automatically **copies, optimizes, and references assets** like images, fonts, and stylesheets, ensuring they’re efficiently bundled.  
-   - Works even when running in a serverless environment or blob storage.  
-
-6. **Code Highlighting That Feels Right** 💻  
-   - Uses **highlight.js with custom themes**, ensuring code snippets are **visually pleasing and readable**.  
-
-7. **CLI That Doesn’t Get in Your Way** 🛠️  
-   - Runs in **zero-config mode** by default but lets **power users tweak every aspect** via an easy-to-use CLI.  
-   - Supports **auto-detection of project structures**, so **you don’t have to manually set up folders** every time.  
-
-8. **Fast, Even at Scale** ⚡  
-   - **Batch processes file changes** to avoid unnecessary rebuilds.  
-   - Can **handle thousands of Markdown files** without slowing down, making it a solid choice for **large-scale documentation**.  
-
-9. **SEO & Accessibility Built-In** 🌍  
-   - Generates **clean, semantic HTML** optimized for search engines.  
-
-> Designed to be focused on **speed, developer experience, and flexibility**.  
- 
- 
-
-8. **Fast, Even at Scale** ⚡  
-   - **Batch processes file changes** to avoid unnecessary rebuilds.  
-   - Can **handle thousands of Markdown files** without slowing down, making it a solid choice for **large-scale documentation**.  
-
-9. **SEO & Accessibility Built-In** 🌍  
-   - Generates **clean, semantic HTML** optimized for search engines.  
-
-> Designed to be focused on **speed, developer experience, and flexibility**.  
+Designed to be focused on **speed, developer experience, and flexibility**.
 
 <docmach type="function" file="fragments/doc-nav.js" 
-params="prev: {link: /, text: Get stated }; next: {link: /docs/quickstart.html, text: Quickstart };" 
+params="prev: {link: /, text: Get started }; next: {link: /docs/quickstart.html, text: Quickstart };" 
 /> 
-<docmach type="fragment" file="fragments/doc-sidebar-end.html"   />
+<docmach type="fragment" file="fragments/doc-sidebar-end.html" />
 <docmach type="fragment" file="fragments/footer.html" />

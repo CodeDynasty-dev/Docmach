@@ -7,4 +7,3 @@ echo  "Packing Docmach ...."
 tsc --emitDeclarationOnly
 npm pack
 mv **.tgz ~/zips/
-

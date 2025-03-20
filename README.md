@@ -1,131 +1,122 @@
-<!-- @docmach-[/docs/introduction.html]-[Docmach] -->
+# Docmach
 
-# Docmach - markdown compiler for blogs & project Documentation 🚀  
+**Docmach** is a **Markdown-powered** static site generator designed for **modern blogs and project documentation**. It integrates **the simplicity of Markdown and Tailwind CSS** to generate sites with minimal effort.
 
-**Docmach** is a  **Markdown-powered** static site generator designed for **modern blogs and project documentation**. It integrates **the simplicity of Markdown and Tailwind CSS** to generate sites with minimal effort.  
+## Features
 
-## **Why Choose Docmach?**  
+- **Markdown Compilation** – Write Markdown, and let Docmach handle the rest
+- **Tailwind CSS Integration** – Built-in Tailwind CSS compiler for beautiful, responsive designs
+- **Custom Themes** – Choose from available themes or create your own
+- **Live Reload & Watch Mode** – Instant preview while editing your content
+- **Performance Optimized** – Fast build times and optimized output
+- **Simple Configuration** – Minimal setup required to get started
 
-✅ **Markdown-First** – Write Markdown, and let Docmach handle the rest.  
-✅ **Tailwind CSS Integration** – inbuilt tailwind css compiler. <br>
-✅ **Ultra-Fast Builds** – Optimized for speed.  
-✅ **Pluggable UI** – Use Tailwind, CSS, or custom themes—**your choice**.  
-✅ **Live Reload & Watch Mode** – Instant preview while editing.
- 
-### **Get Started**    
+##  Installation
 
 ```sh
-npm i -g docmach
-mkdir my-blog
-cd my-blog
+# Install locally
+npm i docmach
+npx docmach
+
+# Or install globally
+npm i docmach -g
 docmach
 ```
-<br>
-<br> 
 
-**How Docmach works** 🚀
+## Configuration
 
-#### Docmach parses the docmach headers on every text based files in your input folder, recursively to extracts md and html text.
+Add the following to your `package.json` file:
 
-**Parts of  a docmach header**
-
-@docmach --- output file ---- page title
-
- syntax
- ```
-/*@docmach-[/index.html]-[Docmach]
-```
-
-# Usage
-
-### Using inline-docs (comments style)
-
-```markdown
-/**
- * @title   Add Function
- * @type    function
- * @description Adds two numbers and returns the result.
- * @tags    math, utility
-
- * @param {number} a The first number.
- * @param {number} b The second number.
- * @returns {number} The sum of `a` and `b`.
- */
-function add(a, b) {
-  return a + b;
+```json
+"docmach": {
+  "docs-directory": "./docs",
+  "build-directory": "./docmach",
+  "assets-folder": "./assets" 
 }
-
 ```
 
-```markdown
-/*@docmach-[/index.html]-[Docmach]
+### Configuration Options
 
-### first clone the repo
-  git clone docmach
-  ### running build command
-  npm run build
-*/
+| Option | Description | Default |
+|--------|-------------|---------|
+| **docs-directory** | Directory containing your Markdown files | Root directory |
+| **build-directory** | Output directory for the generated site | `./docmach` |
+| **assets-folder** | Directory with assets to be copied to output | None |
+
+## 🧩 How Docmach Works
+
+Docmach parses all .md files in your input folder, extracting and processing Markdown and HTML content. It uses special Docmach tag to apply templates and functions.
+
+### Docmach tag
+
+Docmach tag work similarly to HTML tags:
+
+```html
+
+<docmach 
+type="fragment" 
+file="template.html" 
+params="title=My Page; author=JohnDoe" 
+/>
+
+<!-- Yes this works, passed as function parameter -->
+<docmach 
+type="function" 
+file="author-bio.js" 
+params="title=My Page; author={name: JohnDoe, age: 24, date: 20th March 2015}" 
+/>
+```
+
+### Using Fragment
+
+```html
+<!-- template.html -->
+
+<html>
+   <head>
+      <title>{{ title }}</title>
+   </head>
+   <body>
+      <h2>{{ author }}</h2>
+   </body>
 ```
 
 
-### Using md files (comment header)
-
-```markdown
-<!-- @docmach-[/docs/introduction.html]-[documentation] -->
-
-# Docmach Command-Line Interface (CLI) Documentation
-
-The **Docmach CLI** is a robust tool designed to streamline and automate tasks associated with the Docmach application suite. This document details its installation, usage, available commands, and developer guidelines.
-
-## Table of Contents
+### Using Function tags
+```js
+// in author-bio.js
+export default function (title,author) {
+   return `
+   <div>
+   <h1>by ${title}</h1>
+   <h3>by ${author.name}</h3>
+   <p>Aged: ${author.age}</p>
+   <p>On: ${author.date}</p>
+   </div>
+   `
+}
+   // such functions should do it works fast please.
 ```
 
-### **About docmach 🚀**  
+### Docmach Attributes
 
-1. **Markdown-Powered, But Smarter** 📝  
-   - Unlike most static site generators, **Docmach** doesn't just convert Markdown to HTML—it **understands context**.  
-   - It allows **nested Markdown inside HTML elements**, solving limitations seen in other generators like Hugo and Docusaurus.  
-
-2. **Tailwind, But on Your Terms** 🎨  
-   - You’re not **forced** into Tailwind, but if you enable it, **Docmach intelligently processes styles** while avoiding unnecessary bloat.  
-   - It scans **Markdown, HTML, and even component files** to ensure only the needed styles make it into your final build.  
-
-3. **Live Reload That Actually Works** 🔄  
-   - Docmach’s **watch mode** goes beyond just reloading pages—it can **retry connections**, detect stale caches, and ensure that **your development experience is smooth** even when working with large projects.  
-
-4. **No More Ugly Typography** 🎭  
-   - By default, **Docmach applies optimized typography settings** so Markdown-based content looks **professional and polished** right out of the box.  
-   - No need for **extra CSS** just to make text readable like in other generators.  
-
-5. **Intelligent Asset Handling** 📦  
-   - Automatically **copies, optimizes, and references assets** like images, fonts, and stylesheets, ensuring they’re efficiently bundled.  
-   - Works even when running in a serverless environment or blob storage.  
-
-6. **Code Highlighting That Feels Right** 💻  
-   - Uses **highlight.js with custom themes**, ensuring code snippets are **visually pleasing and readable**.  
-
-7. **CLI That Doesn’t Get in Your Way** 🛠️  
-   - Runs in **zero-config mode** by default but lets **power users tweak every aspect** via an easy-to-use CLI.  
-   - Supports **auto-detection of project structures**, so **you don’t have to manually set up folders** every time.  
-
-8. **Fast, Even at Scale** ⚡  
-   - **Batch processes file changes** to avoid unnecessary rebuilds.  
-   - Can **handle thousands of Markdown files** without slowing down, making it a solid choice for **large-scale documentation**.  
-
-9. **SEO & Accessibility Built-In** 🌍  
-   - Generates **clean, semantic HTML** optimized for search engines.  
-
-> Designed to be focused on **speed, developer experience, and flexibility**.  
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| **type** | string | Template type: `"fragment"` or `"function"` |
+| **file** | string | Location of template code: `.html` for fragments or `.js` for functions |
+| **params** | string | Parameters passed to templates as `{{ key }}` in HTML fragments or as function parameters |
  
- 
+## Why Choose Docmach?
 
-8. **Fast, Even at Scale** ⚡  
-   - **Batch processes file changes** to avoid unnecessary rebuilds.  
-   - Can **handle thousands of Markdown files** without slowing down, making it a solid choice for **large-scale documentation**.  
+- **Live Reload That Actually Works** 🔄 – See changes instantly
+- **CLI That Doesn't Get in Your Way** 🛠️ – Simple, intuitive commands
+- **Developer Experience Focused** 🌟 – Built with modern web development workflows in mind
+- **Flexible & Extensible** 🧩 – Adapt to your project needs without complexity
 
-9. **SEO & Accessibility Built-In** 🌍  
-   - Generates **clean, semantic HTML** optimized for search engines.  
+## Contributing
 
-> Designed to be focused on **speed, developer experience, and flexibility**.  
- 
- 
+Contributions are welcome! Feel free to open issues or submit pull requests.
+
+## License
+
+MIT

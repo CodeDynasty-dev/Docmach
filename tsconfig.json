@@ -9,6 +9,8 @@
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "declaration": true,
+    "emitDeclarationOnly": true,
+    "allowImportingTsExtensions": true,
     // "noEmit": true,
     // Best practices
     "strict": true,
@@ -22,7 +24,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "outDir": "dist",
     // "outDir": "tests/dist",
-    "stripInternal": true
+    "stripInternal": true,
   },
   "include": ["src", "new.ts"]
 }

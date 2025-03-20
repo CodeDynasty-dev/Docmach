@@ -68,147 +68,89 @@
         <!-- Documentation Content -->
         <div class="container mx-auto px-6 py-12 max-w-5xl mt-16">
             <div class="prose prose-invert max-w-none mx-auto md:mx-0">
-# Docmach - markdown compiler for blogs & project Documentation 🚀  
-<p><strong>Docmach</strong> is a  <strong>Markdown-powered</strong> static site generator designed for <strong>modern blogs and project documentation</strong>. It integrates <strong>the simplicity of Markdown and Tailwind CSS</strong> to generate sites with minimal effort.</p>
-<h2><strong>Why Choose Docmach?</strong></h2>
-<p>✅ <strong>Markdown-First</strong> – Write Markdown, and let Docmach handle the rest.<br>
-✅ <strong>Tailwind CSS Integration</strong> – inbuilt tailwind css compiler. <br>
-✅ <strong>Ultra-Fast Builds</strong> – Optimized for speed.<br>
-✅ <strong>Pluggable UI</strong> – Use Tailwind, CSS, or custom themes—<strong>your choice</strong>.<br>
-✅ <strong>Live Reload &amp; Watch Mode</strong> – Instant preview while editing.</p>
-<h3><strong>Get Started</strong></h3>
-<pre><code class="language-sh">npm i -g docmach
+<h1>Docmach - Markdown Compiler for Blogs &amp; Project Documentation</h1>
+<p><strong>Docmach</strong> is a <strong>Markdown-powered</strong> static site generator designed for <strong>modern blogs and project documentation</strong>. It integrates <strong>the simplicity of Markdown and Tailwind CSS</strong> to generate sites with minimal effort.</p>
+<h2>Why Choose Docmach</h2>
+<ul>
+<li><strong>Markdown-First</strong> – Write Markdown, and let Docmach handle the rest</li>
+<li><strong>Tailwind CSS Integration</strong> – Built-in Tailwind CSS compiler for beautiful, responsive designs</li>
+<li><strong>Ultra-Fast Builds</strong> – Optimized for speed and performance</li>
+<li><strong>Custom Themes</strong> – Choose from available themes or create your own</li>
+<li><strong>Live Reload &amp; Watch Mode</strong> – Instant preview while editing your content</li>
+</ul>
+<h2>Get Started</h2>
+<pre><code class="language-sh"><span class="hljs-comment"># Install globally</span>
+npm i -g docmach
+
+<span class="hljs-comment"># Create a new project</span>
 <span class="hljs-built_in">mkdir</span> my-blog
 <span class="hljs-built_in">cd</span> my-blog
 docmach
 </code></pre>
-<br>
-<br> 
-<p><strong>How Docmach works</strong> 🚀</p>
-<h4>Docmach parses the docmach headers on every text based files in your input folder, recursively to extracts md and html text.</h4>
-<p><strong>Parts of  a docmach header</strong></p>
-<p>@docmach — output file ---- page title</p>
-<p>syntax</p>
-<pre><code>/*@docmach-[/index.html]-[Docmach]
-</code></pre>
-<h1>Usage</h1>
-<h3>Using inline-docs (comments style)</h3>
-<pre><code class="language-markdown">/**
-<span class="hljs-bullet"> *</span> @title   Add Function
-<span class="hljs-bullet"> *</span> @type    function
-<span class="hljs-bullet"> *</span> @description Adds two numbers and returns the result.
-<span class="hljs-bullet"> *</span> @tags    math, utility
+<h2>How Docmach Works</h2>
+<p>Docmach parses all .md files in your input folder, extracting and processing Markdown and HTML content. It uses special Docmach tag to apply templates and functions.</p>
+<h3>Docmach Tag</h3>
+<p>Docmach tags work similarly to HTML tags:</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span> 
+<span class="hljs-attr">type</span>=<span class="hljs-string">&quot;fragment&quot;</span> 
+<span class="hljs-attr">file</span>=<span class="hljs-string">&quot;template.html&quot;</span> 
+<span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title=My Page; author=JohnDoe&quot;</span> 
+/&gt;</span>
 
-<span class="hljs-bullet"> *</span> @param {number} a The first number.
-<span class="hljs-bullet"> *</span> @param {number} b The second number.
-<span class="hljs-bullet"> *</span> @returns {number} The sum of <span class="hljs-code">`a`</span> and <span class="hljs-code">`b`</span>.
- <span class="hljs-emphasis">*/
-function add(a, b) {
-  return a + b;
+<span class="hljs-comment">&lt;!-- Function parameters example --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">docmach</span> 
+<span class="hljs-attr">type</span>=<span class="hljs-string">&quot;function&quot;</span> 
+<span class="hljs-attr">file</span>=<span class="hljs-string">&quot;author-bio.js&quot;</span> 
+<span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title=My Page; author={name: JohnDoe, age: 24, date: 20th March 2015}&quot;</span> 
+/&gt;</span>
+</code></pre>
+<h2>Using Fragment Templates</h2>
+<p>Fragment templates allow you to create reusable HTML components:</p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- template.html --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>{{ title }}<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>{{ author }}<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</code></pre>
+<h2>Using Function Templates</h2>
+<p>Function templates enable dynamic content generation:</p>
+<pre><code class="language-js"><span class="hljs-comment">// in author-bio.js</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">title, author</span>) {
+   <span class="hljs-keyword">return</span> <span class="hljs-string">`
+   &lt;div&gt;
+   &lt;h1&gt;by <span class="hljs-subst">${title}</span>&lt;/h1&gt;
+   &lt;h3&gt;by <span class="hljs-subst">${author.name}</span>&lt;/h3&gt;
+   &lt;p&gt;Aged: <span class="hljs-subst">${author.age}</span>&lt;/p&gt;
+   &lt;p&gt;On: <span class="hljs-subst">${author.date}</span>&lt;/p&gt;
+   &lt;/div&gt;
+   `</span>
 }
-
-</span></code></pre>
-<pre><code class="language-markdown">/<span class="hljs-emphasis">*@docmach-[/index.html]-[Docmach]
-
-### first clone the repo
-  git clone docmach
-  ### running build command
-  npm run build
-*</span>/
 </code></pre>
-<h3>Using md files (comment header)</h3>
-<pre><code class="language-markdown">&lt;!-- @docmach-[/docs/introduction.html]-[documentation] --&gt;
-
-<span class="hljs-section"># Docmach Command-Line Interface (CLI) Documentation</span>
-
-The <span class="hljs-strong">**Docmach CLI**</span> is a robust tool designed to streamline and automate tasks associated with the Docmach application suite. This document details its installation, usage, available commands, and developer guidelines.
-
-<span class="hljs-section">## Table of Contents</span>
+<h2>Configuration</h2>
+<p>Add the following to your <code>package.json</code> file:</p>
+<pre><code class="language-json"><span class="hljs-attr">&quot;docmach&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./docs&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./docmach&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./assets&quot;</span> 
+<span class="hljs-punctuation">}</span>
 </code></pre>
-<h3><strong>About docmach 🚀</strong></h3>
-<ol>
-<li>
-<p><strong>Markdown-Powered, But Smarter</strong> 📝</p>
+<h2>About Docmach</h2>
 <ul>
-<li>Unlike most static site generators, <strong>Docmach</strong> doesn’t just convert Markdown to HTML—it <strong>understands context</strong>.</li>
-<li>It allows <strong>nested Markdown inside HTML elements</strong>, solving limitations seen in other generators like Hugo and Docusaurus.</li>
+<li><strong>Markdown-Powered, But Smarter</strong> – Understands context and allows nested Markdown inside HTML elements</li>
+<li><strong>Tailwind, But on Your Terms</strong> – Not forced into Tailwind, but intelligently processes styles if enabled</li>
+<li><strong>Live Reload That Actually Works</strong> – Watch mode ensures smooth development experience even with large projects</li>
+<li><strong>Optimized Typography</strong> – Applies optimized typography settings for professional and polished content</li>
+<li><strong>Intelligent Asset Handling</strong> – Automatically copies, optimizes, and references assets</li>
+<li><strong>Code Highlighting</strong> – Uses highlight.js with custom themes for readable code snippets</li>
+<li><strong>CLI That Doesn’t Get in Your Way</strong> – Zero-config mode by default with options for power users</li>
+<li><strong>Fast, Even at Scale</strong> – Batch processes file changes to avoid unnecessary rebuilds</li>
+<li><strong>SEO &amp; Accessibility Built-In</strong> – Generates clean, semantic HTML optimized for search engines</li>
 </ul>
-</li>
-<li>
-<p><strong>Tailwind, But on Your Terms</strong> 🎨</p>
-<ul>
-<li>You’re not <strong>forced</strong> into Tailwind, but if you enable it, <strong>Docmach intelligently processes styles</strong> while avoiding unnecessary bloat.</li>
-<li>It scans <strong>Markdown, HTML, and even component files</strong> to ensure only the needed styles make it into your final build.</li>
-</ul>
-</li>
-<li>
-<p><strong>Live Reload That Actually Works</strong> 🔄</p>
-<ul>
-<li>Docmach’s <strong>watch mode</strong> goes beyond just reloading pages—it can <strong>retry connections</strong>, detect stale caches, and ensure that <strong>your development experience is smooth</strong> even when working with large projects.</li>
-</ul>
-</li>
-<li>
-<p><strong>No More Ugly Typography</strong> 🎭</p>
-<ul>
-<li>By default, <strong>Docmach applies optimized typography settings</strong> so Markdown-based content looks <strong>professional and polished</strong> right out of the box.</li>
-<li>No need for <strong>extra CSS</strong> just to make text readable like in other generators.</li>
-</ul>
-</li>
-<li>
-<p><strong>Intelligent Asset Handling</strong> 📦</p>
-<ul>
-<li>Automatically <strong>copies, optimizes, and references assets</strong> like images, fonts, and stylesheets, ensuring they’re efficiently bundled.</li>
-<li>Works even when running in a serverless environment or blob storage.</li>
-</ul>
-</li>
-<li>
-<p><strong>Code Highlighting That Feels Right</strong> 💻</p>
-<ul>
-<li>Uses <strong>highlight.js with custom themes</strong>, ensuring code snippets are <strong>visually pleasing and readable</strong>.</li>
-</ul>
-</li>
-<li>
-<p><strong>CLI That Doesn’t Get in Your Way</strong> 🛠️</p>
-<ul>
-<li>Runs in <strong>zero-config mode</strong> by default but lets <strong>power users tweak every aspect</strong> via an easy-to-use CLI.</li>
-<li>Supports <strong>auto-detection of project structures</strong>, so <strong>you don’t have to manually set up folders</strong> every time.</li>
-</ul>
-</li>
-<li>
-<p><strong>Fast, Even at Scale</strong> ⚡</p>
-<ul>
-<li><strong>Batch processes file changes</strong> to avoid unnecessary rebuilds.</li>
-<li>Can <strong>handle thousands of Markdown files</strong> without slowing down, making it a solid choice for <strong>large-scale documentation</strong>.</li>
-</ul>
-</li>
-<li>
-<p><strong>SEO &amp; Accessibility Built-In</strong> 🌍</p>
-<ul>
-<li>Generates <strong>clean, semantic HTML</strong> optimized for search engines.</li>
-</ul>
-</li>
-</ol>
-<blockquote>
 <p>Designed to be focused on <strong>speed, developer experience, and flexibility</strong>.</p>
-</blockquote>
-<ol start="8">
-<li>
-<p><strong>Fast, Even at Scale</strong> ⚡</p>
-<ul>
-<li><strong>Batch processes file changes</strong> to avoid unnecessary rebuilds.</li>
-<li>Can <strong>handle thousands of Markdown files</strong> without slowing down, making it a solid choice for <strong>large-scale documentation</strong>.</li>
-</ul>
-</li>
-<li>
-<p><strong>SEO &amp; Accessibility Built-In</strong> 🌍</p>
-<ul>
-<li>Generates <strong>clean, semantic HTML</strong> optimized for search engines.</li>
-</ul>
-</li>
-</ol>
-<blockquote>
-<p>Designed to be focused on <strong>speed, developer experience, and flexibility</strong>.</p>
-</blockquote>
 <p><div class="container mx-auto px-6 py-8 max-w-4xl border-t border-white/10">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Previous Post -->
@@ -221,7 +163,7 @@ The <span class="hljs-strong">**Docmach CLI**</span> is a robust tool designed t
                 </div>
                 <div>
                     <p class="text-sm text-gray-400">Previous</p>
-                    <h3 class="text-lg font-medium text-white group-hover:text-orange-400 transition-colors">Get stated</h3>
+                    <h3 class="text-lg font-medium text-white group-hover:text-orange-400 transition-colors">Get started</h3>
                 </div>
             </div>
         </a>

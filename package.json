@@ -5,10 +5,7 @@
   "main": "dist/index.js",
   "type": "module",
   "files": [
-    "dist/index.d.ts",
-    "dist/index.js",
-    "dist/parser.d.ts",
-    "dist/parser.js"
+    "dist"
   ],
   "bin": {
     "docmach": "./dist/index.js"
@@ -44,8 +41,7 @@
     "watch": "tsc  --watch",
     "dev": "node --experimental_transform-types --watch --inspect dist/index.js",
     "inspect": "node --inspect dist/index.js",
-    "build": "tsc && ./pack",
-    "compile": "tsc && ./pack"
+    "compile": "tsc &&  bun bundle"
   },
   "engines": {
     "node": ">=14.0.0",

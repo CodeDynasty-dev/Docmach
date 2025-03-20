@@ -424,9 +424,6 @@
   .cursor-not-allowed {
     cursor: not-allowed;
   }
-  .resize {
-    resize: both;
-  }
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }

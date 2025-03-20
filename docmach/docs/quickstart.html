@@ -68,22 +68,51 @@
         <!-- Documentation Content -->
         <div class="container mx-auto px-6 py-12 max-w-5xl mt-16">
             <div class="prose prose-invert max-w-none mx-auto md:mx-0">
-<h2>Quickstart</h2>
-<h4>Get started with Docmach in a few simple steps.</h4>
-<hr>
-<ol>
-<li><strong>Install Docmach</strong><pre><code class="language-bash">npm install -g docmach
+<h1>Quickstart</h1>
+<p>Get started with Docmach in a few simple steps.</p>
+<h2>Installation</h2>
+<pre><code class="language-bash"><span class="hljs-comment"># Install locally</span>
+npm i docmach
+npx docmach
+
+<span class="hljs-comment"># Or install globally</span>
+npm i docmach -g
+docmach
 </code></pre>
-</li>
-<li><strong>Create a new directory</strong><pre><code class="language-bash"><span class="hljs-built_in">mkdir</span> my-docs
+<h2>Create a New Project</h2>
+<pre><code class="language-bash"><span class="hljs-built_in">mkdir</span> my-docs
 <span class="hljs-built_in">cd</span> my-docs
 </code></pre>
-</li>
-<li><strong>Start the development server</strong><pre><code class="language-bash">docmach
+<h2>Basic Configuration</h2>
+<p>Add the following to your <code>package.json</code> file:</p>
+<pre><code class="language-json"><span class="hljs-attr">&quot;docmach&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./docs&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./docmach&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./assets&quot;</span> 
+<span class="hljs-punctuation">}</span>
 </code></pre>
-</li>
-<li><strong>Open your browser and navigate to <code>http://localhost:4000</code></strong></li>
-</ol>
+<h2>Create Your First Document</h2>
+<p>Create a file called <code>index.md</code> in your docs directory:</p>
+<pre><code class="language-markdown"><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;fragment&quot;</span> <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;template.html&quot;</span> <span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title=My First Docmach Page&quot;</span>&gt;</span></span>
+
+<span class="hljs-section"># Hello Docmach!</span>
+
+This is my first page created with Docmach.
+
+<span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">docmach</span>&gt;</span></span>
+</code></pre>
+<h2>Start the Development Server</h2>
+<pre><code class="language-bash">docmach
+</code></pre>
+<h2>View Your Site</h2>
+<p>Open your browser and navigate to <code>http://localhost:4000</code></p>
+<h2>Next Steps</h2>
+<ul>
+<li>Create more Markdown files in your docs directory</li>
+<li>Customize templates in your fragments directory</li>
+<li>Add function templates for dynamic content</li>
+<li>Explore custom themes and Tailwind CSS options</li>
+</ul>
 <p><div class="container mx-auto px-6 py-8 max-w-4xl border-t border-white/10">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Previous Post -->
