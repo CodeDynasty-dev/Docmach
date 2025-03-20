@@ -68,9 +68,8 @@
     "ws": "^8.18.1"
   },
   "docmach": {
-    "docs-directory": ".",
-    "build-directory": "docs",
-    "default-template": "local/doc.html",
-    "assets-folder": "./local"
+    "docs-directory": "docs",
+    "build-directory": "docmach",
+    "assets-folder": "assets"
   }
 }

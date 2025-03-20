@@ -13,9 +13,9 @@
  */
 
 // native
-import { mkdir, open, readFile, rm,   stat } from 'fs/promises';
-import { join, resolve, extname } from 'path';
-import {createReadStream, } from "node:fs";;
+import { mkdir, open, readFile, rm, stat } from "fs/promises";
+import { extname, join, resolve } from "path";
+import { createReadStream } from "node:fs";
 import { exec } from "child_process";
 import { cwd } from "process";
 import http from "http";
@@ -25,9 +25,10 @@ import { WebSocketServer } from "ws";
 import chokidar from "chokidar";
 import Mime from "mime/lite";
 // files
-import { parseDocmachFIles } from "./parser.js";
+import { parseDocmachFIles } from "./parser.ts";
+import { relative } from "node:path";
 
- async function findAvailablePort(port = 4000) {
+async function findAvailablePort(port = 4000) {
   while (await isPortInUse(port)) port++;
   return port;
 }
@@ -49,16 +50,13 @@ function isPortInUse(port: number) {
   });
 }
 
- 
-
 // Define the path to your package.json file
-const packageJsonPath =join(cwd(), "package.json");
- 
-const root =resolve(process.argv[3] || process.cwd());
+const packageJsonPath = join(cwd(), "package.json");
+
+const root = resolve(process.argv[3] || process.cwd());
 let config = {
   "docs-directory": root,
-  "build-directory": "./docmach-build",
-  "default-template": "",
+  "build-directory": "./docmach",
   "assets-folder": "",
   root,
 };
@@ -69,13 +67,15 @@ try {
   const docmachConfig = p.docmach;
   if (docmachConfig) {
     config = Object.assign(config, docmachConfig);
+    config["docs-directory"] = resolve(config["docs-directory"]);
+    config["build-directory"] = resolve(config["build-directory"]);
+    config["assets-folder"] = resolve(config["assets-folder"]);
   } else {
     console.warn("No docmach configuration found in package.json.");
   }
 } catch (_e) {
   console.error("Error reading package.json:", _e);
 }
-
 // Get command-line arguments: port and root directory.
 
 // Live-reload client script to inject into HTML pages.
@@ -128,10 +128,10 @@ function logHttpError(
 // Create an HTTP server.
 const server = http.createServer(async (req, res) => {
   // Resolve file path relative to the root directory.
-  let filePath =join(cwd(), config["build-directory"], req.url!);
+  let filePath = relative(cwd(), config["build-directory"]) + req.url;
   // If the URL ends with '/' serve index.html
   if (req.url?.endsWith("/")) {
-    filePath =join(filePath, "/index.html");
+    filePath = join(filePath, "/index.html");
   }
   // console.log(req.url, filePath);
   try {
@@ -141,7 +141,7 @@ const server = http.createServer(async (req, res) => {
       return res.end("404 Not Found");
     }
     let content = await readFile(filePath, "utf8");
-    const ext =extname(filePath).toLowerCase();
+    const ext = extname(filePath).toLowerCase();
     const contentType = Mime.getType(ext) ?? "application/octet-stream";
     if (ext === ".html" || ext === ".htm") {
       if (content.includes("</body>")) {
@@ -155,6 +155,7 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { "Content-Type": contentType });
     stream.pipe(res);
   } catch (error) {
+    // console.log(error);
     logHttpError(req.method!, req.url!, 500, "Server Error");
     res.writeHead(500, { "Content-Type": "text/plain" });
     return res.end("500 Server Error");
@@ -186,13 +187,8 @@ const getCSSCommand = async () => {
   try {
     if (await open("./tailwind.config.js")) {
       return `npx tailwindcss -c tailwind.config.js -o ${
-       join(config["build-directory"], "/bundle.css")
+        join(config["build-directory"], "/bundle.css")
       }`;
-    }
-    if (await open("./postcss.config.js")) {
-      return `npx postcss ${
-       join(config["docs-directory"], "/styles.css")
-      } -o ${join(config["build-directory"], "/bundle.css")}`;
     }
   } catch (error) {
   }
@@ -221,18 +217,20 @@ const debounce = (fn: Function, delay: number) => {
   };
 };
 let parsing = false;
-const onFileChange = debounce(async (file: string) => {
-  parsing = true;
-  const ran = await parseDocmachFIles(config, file);
-  parsing = false;
-  if (!ran) {  
-  await buildCSS();
-  broadcastReload();
-    return;
-  }
-  await buildCSS();
-  broadcastReload();
-}, 650);
+const onFileChange = //debounce(
+  async (file: string) => {
+    parsing = true;
+    const ran = await parseDocmachFIles(config, file);
+    parsing = false;
+    if (!ran) {
+      await buildCSS();
+      broadcastReload();
+      return;
+    }
+    await buildCSS();
+    broadcastReload();
+  };
+//, 250);
 
 const ran = await parseDocmachFIles(config);
 if (!ran) {
@@ -240,20 +238,20 @@ if (!ran) {
 }
 await buildCSS();
 
-chokidar.watch(config["docs-directory"], {
+chokidar.watch(root, {
   ignoreInitial: true,
+  // awaitWriteFinish: true,
 }).on(
   "all",
   async (_, file) => {
     if (parsing) return;
     try {
       if (
-        (join(cwd(), file)).includes(
-         resolve(cwd(), config["build-directory"]) + "/",
-        ) &&
-        Boolean(await open(join(cwd(), file)))
+        file.includes(config["build-directory"]) &&
+        Boolean(await open(file))
       ) return;
     } catch {}
+    console.log(file);
     onFileChange(file);
   },
 );

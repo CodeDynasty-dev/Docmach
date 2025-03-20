@@ -1,80 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title> <%= title %></title> 
+    <title><%= title %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" href="../bundle.css">
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="bundle.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <base href="/">
 </head>
-<body class="bg-[#0A0A0A]">
-    <div class="">
- 
-    <!-- Sidebar Navigation -->
-<aside class="w-64 fixed h-screen bg-[#161616] border-r border-white/10 overflow-y-auto hidden md:grid">
-        <div class="p-6">
-            <div class="flex items-center gap-3 mb-8">
-                <a href="../index.html" class="flex gap-4">
-                    <img src="/2.png" alt="docmach" class="w-30" >  
-                </a>
-            </div>
-            
-            <!-- Documentation Navigation -->
-            <nav class="space-y-8">
-                <div>
-                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Getting Started</h2>
-                    <ul class="space-y-2">
-                        <li><a href="/docs/introduction.html" class="text-gray-300 hover:text-orange-400 block transition-colors">Introduction</a></li> 
-                        <li><a href="/docs/quickstart.html" class="text-gray-300 hover:text-orange-400 block transition-colors">Quick Start</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Core Concepts</h2>
-                    <ul class="space-y-2">
-                        <li><a href="/docs/configuration.html" class="text-gray-300 hover:text-orange-400 block transition-colors">Configuration</a></li>
-                        <li><a href="#markdown" class="text-gray-300 hover:text-orange-400 block transition-colors">Docmach Syntax</a></li>
-                    </ul>
-                </div> 
-                <div class="opacity-[0.6] cursor-not-allowed" title="Coming Soon">
-                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Advanced</h2>
-                    <ul class="space-y-2  pointer-events-none">
-                        <li><a href="#plugins" class="text-gray-300 hover:text-orange-400 block transition-colors">Plugins</a></li> 
-                        <li><a href="#deployment" class="text-gray-300 hover:text-orange-400 block transition-colors">Deployment</a></li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="md:ml-64 flex-1 pt-16 min-h-screen" >
-            <!-- Floating Navigation -->
+<body class="w-full bg-gradient-to-br from-[#0A0A0A] via-[#1A1A1A] to-[#0A0A0A]">
+    <!-- Floating Navigation -->
     <nav class="max-w-[98vw] fixed top-8 left-1/2 transform -translate-x-1/2 backdrop-blur-lg bg-white/10 rounded-full px-8 py-4 z-50">
         <div class="flex items-center space-x-6 md:space-x-8 ">
             <a href="../index.html" class="text-white hover:text-orange-400 transition-colors">Home</a>
-            <a href="../docs/introduction.html" class="text-white hover:text-orange-400 transition-colors">Docs</a>
-            <img src="/2.png" alt="docmach" class="w-30" >
-                <div class="relative hidden md:grid">
-                        <input type="search" 
-                               placeholder="Search documentation..." 
-                               class="w-64 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
-                    </div>
+            <a href="docs/introduction.html" class="text-white hover:text-orange-400 transition-colors">Docs</a>
+            <img src="/logo.png" alt="docmach" class="w-30" >
             <a href="https://github.com/CodeDynasty-dev/Docmach" class="text-white hover:text-orange-400 transition-colors">GitHub</a>
-            <a href="../blog.html" class="text-white hover:text-orange-400 transition-colors">Blog</a>
+            <a href="blog.html" class="text-white hover:text-orange-400 transition-colors">Blog</a>
         </div>
     </nav>
-        <!-- Documentation Content -->
+      <!-- Documentation Content -->
         <div class="container mx-auto px-6 py-12 max-w-5xl mt-16">
-            <div class="prose prose-invert max-w-none mx-auto md:mx-0">
+            <div class="prose prose-invert max-w-none mx-auto">
                <%= content %>
             </div>
             </div>
-
-    </main>
-</div>
-        <!-- Footer -->
+    <!-- Footer -->
     <footer class="relative overflow-hidden border-t border-white/10 bg-gradient-to-b from-[#1A1A1A] to-[#0A0A0A]">
         <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
         <div class="container mx-auto px-6 py-16 relative z-10">
@@ -82,7 +35,7 @@
                 <!-- Brand Section -->
                 <div class="space-y-6 md:w-1/3">
                     <div class="flex items-center gap-3"> 
-                        <img src="/2.png" alt="docmach" class="w-30" >
+                        <img src="/logo.png" alt="docmach" class="w-30" >
                     </div>
                     <p class="text-gray-400">Transform your documentation into an immersive experience with our modern markdown compiler.</p>
                 </div>
@@ -99,7 +52,7 @@
                     <div class="space-y-4">
                         <h3 class="text-white font-semibold">Resources</h3>
                         <ul class="space-y-2">
-                            <li><a href="blog" class="text-gray-400 hover:text-orange-400 transition-colors">Blog</a></li>
+                            <li><a href="blog.html" class="text-gray-400 hover:text-orange-400 transition-colors">Blog</a></li>
                             <li><a href="examples.html" class="text-gray-400 hover:text-orange-400 transition-colors">Examples</a></li>
                         </ul>
                     </div>

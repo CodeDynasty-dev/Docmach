@@ -1,51 +1,8 @@
-/*@docmach-[/docs/configuration.html]
+<docmach type="fragment" file="fragments/head.html" params="title: Docmach Quickstart" />
+<docmach type="fragment" file="fragments/doc-sidebar.html"   />
 
-# Docmach Configuration
-#### Docmach configuration is done in the `package.json` file. The configuration is done under the `docmach` key.
-
-#### Configuration Options
-  ```json
-  // package.json
-  ...
-  "docmach": {
-    "docs-directory": ".",
-    "build-directory": "docs",
-    "default-template": "local/index.html",
-    "assets-folder": "./local"
-  },
-  ...
-  ```
-*/
-
-/*@docmach-[/docs/configuration.html]-[Docmach Configuration]
-### Options Descriptions
----
-
-`docs-directory` | The directory where the markdown files are located.
- Default is the root directory.
-
-
-`build-directory` | The directory where the generated static site will be placed. Default is `docs`.
-
-
-`default-template` | The path to the base html file that will be used to generate the static site. Default is `local/index.html`.
-
-
-`assets-folder` | The path to the directory containing assets that should be copied to the output directory. Default is `./local`.
-
-
-*/
-/*@docmach-[/examples.html]-[Docmach Examples]-[local/blog.html]
-## Examples
-#### Send a pr to add your examples to the list.
----
-
-**1. [Docmach docs](https://github.com/CodeDynasty-dev/Docmach/tree/main/docs)**
-
-*/
-
-/*@docmach-[/docs/quickstart.html]-[Docmach Quickstart]
 ## Quickstart
+
 #### Get started with Docmach in a few simple steps.
 ---
 
@@ -96,4 +53,6 @@
         </a>
     </div>
 </div>
-*/
+
+<docmach type="fragment" file="fragments/doc-sidebar-end.html"   />
+<docmach type="fragment" file="fragments/footer.html" />

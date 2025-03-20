@@ -1,8 +1,7 @@
 // @ts-expect-error
 const res = await Bun.build({
   entrypoints: ["src/index.ts"],
-  outdir: "./dist",
-  // outdir: "./tests/dist",
+  outdir: "./dist", 
   target: "node",
   format: "esm",
   // minify: true,

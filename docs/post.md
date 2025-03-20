@@ -1,11 +1,10 @@
-
-<!-- @docmach-[/blog.html]-[blog]-[./local/blog.html] -->
+<docmach type="fragment" file="fragments/head.html" params="title: getting started with docmach" />
 
 # Getting Started with Docmach: A Developer's Best Friend
 
 As developers, we often find ourselves juggling between writing code and documenting it. What if there was a tool that could make this process seamless? That's where **Docmach** comes in as a modern markdown compiler that turns code comments and MD files into documentations or blog posts.
 
-![Docmach Banner](https://i0.wp.com/miniextensions.com/wp-content/uploads/sites/5/2020/04/icons.001-2.png?resize=700%2C350&ssl=1)
+![Docmach Banner](https://i0.wp.com/miniextensions.com/wp-content/uploads/sites/5/2020/04/icons.001-logo.png?resize=700%2C350&ssl=1)
 
 ## The Problem with Documentation
 
@@ -101,3 +100,6 @@ Visit our [GitHub repository](https://github.com/CodeDynasty-dev/Docmach) to lea
 
 ---
 *Published on March 1, 2025 by The Docmach Team*
+
+
+<docmach type="fragment" file="fragments/footer.html" />
