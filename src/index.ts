@@ -12,6 +12,8 @@
  *          Dante - The Divine Comedy (Canto III)
  */
 
+
+
 // native
 import { mkdir, open, readFile, rm, stat } from "fs/promises";
 import { extname, join, resolve } from "path";
@@ -27,6 +29,20 @@ import Mime from "mime/lite";
 // files
 import { parseDocmachFIles } from "./parser.ts";
 import { relative } from "node:path";
+import { Print } from "./print.ts";
+
+let usesAsCli = false;
+// Only execute main() when used as a CLI
+if (
+  (typeof require !== "undefined" && require.main === module) ||
+  (typeof import.meta !== "undefined" && import.meta.url === `file://${process.argv[1]}`)
+) {
+  usesAsCli = true;  
+}
+
+
+
+
 
 async function findAvailablePort(port = 4000) {
   while (await isPortInUse(port)) port++;
@@ -75,6 +91,11 @@ try {
   }
 } catch (_e) {
   console.error("Error reading package.json:", _e);
+}
+
+if (process.argv[2] === "print") {
+  Print(config["build-directory"]);
+  process.exit(0);
 }
 // Get command-line arguments: port and root directory.
 
@@ -161,28 +182,7 @@ const server = http.createServer(async (req, res) => {
     return res.end("500 Server Error");
   }
 });
-
-await rm(resolve(cwd(), config["build-directory"]), { recursive: true })
-  .catch((_e) => {});
-await mkdir(config["build-directory"]).catch((_e) => {});
-const port = await findAvailablePort();
-// Start the HTTP server.
-server.listen(port, () => {
-  console.log(`Docmach compiling at http://localhost:${port}`);
-});
-
-// Set up WebSocket server on the same HTTP server.
-const wss = new WebSocketServer({ server });
-function broadcastReload() {
-  wss.clients.forEach(
-    (client: { readyState: number; send: (arg0: string) => void }) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send("reload");
-      }
-    },
-  );
-}
-
+ 
 const getCSSCommand = async () => {
   try {
     if (await open("./tailwind.config.js")) {
@@ -220,8 +220,21 @@ const throttle = (fn: Function, delay: number) => {
   };
 };
 
+
+// Set up WebSocket server on the same HTTP server.
+const wss = new WebSocketServer({ server });
+function broadcastReload() {
+  wss.clients.forEach(
+    (client: { readyState: number; send: (arg0: string) => void }) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send("reload");
+      }
+    },
+  );
+}
+
 let parsing = false;
-const onFileChange = throttle(
+ const Docmach = throttle(
   async (file: string) => {
     parsing = true;
     const ran = await parseDocmachFIles(config, file);
@@ -235,14 +248,26 @@ const onFileChange = throttle(
     broadcastReload();
   },
   250,
-);
+ );
+
+
+
+async function main( ) { 
+
+await rm(resolve(cwd(), config["build-directory"]), { recursive: true })
+  .catch((_e) => {});
+await mkdir(config["build-directory"]).catch((_e) => {});
+const port = await findAvailablePort();
+// Start the HTTP server.
+server.listen(port, () => {
+  console.log(`Docmach compiling at http://localhost:${port}`);
+});
 
 const ran = await parseDocmachFIles(config);
 if (!ran) {
   console.warn("No Docmach syntax detected!");
 }
 await buildCSS();
-
 chokidar.watch(root, {
   ignoreInitial: true,
   ignored: [".git", "node_modules"],
@@ -257,8 +282,15 @@ chokidar.watch(root, {
         Boolean(await open(file))
       ) return;
     } catch {} 
-    onFileChange(file);
+    Docmach(file);
   },
 );
 
 console.log("Watching for changes...");
+}
+
+if (usesAsCli) {
+  main(); 
+}
+
+export default Docmach;

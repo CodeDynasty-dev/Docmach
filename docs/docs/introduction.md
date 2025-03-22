@@ -25,6 +25,18 @@ cd my-blog
 docmach
 ```
 
+## Or just build a single md file
+
+```js
+import Docmach from "docmach";
+
+await Docmach(file);
+```
+This assumes the file exists in the docs folder.
+So, that why you can programmatically use this for a blog engine.
+You can write the file to s3 then the docs folder. then call ```Docmach(file);```
+Then configure Nginx to sever your build folder.
+
 ## How Docmach Works
 
 Docmach parses all .md files in your input folder, extracting and processing Markdown and HTML content. It uses special Docmach tag to apply templates and functions.

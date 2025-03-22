@@ -105,6 +105,18 @@ This is my first page created with Docmach.
 <h2>Start the Development Server</h2>
 <pre><code class="language-bash">docmach
 </code></pre>
+<h2>Or just build a single md file</h2>
+<pre><code class="language-js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Docmach</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;docmach&quot;</span>;
+
+<span class="hljs-keyword">await</span> <span class="hljs-title class_">Docmach</span>(file);
+</code></pre>
+<p>This assumes the file exists in the docs folder.
+So, that why you can programmatically use this for a blog engine.
+You can write the file to s3 then the docs folder. then call <code>Docmach(file);</code>
+Then configure Nginx to sever your build folder.</p>
+<h2>Visualize the pages in your site.</h2>
+<pre><code class="language-bash">docmach <span class="hljs-built_in">print</span>
+</code></pre>
 <h2>View Your Site</h2>
 <p>Open your browser and navigate to <code>http://localhost:4000</code></p>
 <h2>Next Steps</h2>
