@@ -1,6 +1,6 @@
-<docmach type="fragment" file="fragments/head.html" params="title: introduction"/>
 
-<docmach type="wrapper" replacement="replacement" file="fragments/post-wrapper.html">
+<docmach type="wrapper" replacement="replacement" file="fragments/post-wrapper.html" params="title: post 2;">
+
 <h1>Nice h1 tag</h1>
 
 # The Markdown-Powered Static Site Generator You Actually Want to Use
@@ -133,5 +133,3 @@ Give it a try and let me know what you think in the comments!
 *What static site generator pain points have you experienced? Are you looking for something simpler but still powerful?*
 
 </docmach>
-
-<docmach type="fragment" file="fragments/footer.html" />

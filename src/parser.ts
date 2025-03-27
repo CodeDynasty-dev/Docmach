@@ -36,7 +36,7 @@ import { cwd } from "node:process";
 import { join } from "path";
 import path, { resolve } from "node:path";
 //
-import { compileFile } from "./compiler2.ts";
+import { compileFile } from "./compiler.ts";
 
 type configType = {
   "docs-directory": string;

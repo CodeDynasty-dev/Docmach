@@ -38,6 +38,18 @@ function cacheMapLimit(cacheMap: Map<any, any>): void {
   }
 }
 
+// Helper: Parse attributes string into a key/value object.
+function parseAttributes(attrString: string): Record<string, string> {
+  const attrs: Record<string, string> = {};
+  // Matches attributes of the form key="value"
+  const attrPattern = /(\w+)\s*=\s*"([^"]*?)"/g;
+  let match;
+  while ((match = attrPattern.exec(attrString)) !== null) {
+    attrs[match[1]] = match[2];
+  }
+  return attrs;
+}
+
 function parseParams(
   paramsStr: string,
 ): Record<string, string | number | object> {
@@ -93,11 +105,53 @@ function renderMarkdown(content: string): string {
   return mdCache.get(content) as string;
 }
 
-export async function compileFile(filePath: string): Promise<string> {
-  let fileContent = await readFile(filePath, "utf8");
-  fileContent = renderMarkdown(fileContent);
+async function processWrapperTags(fileContent: string) {
+  const replacements: { original: string; replacement: string }[] = [];
+  const wrapperRegex = /<docmach\b([^>]*?)\s*([^/])>([\s\S]*?)<\/docmach>/g;
+  // Replace each wrapper tag with the content from the template file with the inner content inserted.
 
-  const tagRegex = /<docmach([^>]+)\/?\>/g; // these types of tags should be scanned first, before tags that doesn't self-close.
+  let match: RegExpExecArray | null;
+  while ((match = wrapperRegex.exec(fileContent)) !== null) {
+    const fullMatch = match[0];
+    const attrStr = match[1].endsWith('"') ? match[1] : match[1] + '"';
+    let innerContent = match[3].trim();
+    let params = {};
+    const attrs = parseAttributes(attrStr);
+    if (attrs["type"] === "wrapper" && attrs["file"] && attrs["replacement"]) {
+      try {
+        if (attrs["params"]) params = parseParams(attrs["params"]);
+        // Create a promise for async file reading.
+        const resolvedPath = resolve(attrs["file"]);
+        let templateContent = await readFile(
+          resolvedPath,
+          "utf8",
+        );
+        if (params) {
+          Object.entries(params).forEach(([key, value]) => {
+            templateContent = templateContent.replace(
+              new RegExp(`{{\\s*${key}\\s*}}`, "g"),
+              String(value),
+            );
+          });
+        }
+        // Replace the placeholder with the inner content.
+        innerContent = renderMarkdown(innerContent);
+        const replaced = templateContent.replace(
+          new RegExp(`{{\\s*${attrs["replacement"]}\\s*}}`),
+          innerContent,
+        );
+        replacements.push({ original: fullMatch, replacement: replaced });
+      } catch (error) {
+        console.error("Error reading template file:", attrs["file"], error);
+        replacements.push({ original: fullMatch, replacement: "" });
+      }
+    }
+  }
+  return replacements;
+}
+
+async function processSelfClosingTags(fileContent: string) {
+  const tagRegex = /<docmach([^>]+)\/?\>/g;
   const attrRegex = /(\w+)="([^"]+)"/g;
 
   const replacements: { original: string; replacement: string }[] = [];
@@ -110,8 +164,7 @@ export async function compileFile(filePath: string): Promise<string> {
     while ((attrMatch = attrRegex.exec(match[1])) !== null) {
       let key = attrMatch[1] as keyof Attributes;
       let value: any = attrMatch[2];
-
-      if (key === "params") value = await parseParams(value);
+      if (key === "params") value = parseParams(value);
       attributes[key] = value;
     }
 
@@ -174,10 +227,20 @@ export async function compileFile(filePath: string): Promise<string> {
       replacements.push({ original: tagFull, replacement: fragmentContent });
     }
   }
+  return replacements;
+}
 
+export async function compileFile(filePath: string): Promise<string> {
+  let fileContent = await readFile(filePath, "utf8");
+  fileContent = renderMarkdown(fileContent);
+  const replacements: {
+    original: string;
+    replacement: string;
+  }[] = [];
+  replacements.push(...(await processSelfClosingTags(fileContent)));
+  replacements.push(...(await processWrapperTags(fileContent)));
   replacements.forEach(({ original, replacement }) => {
     fileContent = fileContent.replace(original, replacement);
   });
-
   return fileContent;
 }
