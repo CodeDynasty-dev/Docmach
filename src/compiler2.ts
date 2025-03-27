@@ -114,9 +114,8 @@ async function processWrapperTags(fileContent: string) {
   while ((match = wrapperRegex.exec(fileContent)) !== null) {
     const fullMatch = match[0];
     const attrStr = match[1].endsWith('"') ? match[1] : match[1] + '"';
-    const innerContent = match[3].trim();
+    let innerContent = match[3].trim();
     const attrs = parseAttributes(attrStr);
-
     if (attrs["type"] === "wrapper" && attrs["file"] && attrs["replacement"]) {
       // Create a promise for async file reading.
       try {
@@ -126,11 +125,11 @@ async function processWrapperTags(fileContent: string) {
           "utf8",
         );
         // Replace the placeholder with the inner content.
-        let replaced = templateContent.replace(
+        innerContent = renderMarkdown(innerContent);
+        const replaced = templateContent.replace(
           new RegExp(`{{\\s*${attrs["replacement"]}\\s*}}`),
           innerContent,
         );
-        replaced = renderMarkdown(replaced);
         replacements.push({ original: fullMatch, replacement: replaced });
       } catch (error) {
         console.error("Error reading template file:", attrs["file"], error);
