@@ -16,3 +16,5 @@ fly.toml
 .vscode
 websites-templates
 dist
+in.ts
+manifest.json

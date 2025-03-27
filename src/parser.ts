@@ -26,7 +26,7 @@ import {
   mkdir,
   open,
   opendir,
-  readdir, 
+  readdir,
   stat,
   utimes,
   writeFile,
@@ -36,7 +36,7 @@ import { cwd } from "node:process";
 import { join } from "path";
 import path, { resolve } from "node:path";
 //
-import { compileFile } from "./compiler.ts";
+import { compileFile } from "./compiler2.ts";
 
 type configType = {
   "docs-directory": string;
@@ -44,7 +44,7 @@ type configType = {
   "assets-folder": string;
   "root": string;
 };
- 
+
 const allowedFiles = /.md/;
 async function getTextFiles(
   source: string,

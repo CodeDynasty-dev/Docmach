@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 
-import {statSync, readdirSync} from "node:fs";
-import {join} from "node:path";
+import { readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
 
 // Exclude these directories
 const excludedDirs = [".git", "node_modules"];
 
 // Function to check if a directory contains `.html` files or subdirectories with `.html` files
 function containsHtmlFiles(dir: string): boolean {
-  const items =  readdirSync(dir);
+  const items = readdirSync(dir);
 
   for (let item of items) {
-    const fullPath =  join(dir, item);
-    const isDirectory =  statSync(fullPath).isDirectory();
+    const fullPath = join(dir, item);
+    const isDirectory = statSync(fullPath).isDirectory();
 
     if (isDirectory) {
       if (excludedDirs.includes(item)) continue; // Skip excluded directories
@@ -27,14 +27,14 @@ function containsHtmlFiles(dir: string): boolean {
 // Function to print the folder structure with directories first
 function printFolderStructure(dir: string, level = 0) {
   const indent = "  ".repeat(level); // Indentation for hierarchy
-  const items =  readdirSync(dir);
+  const items = readdirSync(dir);
 
   // Separate folders and files
   const directories = [];
   const files = [];
   for (let item of items) {
-    const fullPath =  join(dir, item);
-    const isDirectory =  statSync(fullPath).isDirectory();
+    const fullPath = join(dir, item);
+    const isDirectory = statSync(fullPath).isDirectory();
 
     if (excludedDirs.includes(item)) continue; // Skip excluded directories
     if (isDirectory) {
@@ -53,7 +53,7 @@ function printFolderStructure(dir: string, level = 0) {
   // Print directories first
   directories.forEach((directory) => {
     console.log(`${indent}├── /${directory}/`);
-    printFolderStructure( join(dir, directory), level + 1);
+    printFolderStructure(join(dir, directory), level + 1);
   });
 
   // Print files next
@@ -69,4 +69,3 @@ export function Print(targetDir = process.cwd()) {
   printFolderStructure(targetDir);
   console.log("\nComplete!");
 }
- 

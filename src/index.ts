@@ -12,8 +12,6 @@
  *          Dante - The Divine Comedy (Canto III)
  */
 
-
-
 // native
 import { mkdir, open, readFile, rm, stat } from "fs/promises";
 import { extname, join, resolve } from "path";
@@ -35,14 +33,11 @@ let usesAsCli = false;
 // Only execute main() when used as a CLI
 if (
   (typeof require !== "undefined" && require.main === module) ||
-  (typeof import.meta !== "undefined" && import.meta.url === `file://${process.argv[1]}`)
+  (typeof import.meta !== "undefined" &&
+    import.meta.url === `file://${process.argv[1]}`)
 ) {
-  usesAsCli = true;  
+  usesAsCli = true;
 }
-
-
-
-
 
 async function findAvailablePort(port = 4000) {
   while (await isPortInUse(port)) port++;
@@ -182,7 +177,7 @@ const server = http.createServer(async (req, res) => {
     return res.end("500 Server Error");
   }
 });
- 
+
 const getCSSCommand = async () => {
   try {
     if (await open("./tailwind.config.js")) {
@@ -220,7 +215,6 @@ const throttle = (fn: Function, delay: number) => {
   };
 };
 
-
 // Set up WebSocket server on the same HTTP server.
 const wss = new WebSocketServer({ server });
 function broadcastReload() {
@@ -234,7 +228,7 @@ function broadcastReload() {
 }
 
 let parsing = false;
- const Docmach = throttle(
+const Docmach = throttle(
   async (file: string) => {
     parsing = true;
     const ran = await parseDocmachFIles(config, file);
@@ -248,49 +242,46 @@ let parsing = false;
     broadcastReload();
   },
   250,
- );
-
-
-
-async function main( ) { 
-
-await rm(resolve(cwd(), config["build-directory"]), { recursive: true })
-  .catch((_e) => {});
-await mkdir(config["build-directory"]).catch((_e) => {});
-const port = await findAvailablePort();
-// Start the HTTP server.
-server.listen(port, () => {
-  console.log(`Docmach compiling at http://localhost:${port}`);
-});
-
-const ran = await parseDocmachFIles(config);
-if (!ran) {
-  console.warn("No Docmach syntax detected!");
-}
-await buildCSS();
-chokidar.watch(root, {
-  ignoreInitial: true,
-  ignored: [".git", "node_modules"],
-  // awaitWriteFinish: true,
-}).on(
-  "all",
-  async (_, file) => {
-    if (parsing) return;
-    try {
-      if (
-        file.includes(config["build-directory"]) &&
-        Boolean(await open(file))
-      ) return;
-    } catch {} 
-    Docmach(file);
-  },
 );
 
-console.log("Watching for changes...");
+async function main() {
+  await rm(resolve(cwd(), config["build-directory"]), { recursive: true })
+    .catch((_e) => {});
+  await mkdir(config["build-directory"]).catch((_e) => {});
+  const port = await findAvailablePort();
+  // Start the HTTP server.
+  server.listen(port, () => {
+    console.log(`Docmach compiling at http://localhost:${port}`);
+  });
+
+  const ran = await parseDocmachFIles(config);
+  if (!ran) {
+    console.warn("No Docmach syntax detected!");
+  }
+  await buildCSS();
+  chokidar.watch(root, {
+    ignoreInitial: true,
+    ignored: [".git", "node_modules"],
+    // awaitWriteFinish: true,
+  }).on(
+    "all",
+    async (_, file) => {
+      if (parsing) return;
+      try {
+        if (
+          file.includes(config["build-directory"]) &&
+          Boolean(await open(file))
+        ) return;
+      } catch {}
+      Docmach(file);
+    },
+  );
+
+  console.log("Watching for changes...");
 }
 
 if (usesAsCli) {
-  main(); 
+  main();
 }
 
 export default Docmach;
