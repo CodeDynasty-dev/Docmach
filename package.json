@@ -41,7 +41,7 @@
     "watch": "tsc  --watch",
     "dev": "node --experimental_transform-types --watch --inspect dist/index.js",
     "inspect": "node --inspect dist/index.js",
-    "compile": "tsc &&  bun bundle"
+    "compile": "rm -rf dist && tsc &&  bun bundle"
   },
   "engines": {
     "node": ">=14.0.0",
@@ -57,7 +57,6 @@
   "dependencies": {
     "@tailwindcss/cli": "^4.0.8",
     "chokidar": "^4.0.3",
-    "esprima": "^4.0.1",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
     "mime": "^4.0.6",

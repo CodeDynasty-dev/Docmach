@@ -92,6 +92,7 @@ if (process.argv[2] === "print") {
   Print(config["build-directory"]);
   process.exit(0);
 }
+
 // Get command-line arguments: port and root directory.
 
 // Live-reload client script to inject into HTML pages.
@@ -228,8 +229,7 @@ function broadcastReload() {
 }
 
 let parsing = false;
-const Docmach = throttle(
-  async (file: string) => {
+const docmachFunction = async (file?: string) => {
     parsing = true;
     const ran = await parseDocmachFIles(config, file);
     parsing = false;
@@ -240,7 +240,9 @@ const Docmach = throttle(
     }
     await buildCSS();
     broadcastReload();
-  },
+  }
+const Docmach = throttle(
+  docmachFunction,
   250,
 );
 
@@ -279,7 +281,11 @@ async function main() {
 
   console.log("Watching for changes...");
 }
-
+if (process.argv[2] === "build") {
+  docmachFunction().finally(() => {
+    process.exit(0);
+  })
+}
 if (usesAsCli) {
   main();
 }
