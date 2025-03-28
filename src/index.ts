@@ -279,15 +279,22 @@ async function main() {
     },
   );
 
-  console.log("Watching for changes...");
 }
 if (process.argv[2] === "build") {
-  docmachFunction().finally(() => {
+  console.log("Building for production...");
+  docmachFunction().then(() => {
+    console.log("build completed!");
+  }).catch((e) => {
+    console.error("Build failed: ",String(e));
+  }).finally(() => {
     process.exit(0);
   })
-}
-if (usesAsCli) {
-  main();
+} else {
+
+  if (usesAsCli) {
+    main();
+    console.log("Watching for changes...");
+  }
 }
 
 export default Docmach;
