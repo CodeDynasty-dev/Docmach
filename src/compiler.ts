@@ -239,7 +239,7 @@ export async function compileFile(filePath: string): Promise<string> {
   }[] = [];
   replacements.push(...(await processSelfClosingTags(fileContent)));
   replacements.push(...(await processWrapperTags(fileContent)));
-  replacements.forEach(({ original, replacement }) => {
+  replacements.reverse().forEach(({ original, replacement }) => {
     fileContent = fileContent.replace(original, replacement);
   });
   return fileContent;

@@ -179,21 +179,11 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-const getCSSCommand = async () => {
-  try {
-    if (await open("./tailwind.config.js")) {
-      return `npx tailwindcss -c tailwind.config.js -o ${
-        join(config["build-directory"], "/bundle.css")
-      }`;
-    }
-  } catch (error) {
-  }
-  return "";
-};
+const css_command = `npx tailwindcss -c tailwind.config.js -o ${
+  join(config["build-directory"], "/bundle.css")
+}`;
 
-const css_command = await getCSSCommand();
 function buildCSS() {
-  if (!css_command) return;
   return new Promise((resolve, reject) => {
     exec(css_command, (err, _stdout, _stderr) => {
       if (err) {
@@ -219,28 +209,41 @@ const throttle = (fn: Function, delay: number) => {
 // Set up WebSocket server on the same HTTP server.
 const wss = new WebSocketServer({ server });
 function broadcastReload() {
-  wss.clients.forEach(
-    (client: { readyState: number; send: (arg0: string) => void }) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send("reload");
-      }
-    },
-  );
+  setTimeout(() => {
+    wss.clients.forEach(
+      (client: { readyState: number; send: (arg0: string) => void }) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send("reload");
+        }
+      },
+    );
+  }, 5);
 }
 
 let parsing = false;
 const docmachFunction = async (file?: string) => {
-    parsing = true;
-    const ran = await parseDocmachFIles(config, file);
-    parsing = false;
-    if (!ran) {
-      await buildCSS();
-      broadcastReload();
-      return;
-    }
-    await buildCSS();
+  parsing = true;
+  // console.time("task 1");
+  const ran = await parseDocmachFIles(config, file);
+  // console.timeEnd("task 1");
+
+  parsing = false;
+  if (!ran) {
+    // console.time("task 2");
+    buildCSS();
+    // console.timeEnd("task 2");
+    // console.time("task 3");
     broadcastReload();
+    // console.timeEnd("task 3");
+    return;
   }
+  // console.time("task 2");
+  buildCSS();
+  // console.timeEnd("task 2");
+  // console.time("task 3");
+  broadcastReload();
+  // console.timeEnd("task 3");
+};
 const Docmach = throttle(
   docmachFunction,
   250,
@@ -275,22 +278,23 @@ async function main() {
           Boolean(await open(file))
         ) return;
       } catch {}
-      Docmach(file);
+      // console.time("df");
+      await docmachFunction(file);
+      // console.timeEnd("df");
+      // Docmach(file);
     },
   );
-
 }
 if (process.argv[2] === "build") {
   console.log("Building for production...");
   docmachFunction().then(() => {
     console.log("build completed!");
   }).catch((e) => {
-    console.error("Build failed: ",String(e));
+    console.error("Build failed: ", String(e));
   }).finally(() => {
     process.exit(0);
-  })
+  });
 } else {
-
   if (usesAsCli) {
     main();
     console.log("Watching for changes...");
