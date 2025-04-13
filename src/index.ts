@@ -282,7 +282,7 @@ async function main() {
       ) return;
 
       if (templateCache.has(file)) {
-        templateCache.set(file, undefined)
+        templateCache.delete(file)
       }
     } catch (e) {
     }
