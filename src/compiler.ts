@@ -18,8 +18,7 @@ const md = new MarkdownIt({
   },
 });
 
-const functionCache = new Map<string, any>();
-const fragmentCache = new Map<string, string>();
+export const fragmentCache = new Map<string, string>();
 const mdCache = new Map<string, string>();
 const MAX_CACHE_SIZE = 100;
 
@@ -120,8 +119,22 @@ async function processWrapperTags(fileContent: string) {
     if (attrs["type"] === "wrapper" && attrs["file"] && attrs["replacement"]) {
       try {
         if (attrs["params"]) params = parseParams(attrs["params"]);
-        // Create a promise for async file reading.
+
         const resolvedPath = resolve(attrs["file"]);
+        if (!existsSync(resolvedPath)) {
+          console.error(`Docmach: Fragment file not found: ${resolvedPath}`);
+          continue;
+        }
+        let fragmentContent: string;
+        if (fragmentCache.has(resolvedPath)) {
+          fragmentContent = fragmentCache.get(resolvedPath) as string;
+        } else {
+          fragmentContent = await streamFile(resolvedPath);
+          fragmentCache.set(resolvedPath, fragmentContent);
+        }
+        cacheMapLimit(fragmentCache);
+
+        // Create a promise for async file reading.
         let templateContent = await readFile(
           resolvedPath,
           "utf8",
@@ -147,7 +160,9 @@ async function processWrapperTags(fileContent: string) {
       }
     } else {
       if (!attrs["replacement"]) {
-        console.error("Docmach: a wrapper tag must have a replacement attribute!");
+        console.error(
+          "Docmach: a wrapper tag must have a replacement attribute!",
+        );
       }
     }
   }
@@ -185,13 +200,19 @@ async function processSelfClosingTags(fileContent: string) {
 
       try {
         let module;
-        if (functionCache.has(resolvedPath)) {
-          module = functionCache.get(resolvedPath);
+
+        if (!existsSync(resolvedPath)) {
+          console.error(`Docmach: Fragment file not found: ${resolvedPath}`);
+          continue;
+        }
+
+        if (fragmentCache.has(resolvedPath)) {
+          module = fragmentCache.get(resolvedPath) as string;
         } else {
           module = await import(resolvedPath);
-          functionCache.set(resolvedPath, module);
+          fragmentCache.set(resolvedPath, module);
         }
-        cacheMapLimit(functionCache);
+        cacheMapLimit(fragmentCache);
 
         if (typeof module.default !== "function") {
           console.error(

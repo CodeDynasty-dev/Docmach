@@ -28,6 +28,7 @@ import Mime from "mime/lite";
 import { parseDocmachFIles } from "./parser.ts";
 import { relative } from "node:path";
 import { Print } from "./print.ts";
+import { fragmentCache } from "./compiler.ts";
 
 let usesAsCli = false;
 // Only execute main() when used as a CLI
@@ -221,7 +222,8 @@ function broadcastReload() {
 }
 
 let parsing = false;
-const docmachFunction = async (file?: string) => {
+const docmachFunction = async (file?: string) => { 
+
   parsing = true;
   // console.time("task 1");
   const ran = await parseDocmachFIles(config, file);
@@ -251,8 +253,8 @@ const Docmach = throttle(
 
 async function main() {
   await rm(resolve(cwd(), config["build-directory"]), { recursive: true })
-    .catch((_e) => {});
-  await mkdir(config["build-directory"]).catch((_e) => {});
+    .catch((_e) => { });
+  await mkdir(config["build-directory"]).catch((_e) => { });
   const port = await findAvailablePort();
   // Start the HTTP server.
   server.listen(port, () => {
@@ -264,26 +266,30 @@ async function main() {
     console.warn("No Docmach syntax detected!");
   }
   await buildCSS();
-  chokidar.watch(root, {
+
+  const watcher = chokidar.watch(root, {
+    ignored: [".git", "node_modules", "**/node_modules", "**/.git"],
     ignoreInitial: true,
-    ignored: [".git", "node_modules"],
-    // awaitWriteFinish: true,
-  }).on(
-    "all",
-    async (_, file) => {
-      if (parsing) return;
-      try {
-        if (
-          file.includes(config["build-directory"]) &&
-          Boolean(await open(file))
-        ) return;
-      } catch {}
-      // console.time("df");
-      await docmachFunction(file);
-      // console.timeEnd("df");
-      // Docmach(file);
-    },
-  );
+    ignorePermissionErrors: true,
+    awaitWriteFinish: true,
+  });
+  const changesCompiler = async (file: string) => {
+    if (parsing) return;
+    try {
+      if (
+        (file.includes(config["build-directory"]) &&
+          Boolean(await open(file))) || !fragmentCache.has(file)
+      ) return;
+    } catch (e) {
+    }
+    // console.time("df");
+    await docmachFunction(file);
+    // console.timeEnd("df");
+  };
+  watcher
+    .on('add', changesCompiler)
+    .on('change', changesCompiler)
+    .on('unlink', changesCompiler);
 }
 if (process.argv[2] === "build") {
   console.log("Building for production...");
@@ -296,8 +302,9 @@ if (process.argv[2] === "build") {
   });
 } else {
   if (usesAsCli) {
-    main();
-    console.log("Watching for changes...");
+    main().finally(() => {
+      console.log("Watching for changes...");
+    });
   }
 }
 
