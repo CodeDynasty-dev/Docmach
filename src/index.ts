@@ -222,8 +222,7 @@ function broadcastReload() {
 }
 
 let parsing = false;
-const docmachFunction = async (file?: string) => { 
-
+const docmachFunction = async (file?: string) => {
   parsing = true;
   // console.time("task 1");
   const ran = await parseDocmachFIles(config, file);
@@ -253,8 +252,8 @@ const Docmach = throttle(
 
 async function main() {
   await rm(resolve(cwd(), config["build-directory"]), { recursive: true })
-    .catch((_e) => { });
-  await mkdir(config["build-directory"]).catch((_e) => { });
+    .catch((_e) => {});
+  await mkdir(config["build-directory"]).catch((_e) => {});
   const port = await findAvailablePort();
   // Start the HTTP server.
   server.listen(port, () => {
@@ -277,23 +276,28 @@ async function main() {
     if (parsing) return;
     try {
       if (
-        (file.includes(config["build-directory"]) &&
-          Boolean(await open(file))) || !templateCache.has(file)
+        !((file.includes(config["build-directory"]) &&
+          Boolean(await open(file))) ||
+          !file.includes(".md") ||
+          !templateCache.has(file))
       ) return;
-
-      if (templateCache.has(file)) {
-        templateCache.delete(file)
-      }
-    } catch (e) {
+    } catch (_e) {}
+    if (templateCache.has(file)) {
+      const deps = templateCache.get(file)!;
+      deps?.dependentMDs.forEach((file) => {
+        docmachFunction(file);
+      });
+    } else {
+      await docmachFunction(file);
     }
+
     // console.time("df");
-    await docmachFunction(file);
     // console.timeEnd("df");
   };
   watcher
-    .on('add', changesCompiler)
-    .on('change', changesCompiler)
-    .on('unlink', changesCompiler);
+    .on("add", changesCompiler)
+    .on("change", changesCompiler)
+    .on("unlink", changesCompiler);
 }
 if (process.argv[2] === "build") {
   console.log("Building for production...");

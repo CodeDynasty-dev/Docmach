@@ -18,8 +18,10 @@ const md = new MarkdownIt({
   },
 });
 
-export const templateCache = new Map<string, string|undefined>();
-const mdCache = new Map<string, string>();
+export const templateCache = new Map<string, {
+  content: string;
+  dependentMDs: Set<string>;
+}>();
 const MAX_CACHE_SIZE = 100;
 
 type Params = Record<string, string | number>;
@@ -96,15 +98,7 @@ async function streamFile(filePath: string): Promise<string> {
   });
 }
 
-function renderMarkdown(content: string): string {
-  if (!mdCache.has(content)) {
-    if (mdCache.size > 50) mdCache.clear();
-    mdCache.set(content, md.render(content));
-  }
-  return mdCache.get(content) as string;
-}
-
-async function processWrapperTags(fileContent: string) {
+async function processWrapperTags(fileContent: string, filePath: string) {
   const replacements: { original: string; replacement: string }[] = [];
   const wrapperRegex = /<docmach\b([^>]*?)\s*([^/])>([\s\S]*?)<\/docmach>/g;
   // Replace each wrapper tag with the content from the template file with the inner content inserted.
@@ -127,12 +121,20 @@ async function processWrapperTags(fileContent: string) {
         }
         let fragmentContent: string;
         if (templateCache.has(resolvedPath)) {
-          fragmentContent = templateCache.get(resolvedPath) as string;
+          const frag = templateCache.get(resolvedPath)!;
+          frag.dependentMDs.add(filePath);
+          fragmentContent = frag.content;
+          templateCache.set(resolvedPath, frag);
         } else {
           fragmentContent = await streamFile(resolvedPath);
-          templateCache.set(resolvedPath, fragmentContent);
+          const frag = {
+            content: fragmentContent,
+            dependentMDs: new Set<string>(),
+          };
+          frag.dependentMDs.add(filePath);
+          templateCache.set(resolvedPath, frag);
+          cacheMapLimit(templateCache);
         }
-        cacheMapLimit(templateCache);
 
         // Create a promise for async file reading.
         let templateContent = await readFile(
@@ -148,7 +150,7 @@ async function processWrapperTags(fileContent: string) {
           });
         }
         // Replace the placeholder with the inner content.
-        innerContent = renderMarkdown(innerContent);
+        innerContent = md.render(innerContent);
         const replaced = templateContent.replace(
           new RegExp(`{{\\s*${attrs["replacement"]}\\s*}}`),
           innerContent,
@@ -169,7 +171,7 @@ async function processWrapperTags(fileContent: string) {
   return replacements;
 }
 
-async function processSelfClosingTags(fileContent: string) {
+async function processSelfClosingTags(fileContent: string, filePath: string) {
   const tagRegex = /<docmach([^>]+)\/?\>/g;
   const attrRegex = /(\w+)="([^"]+)"/g;
 
@@ -207,12 +209,18 @@ async function processSelfClosingTags(fileContent: string) {
         }
 
         if (templateCache.has(resolvedPath)) {
-          module = templateCache.get(resolvedPath) as string;
+          const frag = templateCache.get(resolvedPath)!;
+          frag.dependentMDs.add(filePath);
+          module = frag.content;
+          templateCache.set(resolvedPath, frag);
         } else {
           module = await import(resolvedPath);
-          templateCache.set(resolvedPath, module);
+          const frag = { content: module, dependentMDs: new Set<string>() };
+          frag.dependentMDs.add(filePath);
+
+          templateCache.set(resolvedPath, frag);
+          cacheMapLimit(templateCache);
         }
-        cacheMapLimit(templateCache);
 
         if (typeof module.default !== "function") {
           console.error(
@@ -235,12 +243,20 @@ async function processSelfClosingTags(fileContent: string) {
       }
       let fragmentContent: string;
       if (templateCache.has(resolvedPath)) {
-        fragmentContent = templateCache.get(resolvedPath) as string;
+        const frag = templateCache.get(resolvedPath)!;
+        frag.dependentMDs.add(filePath);
+        fragmentContent = frag.content;
+        templateCache.set(resolvedPath, frag);
       } else {
         fragmentContent = await streamFile(resolvedPath);
-        templateCache.set(resolvedPath, fragmentContent);
+        const frag = {
+          content: fragmentContent,
+          dependentMDs: new Set<string>(),
+        };
+        frag.dependentMDs.add(filePath);
+        templateCache.set(resolvedPath, frag);
+        cacheMapLimit(templateCache);
       }
-      cacheMapLimit(templateCache);
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
           fragmentContent = fragmentContent.replace(
@@ -257,13 +273,13 @@ async function processSelfClosingTags(fileContent: string) {
 
 export async function compileFile(filePath: string): Promise<string> {
   let fileContent = await readFile(filePath, "utf8");
-  fileContent = renderMarkdown(fileContent);
+  fileContent = md.render(fileContent);
   const replacements: {
     original: string;
     replacement: string;
   }[] = [];
-  replacements.push(...(await processSelfClosingTags(fileContent)));
-  replacements.push(...(await processWrapperTags(fileContent)));
+  replacements.push(...(await processSelfClosingTags(fileContent, filePath)));
+  replacements.push(...(await processWrapperTags(fileContent, filePath)));
   replacements.reverse().forEach(({ original, replacement }) => {
     fileContent = fileContent.replace(original, replacement);
   });
