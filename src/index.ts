@@ -28,7 +28,7 @@ import Mime from "mime/lite";
 import { parseDocmachFIles } from "./parser.ts";
 import { relative } from "node:path";
 import { Print } from "./print.ts";
-import { fragmentCache } from "./compiler.ts";
+import { templateCache } from "./compiler.ts";
 
 let usesAsCli = false;
 // Only execute main() when used as a CLI
@@ -278,8 +278,12 @@ async function main() {
     try {
       if (
         (file.includes(config["build-directory"]) &&
-          Boolean(await open(file))) || !fragmentCache.has(file)
+          Boolean(await open(file))) || !templateCache.has(file)
       ) return;
+
+      if (templateCache.has(file)) {
+        templateCache.set(file, undefined)
+      }
     } catch (e) {
     }
     // console.time("df");

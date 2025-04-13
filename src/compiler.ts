@@ -18,7 +18,7 @@ const md = new MarkdownIt({
   },
 });
 
-export const fragmentCache = new Map<string, string>();
+export const templateCache = new Map<string, string|undefined>();
 const mdCache = new Map<string, string>();
 const MAX_CACHE_SIZE = 100;
 
@@ -126,13 +126,13 @@ async function processWrapperTags(fileContent: string) {
           continue;
         }
         let fragmentContent: string;
-        if (fragmentCache.has(resolvedPath)) {
-          fragmentContent = fragmentCache.get(resolvedPath) as string;
+        if (templateCache.has(resolvedPath)) {
+          fragmentContent = templateCache.get(resolvedPath) as string;
         } else {
           fragmentContent = await streamFile(resolvedPath);
-          fragmentCache.set(resolvedPath, fragmentContent);
+          templateCache.set(resolvedPath, fragmentContent);
         }
-        cacheMapLimit(fragmentCache);
+        cacheMapLimit(templateCache);
 
         // Create a promise for async file reading.
         let templateContent = await readFile(
@@ -206,13 +206,13 @@ async function processSelfClosingTags(fileContent: string) {
           continue;
         }
 
-        if (fragmentCache.has(resolvedPath)) {
-          module = fragmentCache.get(resolvedPath) as string;
+        if (templateCache.has(resolvedPath)) {
+          module = templateCache.get(resolvedPath) as string;
         } else {
           module = await import(resolvedPath);
-          fragmentCache.set(resolvedPath, module);
+          templateCache.set(resolvedPath, module);
         }
-        cacheMapLimit(fragmentCache);
+        cacheMapLimit(templateCache);
 
         if (typeof module.default !== "function") {
           console.error(
@@ -234,13 +234,13 @@ async function processSelfClosingTags(fileContent: string) {
         continue;
       }
       let fragmentContent: string;
-      if (fragmentCache.has(resolvedPath)) {
-        fragmentContent = fragmentCache.get(resolvedPath) as string;
+      if (templateCache.has(resolvedPath)) {
+        fragmentContent = templateCache.get(resolvedPath) as string;
       } else {
         fragmentContent = await streamFile(resolvedPath);
-        fragmentCache.set(resolvedPath, fragmentContent);
+        templateCache.set(resolvedPath, fragmentContent);
       }
-      cacheMapLimit(fragmentCache);
+      cacheMapLimit(templateCache);
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
           fragmentContent = fragmentContent.replace(
