@@ -145,6 +145,10 @@ async function processWrapperTags(fileContent: string) {
         console.error("Error reading template file:", attrs["file"], error);
         replacements.push({ original: fullMatch, replacement: "" });
       }
+    } else {
+      if (!attrs["replacement"]) {
+        console.error("Docmach: a wrapper tag must have a replacement attribute!");
+      }
     }
   }
   return replacements;

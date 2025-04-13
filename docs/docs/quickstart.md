@@ -43,6 +43,13 @@ Create a file called `index.md` in your docs directory:
 ```markdown
 <docmach type="fragment" file="template.html" params="title=My First Docmach Page">
 
+ 
+<docmach type="wrapper" replacement="replacement" file="fragments/post-wrapper.html" params="title: post 2;">
+
+<h1>Nice h1 tag</h1>
+
+</docmach>
+
 # Hello Docmach!
 
 This is my first page created with Docmach.
