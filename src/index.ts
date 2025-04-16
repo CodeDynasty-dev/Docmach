@@ -64,7 +64,6 @@ function isPortInUse(port: number) {
 
 // Define the path to your package.json file
 const packageJsonPath = join(cwd(), "package.json");
-console.log({ packageJsonPath });
 const root = resolve(process.argv[3] || process.cwd());
 let config = {
   "docs-directory": root,
@@ -182,9 +181,8 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-const css_command = `npx tailwindcss -c tailwind.config.js -o ${join(
-  config["build-directory"],
-  "/bundle.css"
+const css_command = `npx tailwindcss -c tailwind.config.js -o ${normalizePath(
+  join(config["build-directory"], "/bundle.css")
 )}`;
 
 function buildCSS() {
