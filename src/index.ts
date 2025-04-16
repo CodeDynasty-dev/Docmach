@@ -181,11 +181,9 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-const css_command = `npx tailwindcss -c tailwind.config.js -o ${normalizePath(
+const css_command = `npx tailwindcss -c tailwind.config.js -o "${normalizePath(
   join(config["build-directory"], "/bundle.css")
-)}`;
-
-console.log({ css_command });
+)}"`;
 
 function buildCSS() {
   return new Promise((resolve) => {
