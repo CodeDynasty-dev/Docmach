@@ -4,6 +4,7 @@ import { resolve } from "path";
 import hljs from "highlight.js";
 import MarkdownIt from "markdown-it";
 import { readFile } from "fs/promises";
+import { normalizePath } from "./parser";
 
 const md = new MarkdownIt({
   html: true,
@@ -18,10 +19,13 @@ const md = new MarkdownIt({
   },
 });
 
-export const templateCache = new Map<string, {
-  content: string;
-  dependentMDs: Set<string>;
-}>();
+export const templateCache = new Map<
+  string,
+  {
+    content: string;
+    dependentMDs: Set<string>;
+  }
+>();
 const MAX_CACHE_SIZE = 100;
 
 type Params = Record<string, string | number>;
@@ -52,7 +56,7 @@ function parseAttributes(attrString: string): Record<string, string> {
 }
 
 function parseParams(
-  paramsStr: string,
+  paramsStr: string
 ): Record<string, string | number | object> {
   const params: Record<string, string | number | object> = {};
   const regex = /(\w+):\s*(\{[^}]*\}|\S[^;]*)/g; // Match full objects or single values
@@ -91,7 +95,9 @@ function parseParams(
 async function streamFile(filePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
     let data = "";
-    const stream = createReadStream(filePath, { encoding: "utf8" });
+    const stream = createReadStream(normalizePath(filePath), {
+      encoding: "utf8",
+    });
     stream.on("data", (chunk: string | Buffer) => (data += chunk.toString()));
     stream.on("end", () => resolve(data));
     stream.on("error", reject);
@@ -115,7 +121,7 @@ async function processWrapperTags(fileContent: string, filePath: string) {
         if (attrs["params"]) params = parseParams(attrs["params"]);
 
         const resolvedPath = resolve(attrs["file"]);
-        if (!existsSync(resolvedPath)) {
+        if (!existsSync(normalizePath(resolvedPath))) {
           console.error(`Docmach: Fragment file not found: ${resolvedPath}`);
           continue;
         }
@@ -126,7 +132,7 @@ async function processWrapperTags(fileContent: string, filePath: string) {
           fragmentContent = frag.content;
           templateCache.set(resolvedPath, frag);
         } else {
-          fragmentContent = await streamFile(resolvedPath);
+          fragmentContent = await streamFile(normalizePath(resolvedPath));
           const frag = {
             content: fragmentContent,
             dependentMDs: new Set<string>(),
@@ -138,14 +144,14 @@ async function processWrapperTags(fileContent: string, filePath: string) {
 
         // Create a promise for async file reading.
         let templateContent = await readFile(
-          resolvedPath,
-          "utf8",
+          normalizePath(resolvedPath),
+          "utf8"
         );
         if (params) {
           Object.entries(params).forEach(([key, value]) => {
             templateContent = templateContent.replace(
               new RegExp(`{{\\s*${key}\\s*}}`, "g"),
-              String(value),
+              String(value)
             );
           });
         }
@@ -153,7 +159,7 @@ async function processWrapperTags(fileContent: string, filePath: string) {
         innerContent = md.render(innerContent);
         const replaced = templateContent.replace(
           new RegExp(`{{\\s*${attrs["replacement"]}\\s*}}`),
-          innerContent,
+          innerContent
         );
         replacements.push({ original: fullMatch, replacement: replaced });
       } catch (error) {
@@ -163,7 +169,7 @@ async function processWrapperTags(fileContent: string, filePath: string) {
     } else {
       if (!attrs["replacement"]) {
         console.error(
-          "Docmach: a wrapper tag must have a replacement attribute!",
+          "Docmach: a wrapper tag must have a replacement attribute!"
         );
       }
     }
@@ -195,7 +201,7 @@ async function processSelfClosingTags(fileContent: string, filePath: string) {
     const resolvedPath = resolve(file);
 
     if (type === "function") {
-      if (!existsSync(resolvedPath)) {
+      if (!existsSync(normalizePath(resolvedPath))) {
         console.error(`Docmach: Function file not found: ${resolvedPath}`);
         continue;
       }
@@ -203,7 +209,7 @@ async function processSelfClosingTags(fileContent: string, filePath: string) {
       try {
         let module;
 
-        if (!existsSync(resolvedPath)) {
+        if (!existsSync(normalizePath(resolvedPath))) {
           console.error(`Docmach: Fragment file not found: ${resolvedPath}`);
           continue;
         }
@@ -224,7 +230,7 @@ async function processSelfClosingTags(fileContent: string, filePath: string) {
 
         if (typeof module.default !== "function") {
           console.error(
-            `Docmach: No default function export in ${resolvedPath}`,
+            `Docmach: No default function export in ${resolvedPath}`
           );
           continue;
         }
@@ -237,7 +243,7 @@ async function processSelfClosingTags(fileContent: string, filePath: string) {
     }
 
     if (type === "fragment") {
-      if (!existsSync(resolvedPath)) {
+      if (!existsSync(normalizePath(resolvedPath))) {
         console.error(`Docmach: Fragment file not found: ${resolvedPath}`);
         continue;
       }
@@ -248,7 +254,7 @@ async function processSelfClosingTags(fileContent: string, filePath: string) {
         fragmentContent = frag.content;
         templateCache.set(resolvedPath, frag);
       } else {
-        fragmentContent = await streamFile(resolvedPath);
+        fragmentContent = await streamFile(normalizePath(resolvedPath));
         const frag = {
           content: fragmentContent,
           dependentMDs: new Set<string>(),
@@ -261,7 +267,7 @@ async function processSelfClosingTags(fileContent: string, filePath: string) {
         Object.entries(params).forEach(([key, value]) => {
           fragmentContent = fragmentContent.replace(
             new RegExp(`{{\\s*${key}\\s*}}`, "g"),
-            String(value),
+            String(value)
           );
         });
       }
@@ -272,7 +278,7 @@ async function processSelfClosingTags(fileContent: string, filePath: string) {
 }
 
 export async function compileFile(filePath: string): Promise<string> {
-  let fileContent = await readFile(filePath, "utf8");
+  let fileContent = await readFile(normalizePath(filePath), "utf8");
   fileContent = md.render(fileContent);
   const replacements: {
     original: string;

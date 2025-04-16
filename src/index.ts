@@ -25,7 +25,7 @@ import { WebSocketServer } from "ws";
 import chokidar from "chokidar";
 import Mime from "mime/lite";
 // files
-import { parseDocmachFIles } from "./parser.ts";
+import { normalizePath, parseDocmachFIles } from "./parser.ts";
 import { relative } from "node:path";
 import { Print } from "./print.ts";
 import { templateCache } from "./compiler.ts";
@@ -64,7 +64,7 @@ function isPortInUse(port: number) {
 
 // Define the path to your package.json file
 const packageJsonPath = join(cwd(), "package.json");
-
+console.log({ packageJsonPath });
 const root = resolve(process.argv[3] || process.cwd());
 let config = {
   "docs-directory": root,
@@ -125,7 +125,7 @@ function logHttpError(
   url: string,
   statusCode: number,
   message: string,
-  error?: any,
+  error?: any
 ): void {
   const errorLog = {
     method,
@@ -136,7 +136,7 @@ function logHttpError(
   };
 
   console.error(
-    `[${errorLog.method} ${errorLog.url} - ${errorLog.statusCode}: ${errorLog.message}`,
+    `[${errorLog.method} ${errorLog.url} - ${errorLog.statusCode}: ${errorLog.message}`
   );
   if (errorLog.error) {
     console.error("Error Details:", String(errorLog.error));
@@ -149,16 +149,16 @@ const server = http.createServer(async (req, res) => {
   let filePath = relative(cwd(), config["build-directory"]) + req.url;
   // If the URL ends with '/' serve index.html
   if (req.url?.endsWith("/")) {
-    filePath = join(filePath, "/index.html");
+    filePath = join(filePath, "index.html");
   }
   // console.log(req.url, filePath);
   try {
-    const stats = await stat(filePath);
+    const stats = await stat(normalizePath(filePath));
     if (!stats.isFile()) {
       res.writeHead(404, { "Content-Type": "text/plain" });
       return res.end("404 Not Found");
     }
-    let content = await readFile(filePath, "utf8");
+    let content = await readFile(normalizePath(filePath), "utf8");
     const ext = extname(filePath).toLowerCase();
     const contentType = Mime.getType(ext) ?? "application/octet-stream";
     if (ext === ".html" || ext === ".htm") {
@@ -169,7 +169,9 @@ const server = http.createServer(async (req, res) => {
       res.end(content);
       return;
     }
-    const stream = createReadStream(filePath, { autoClose: true });
+    const stream = createReadStream(normalizePath(filePath), {
+      autoClose: true,
+    });
     res.writeHead(200, { "Content-Type": contentType });
     stream.pipe(res);
   } catch (error) {
@@ -180,9 +182,10 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-const css_command = `npx tailwindcss -c tailwind.config.js -o ${
-  join(config["build-directory"], "/bundle.css")
-}`;
+const css_command = `npx tailwindcss -c tailwind.config.js -o ${join(
+  config["build-directory"],
+  "/bundle.css"
+)}`;
 
 function buildCSS() {
   return new Promise((resolve, reject) => {
@@ -216,7 +219,7 @@ function broadcastReload() {
         if (client.readyState === WebSocket.OPEN) {
           client.send("reload");
         }
-      },
+      }
     );
   }, 5);
 }
@@ -245,15 +248,15 @@ const docmachFunction = async (file?: string) => {
   broadcastReload();
   // console.timeEnd("task 3");
 };
-const Docmach = throttle(
-  docmachFunction,
-  250,
-);
+const Docmach = throttle(docmachFunction, 250);
 
 async function main() {
-  await rm(resolve(cwd(), config["build-directory"]), { recursive: true })
-    .catch((_e) => {});
-  await mkdir(config["build-directory"]).catch((_e) => {});
+  await rm(normalizePath(resolve(cwd(), config["build-directory"])), {
+    recursive: true,
+  }).catch((_e) => {});
+  await mkdir(normalizePath(config["build-directory"]), {
+    recursive: true,
+  }).catch((_e) => {});
   const port = await findAvailablePort();
   // Start the HTTP server.
   server.listen(port, () => {
@@ -276,11 +279,14 @@ async function main() {
     if (parsing) return;
     try {
       if (
-        !((file.includes(config["build-directory"]) &&
-          Boolean(await open(file))) ||
+        !(
+          (file.includes(config["build-directory"]) &&
+            Boolean(await open(normalizePath(file)))) ||
           !file.includes(".md") ||
-          !templateCache.has(file))
-      ) return;
+          !templateCache.has(file)
+        )
+      )
+        return;
     } catch (_e) {}
     if (templateCache.has(file)) {
       const deps = templateCache.get(file)!;
@@ -301,13 +307,16 @@ async function main() {
 }
 if (process.argv[2] === "build") {
   console.log("Building for production...");
-  docmachFunction().then(() => {
-    console.log("build completed!");
-  }).catch((e) => {
-    console.error("Build failed: ", String(e));
-  }).finally(() => {
-    process.exit(0);
-  });
+  docmachFunction()
+    .then(() => {
+      console.log("build completed!");
+    })
+    .catch((e) => {
+      console.error("Build failed: ", String(e));
+    })
+    .finally(() => {
+      process.exit(0);
+    });
 } else {
   if (usesAsCli) {
     main().finally(() => {

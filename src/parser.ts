@@ -42,24 +42,25 @@ type configType = {
   "docs-directory": string;
   "build-directory": string;
   "assets-folder": string;
-  "root": string;
+  root: string;
 };
 
 const allowedFiles = /.md/;
 async function getTextFiles(
   source: string,
-  config: configType,
+  config: configType
 ): Promise<string[]> {
   const output: string[] = [];
   try {
     source = source ? path.resolve(cwd(), source) : cwd();
-    const dir = await opendir(source);
+    const dir = await opendir(normalizePath(source));
     for await (const dirent of dir) {
       const filename = path.resolve(source, dirent.name);
       if (dirent.isFile() && allowedFiles.test(filename)) {
         output.push(filename);
       } else if (
-        dirent.isDirectory() && !["node_modules", ".git"].includes(dirent.name)
+        dirent.isDirectory() &&
+        !["node_modules", ".git"].includes(dirent.name)
       ) {
         const nestedFiles = await getTextFiles(filename, config);
         output.push(...nestedFiles);
@@ -69,7 +70,7 @@ async function getTextFiles(
     console.error(`Error reading directory: ${source.slice(0, 50)}...`);
     if (config["docs-directory"] === config["root"]) {
       console.warn(
-        "Please specify docmach `docs-directory` key in your `package.json` file \n Currently set to'.'.",
+        "Please specify docmach `docs-directory` key in your `package.json` file \n Currently set to'.'."
       );
     }
   }
@@ -78,7 +79,7 @@ async function getTextFiles(
 
 export async function getTextFile(source: string): Promise<string[]> {
   const output: string[] = [];
-  const dirent = path.resolve(cwd(), source);
+  const dirent = normalizePath(path.resolve((cwd(), source)));
   try {
     const filename = path.resolve(source, dirent);
     if (allowedFiles.test(dirent)) {
@@ -92,10 +93,10 @@ export async function getTextFile(source: string): Promise<string[]> {
 
 function ensureFileSync(filePath: string) {
   const dir = path.dirname(filePath);
-  if (!existsSync(dir)) {
-    mkdirSync(dir, { recursive: true });
+  if (!existsSync(normalizePath(dir))) {
+    mkdirSync(normalizePath(dir), { recursive: true });
   }
-  writeFileSync(filePath, "");
+  writeFileSync(normalizePath(filePath), "");
 }
 async function parseFiles(files: string[], config: configType) {
   for (let i = 0; i < files.length; i++) {
@@ -103,10 +104,10 @@ async function parseFiles(files: string[], config: configType) {
     const content = await compileFile(file);
     const path = resolve(
       cwd(),
-      file.replace(config["docs-directory"], config["build-directory"]),
+      file.replace(config["docs-directory"], config["build-directory"])
     ).replace(".md", ".html");
     ensureFileSync(path);
-    await writeFile(path, content);
+    await writeFile(normalizePath(path), content);
   }
 }
 
@@ -114,7 +115,8 @@ const getList = async (config: configType, file?: string) => {
   if (
     file &&
     (!allowedFiles.test(file) || !file.includes(config["docs-directory"]))
-  ) return [];
+  )
+    return [];
   if (file) {
     return await getTextFile(file);
   }
@@ -123,14 +125,14 @@ const getList = async (config: configType, file?: string) => {
 
 async function copyChangedFiles(
   sourceDir: string,
-  destinationDir: string,
+  destinationDir: string
 ): Promise<void> {
   async function processFile(srcPath: string, destPath: string): Promise<void> {
     try {
-      const srcStat = await stat(srcPath);
+      const srcStat = await stat(normalizePath(srcPath));
       let shouldCopy = true;
       try {
-        const destStat = await stat(destPath);
+        const destStat = await stat(normalizePath(destPath));
         if (srcStat.mtimeMs <= destStat.mtimeMs) {
           shouldCopy = false;
         }
@@ -138,8 +140,11 @@ async function copyChangedFiles(
         if (err.code !== "ENOENT") throw err;
       }
       if (shouldCopy) {
-        await pipeline(createReadStream(srcPath), createWriteStream(destPath));
-        await utimes(destPath, srcStat.atime, srcStat.mtime);
+        await pipeline(
+          createReadStream(normalizePath(srcPath)),
+          createWriteStream(normalizePath(destPath))
+        );
+        await utimes(normalizePath(destPath), srcStat.atime, srcStat.mtime);
       }
     } catch (error) {
       console.error(`Error processing file ${srcPath}:`, error);
@@ -147,17 +152,21 @@ async function copyChangedFiles(
   }
 
   async function processDirectory(src: string, dest: string): Promise<void> {
-    await mkdir(dest, { recursive: true });
-    const entries: Dirent[] = await readdir(src, { withFileTypes: true });
-    await Promise.all(entries.map(async (entry) => {
-      const srcPath = join(src, entry.name);
-      const destPath = join(dest, entry.name);
-      if (entry.isDirectory()) {
-        return processDirectory(srcPath, destPath);
-      } else {
-        return processFile(srcPath, destPath);
-      }
-    }));
+    await mkdir(normalizePath(dest), { recursive: true });
+    const entries: Dirent[] = await readdir(normalizePath(src), {
+      withFileTypes: true,
+    });
+    await Promise.all(
+      entries.map(async (entry) => {
+        const srcPath = join(src, entry.name);
+        const destPath = join(dest, entry.name);
+        if (entry.isDirectory()) {
+          return processDirectory(srcPath, destPath);
+        } else {
+          return processFile(srcPath, destPath);
+        }
+      })
+    );
   }
   await processDirectory(sourceDir, destinationDir);
 }
@@ -168,21 +177,65 @@ export const parseDocmachFIles = async (config: configType, file?: string) => {
     if (file) {
       // check
       if (
-        config["assets-folder"] && file.startsWith(config["assets-folder"]) &&
-        await open(file)
+        config["assets-folder"] &&
+        file.startsWith(normalizePath(config["assets-folder"])) &&
+        (await open(normalizePath(file)))
       ) {
-        const sourceDir = path.relative(cwd(), config["assets-folder"]);
-        const destinationDir = path.relative(cwd(), config["build-directory"]);
+        const sourceDir = path.relative(
+          cwd(),
+          normalizePath(config["assets-folder"])
+        );
+        const destinationDir = path.relative(
+          cwd(),
+          normalizePath(config["build-directory"])
+        );
         await copyChangedFiles(sourceDir, destinationDir);
       }
     }
     return;
   }
-  if (config["assets-folder"] && await open(config["assets-folder"])) {
-    const sourceDir = path.relative(cwd(), config["assets-folder"]);
-    const destinationDir = path.relative(cwd(), config["build-directory"]);
-    await copyChangedFiles(sourceDir, destinationDir);
+  if (
+    config["assets-folder"] &&
+    (await open(normalizePath(config["assets-folder"])))
+  ) {
+    const sourceDir = path.relative(
+      cwd(),
+      normalizePath(config["assets-folder"])
+    );
+    const destinationDir = path.relative(
+      cwd(),
+      normalizePath(config["build-directory"])
+    );
+    await copyChangedFiles(
+      normalizePath(sourceDir),
+      normalizePath(destinationDir)
+    );
   }
   await parseFiles(files, config);
   return files;
 };
+
+// utils/paths.ts
+export function detectOS(): "windows" | "linux" | "darwin" | "unknown" {
+  const platform =
+    typeof process !== "undefined" ? process.platform : "unknown";
+  // @ts-expect-error
+  if (platform === "win32" || platform === "windows") return "windows";
+  if (platform === "linux") return "linux";
+  if (platform === "darwin") return "darwin";
+  return "unknown";
+}
+
+export function toPOSIXPath(path: string): string {
+  return path.replace(/\\/g, "/");
+}
+
+export function toWindowsPath(path: string): string {
+  return path.replace(/\//g, "\\");
+}
+
+export function normalizePath(path: string): string {
+  const os = detectOS();
+  if (os === "windows") return toWindowsPath(path);
+  return toPOSIXPath(path);
+}
