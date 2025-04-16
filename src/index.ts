@@ -185,11 +185,14 @@ const css_command = `npx tailwindcss -c tailwind.config.js -o ${normalizePath(
   join(config["build-directory"], "/bundle.css")
 )}`;
 
+console.log({ css_command });
+
 function buildCSS() {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     exec(css_command, (err, _stdout, _stderr) => {
       if (err) {
-        reject("CSS compilation error:" + String(err));
+        console.error("CSS compilation error:", String(err));
+        resolve(undefined);
       } else {
         resolve(undefined);
       }
