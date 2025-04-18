@@ -21,7 +21,7 @@ import { cwd } from "process";
 import http from "http";
 import net from "net";
 // packages
-import { WebSocketServer } from "ws";
+import { WebSocketServer, WebSocket } from "ws";
 import chokidar from "chokidar";
 import Mime from "mime/lite";
 // files
