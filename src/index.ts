@@ -307,7 +307,8 @@ async function main() {
 if (process.argv[2] === "build") {
   console.log("Building for production...");
   docmachFunction()
-    .then(() => {
+    .then(async () => {
+      await buildCSS();
       console.log("build completed!");
     })
     .catch((e) => {
