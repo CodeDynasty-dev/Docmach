@@ -1,4 +1,3 @@
-import { createReadStream } from "fs";
 import { existsSync } from "fs";
 import { resolve } from "path";
 import hljs from "highlight.js";
@@ -19,29 +18,54 @@ const md = new MarkdownIt({
   },
 });
 
-export const templateCache = new Map<
+class LRUCache<K, V> {
+  private maxSize: number;
+  private cache: Map<K, V>;
+
+  constructor(maxSize: number = 100) {
+    this.maxSize = maxSize;
+    this.cache = new Map<K, V>();
+  }
+
+  has(key: K): boolean {
+    return this.cache.has(key);
+  }
+
+  get(key: K): V | undefined {
+    if (this.cache.has(key)) {
+      const value = this.cache.get(key)!;
+      // Move to end to mark as recently used
+      this.cache.delete(key);
+      this.cache.set(key, value);
+      return value;
+    }
+    return undefined;
+  }
+
+  set(key: K, value: V): void {
+    if (this.cache.has(key)) {
+      // just update the value and move to end
+      this.cache.delete(key);
+    } else if (this.cache.size >= this.maxSize) {
+      // evict the least recently used item
+      const firstKey = this.cache.keys().next().value;
+      if (firstKey !== undefined) {
+        this.cache.delete(firstKey);
+      }
+    }
+    this.cache.set(key, value);
+  }
+}
+
+export const templateCache = new LRUCache<
   string,
   {
-    content: string;
+    content: any;
     dependentMDs: Set<string>;
   }
 >();
-const MAX_CACHE_SIZE = 100;
 
-type Params = Record<string, string | number>;
 
-type Attributes = {
-  file?: string;
-  params?: Params;
-  type?: string;
-};
-
-function cacheMapLimit(cacheMap: Map<any, any>): void {
-  if (cacheMap.size > MAX_CACHE_SIZE) {
-    const firstKey = cacheMap.keys().next().value;
-    cacheMap.delete(firstKey);
-  }
-}
 
 // Helper: Parse attributes string into a key/value object.
 function parseAttributes(attrString: string): Record<string, string> {
@@ -92,82 +116,76 @@ function parseParams(
   return params;
 }
 
-async function streamFile(filePath: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    let data = "";
-    const stream = createReadStream(normalizePath(filePath), {
-      encoding: "utf8",
-    });
-    stream.on("data", (chunk: string | Buffer) => (data += chunk.toString()));
-    stream.on("end", () => resolve(data));
-    stream.on("error", reject);
-  });
-}
 
 async function processWrapperTags(fileContent: string, filePath: string) {
   const replacements: { original: string; replacement: string }[] = [];
   const wrapperRegex = /<docmach\b([^>]*?)\s*([^/])>([\s\S]*?)<\/docmach>/g;
-  // Replace each wrapper tag with the content from the template file with the inner content inserted.
 
-  let match: RegExpExecArray | null;
-  while ((match = wrapperRegex.exec(fileContent)) !== null) {
+  const matches = [...fileContent.matchAll(wrapperRegex)];
+  const templatePaths = new Set<string>();
+
+  for (const match of matches) {
+    const attrStr = match[1].endsWith('"') ? match[1] : match[1] + '"';
+    const attrs = parseAttributes(attrStr);
+    if (attrs['type'] === "wrapper" && attrs['file']) {
+      templatePaths.add(resolve(attrs['file']));
+    }
+  }
+
+  const loadedTemplates = new Map<string, string>();
+  const readPromises = [...templatePaths].map(async (resolvedPath) => {
+    if (templateCache.has(resolvedPath)) {
+      loadedTemplates.set(
+        resolvedPath,
+        templateCache.get(resolvedPath)!.content
+      );
+      return;
+    }
+    try {
+      const fragmentContent = await readFile(
+        normalizePath(resolvedPath),
+        "utf8"
+      );
+      loadedTemplates.set(resolvedPath, fragmentContent);
+      const frag = {
+        content: fragmentContent,
+        dependentMDs: new Set<string>([filePath]),
+      };
+      templateCache.set(resolvedPath, frag);
+    } catch (error) {
+      console.error("Error reading template file:", resolvedPath, error);
+    }
+  });
+
+  await Promise.all(readPromises);
+
+  for (const match of matches) {
     const fullMatch = match[0];
     const attrStr = match[1].endsWith('"') ? match[1] : match[1] + '"';
     let innerContent = match[3].trim();
-    let params = {};
     const attrs = parseAttributes(attrStr);
-    if (attrs["type"] === "wrapper" && attrs["file"] && attrs["replacement"]) {
-      try {
-        if (attrs["params"]) params = parseParams(attrs["params"]);
-
-        const resolvedPath = resolve(attrs["file"]);
-        if (!existsSync(normalizePath(resolvedPath))) {
-          console.error(`Docmach: Fragment file not found: ${resolvedPath}`);
-          continue;
-        }
-        let fragmentContent: string;
-        if (templateCache.has(resolvedPath)) {
-          const frag = templateCache.get(resolvedPath)!;
-          frag.dependentMDs.add(filePath);
-          fragmentContent = frag.content;
-          templateCache.set(resolvedPath, frag);
-        } else {
-          fragmentContent = await streamFile(normalizePath(resolvedPath));
-          const frag = {
-            content: fragmentContent,
-            dependentMDs: new Set<string>(),
-          };
-          frag.dependentMDs.add(filePath);
-          templateCache.set(resolvedPath, frag);
-          cacheMapLimit(templateCache);
-        }
-
-        // Create a promise for async file reading.
-        let templateContent = await readFile(
-          normalizePath(resolvedPath),
-          "utf8"
-        );
+    if (attrs['type'] === "wrapper" && attrs['file'] && attrs['replacement']) {
+      const resolvedPath = resolve(attrs['file']);
+      let templateContent = loadedTemplates.get(resolvedPath);
+      if (templateContent) {
+        const params = attrs['params'] ? parseParams(attrs['params']) : {};
         if (params) {
           Object.entries(params).forEach(([key, value]) => {
-            templateContent = templateContent.replace(
+            templateContent = templateContent!.replace(
               new RegExp(`{{\\s*${key}\\s*}}`, "g"),
               String(value)
             );
           });
         }
-        // Replace the placeholder with the inner content.
         innerContent = md.render(innerContent);
         const replaced = templateContent.replace(
           new RegExp(`{{\\s*${attrs["replacement"]}\\s*}}`),
           innerContent
         );
         replacements.push({ original: fullMatch, replacement: replaced });
-      } catch (error) {
-        console.error("Error reading template file:", attrs["file"], error);
-        replacements.push({ original: fullMatch, replacement: "" });
       }
     } else {
-      if (!attrs["replacement"]) {
+      if (!attrs['replacement']) {
         console.error(
           "Docmach: a wrapper tag must have a replacement attribute!"
         );
@@ -179,66 +197,60 @@ async function processWrapperTags(fileContent: string, filePath: string) {
 
 async function processSelfClosingTags(fileContent: string, filePath: string) {
   const tagRegex = /<docmach([^>]+)\/?\>/g;
-  const attrRegex = /(\w+)="([^"]+)"/g;
 
   const replacements: { original: string; replacement: string }[] = [];
-  let match: RegExpExecArray | null;
-  while ((match = tagRegex.exec(fileContent)) !== null) {
-    const tagFull = match[0];
-    let attributes: Attributes = {};
+  const matches = [...fileContent.matchAll(tagRegex)];
+  const functionPaths = new Set<string>();
 
-    let attrMatch: RegExpExecArray | null;
-    while ((attrMatch = attrRegex.exec(match[1])) !== null) {
-      let key = attrMatch[1] as keyof Attributes;
-      let value: any = attrMatch[2];
-      if (key === "params") value = parseParams(value);
-      attributes[key] = value;
+  for (const match of matches) {
+    const attributes = parseAttributes(match[1]);
+    if (attributes['type'] === "function" && attributes['file']) {
+      functionPaths.add(resolve(attributes['file']));
     }
+  }
 
-    const { file, type, params } = attributes;
+  const loadedFunctions = new Map<string, any>();
+  const importPromises = [...functionPaths].map(async (resolvedPath) => {
+    if (templateCache.has(resolvedPath)) {
+      loadedFunctions.set(
+        resolvedPath,
+        templateCache.get(resolvedPath)!.content
+      );
+      return;
+    }
+    try {
+      const module = await import(resolvedPath);
+      if (typeof module.default !== "function") {
+        console.error(`Docmach: No default function export in ${resolvedPath}`);
+        return;
+      }
+      loadedFunctions.set(resolvedPath, module);
+      const frag = {
+        content: module,
+        dependentMDs: new Set<string>([filePath]),
+      };
+      templateCache.set(resolvedPath, frag);
+    } catch (err) {
+      console.error(`Error executing function ${resolvedPath}:`, err);
+    }
+  });
+
+  await Promise.all(importPromises);
+
+  for (const match of matches) {
+    const tagFull = match[0];
+    const attributes = parseAttributes(match[1]);
+    const { file, type } = attributes;
     if (!file || !type) continue;
 
+    const params = attributes['params'] ? parseParams(attributes['params']) : {};
     const resolvedPath = resolve(file);
 
     if (type === "function") {
-      if (!existsSync(normalizePath(resolvedPath))) {
-        console.error(`Docmach: Function file not found: ${resolvedPath}`);
-        continue;
-      }
-
-      try {
-        let module;
-
-        if (!existsSync(normalizePath(resolvedPath))) {
-          console.error(`Docmach: Fragment file not found: ${resolvedPath}`);
-          continue;
-        }
-
-        if (templateCache.has(resolvedPath)) {
-          const frag = templateCache.get(resolvedPath)!;
-          frag.dependentMDs.add(filePath);
-          module = frag.content;
-          templateCache.set(resolvedPath, frag);
-        } else {
-          module = await import(resolvedPath);
-          const frag = { content: module, dependentMDs: new Set<string>() };
-          frag.dependentMDs.add(filePath);
-
-          templateCache.set(resolvedPath, frag);
-          cacheMapLimit(templateCache);
-        }
-
-        if (typeof module.default !== "function") {
-          console.error(
-            `Docmach: No default function export in ${resolvedPath}`
-          );
-          continue;
-        }
-
+      const module = loadedFunctions.get(resolvedPath);
+      if (module) {
         const result = await module.default(params || {});
         replacements.push({ original: tagFull, replacement: String(result) });
-      } catch (err) {
-        console.error(`Error executing function ${resolvedPath}:`, err);
       }
     }
 
@@ -254,14 +266,13 @@ async function processSelfClosingTags(fileContent: string, filePath: string) {
         fragmentContent = frag.content;
         templateCache.set(resolvedPath, frag);
       } else {
-        fragmentContent = await streamFile(normalizePath(resolvedPath));
+        fragmentContent = await readFile(normalizePath(resolvedPath), "utf8");
         const frag = {
           content: fragmentContent,
           dependentMDs: new Set<string>(),
         };
         frag.dependentMDs.add(filePath);
         templateCache.set(resolvedPath, frag);
-        cacheMapLimit(templateCache);
       }
       if (params) {
         Object.entries(params).forEach(([key, value]) => {

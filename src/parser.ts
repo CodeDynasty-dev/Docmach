@@ -99,16 +99,17 @@ function ensureFileSync(filePath: string) {
   writeFileSync(normalizePath(filePath), "");
 }
 async function parseFiles(files: string[], config: configType) {
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    const content = await compileFile(file);
-    const path = resolve(
-      cwd(),
-      file.replace(config["docs-directory"], config["build-directory"])
-    ).replace(".md", ".html");
-    ensureFileSync(path);
-    await writeFile(normalizePath(path), content);
-  }
+  await Promise.all(
+    files.map(async (file) => {
+      const content = await compileFile(file);
+      const path = resolve(
+        cwd(),
+        file.replace(config["docs-directory"], config["build-directory"])
+      ).replace(".md", ".html");
+      ensureFileSync(path);
+      await writeFile(normalizePath(path), content);
+    })
+  );
 }
 
 const getList = async (config: configType, file?: string) => {
