@@ -65,8 +65,6 @@ export const templateCache = new LRUCache<
   }
 >();
 
-
-
 // Helper: Parse attributes string into a key/value object.
 function parseAttributes(attrString: string): Record<string, string> {
   const attrs: Record<string, string> = {};
@@ -116,7 +114,6 @@ function parseParams(
   return params;
 }
 
-
 async function processWrapperTags(fileContent: string, filePath: string) {
   const replacements: { original: string; replacement: string }[] = [];
   const wrapperRegex = /<docmach\b([^>]*?)\s*([^/])>([\s\S]*?)<\/docmach>/g;
@@ -127,8 +124,8 @@ async function processWrapperTags(fileContent: string, filePath: string) {
   for (const match of matches) {
     const attrStr = match[1].endsWith('"') ? match[1] : match[1] + '"';
     const attrs = parseAttributes(attrStr);
-    if (attrs['type'] === "wrapper" && attrs['file']) {
-      templatePaths.add(resolve(attrs['file']));
+    if (attrs["type"] === "wrapper" && attrs["file"]) {
+      templatePaths.add(resolve(attrs["file"]));
     }
   }
 
@@ -164,11 +161,11 @@ async function processWrapperTags(fileContent: string, filePath: string) {
     const attrStr = match[1].endsWith('"') ? match[1] : match[1] + '"';
     let innerContent = match[3].trim();
     const attrs = parseAttributes(attrStr);
-    if (attrs['type'] === "wrapper" && attrs['file'] && attrs['replacement']) {
-      const resolvedPath = resolve(attrs['file']);
+    if (attrs["type"] === "wrapper" && attrs["file"] && attrs["replacement"]) {
+      const resolvedPath = resolve(attrs["file"]);
       let templateContent = loadedTemplates.get(resolvedPath);
       if (templateContent) {
-        const params = attrs['params'] ? parseParams(attrs['params']) : {};
+        const params = attrs["params"] ? parseParams(attrs["params"]) : {};
         if (params) {
           Object.entries(params).forEach(([key, value]) => {
             templateContent = templateContent!.replace(
@@ -185,7 +182,7 @@ async function processWrapperTags(fileContent: string, filePath: string) {
         replacements.push({ original: fullMatch, replacement: replaced });
       }
     } else {
-      if (!attrs['replacement']) {
+      if (!attrs["replacement"]) {
         console.error(
           "Docmach: a wrapper tag must have a replacement attribute!"
         );
@@ -204,8 +201,8 @@ async function processSelfClosingTags(fileContent: string, filePath: string) {
 
   for (const match of matches) {
     const attributes = parseAttributes(match[1]);
-    if (attributes['type'] === "function" && attributes['file']) {
-      functionPaths.add(resolve(attributes['file']));
+    if (attributes["type"] === "function" && attributes["file"]) {
+      functionPaths.add(resolve(attributes["file"]));
     }
   }
 
@@ -243,7 +240,9 @@ async function processSelfClosingTags(fileContent: string, filePath: string) {
     const { file, type } = attributes;
     if (!file || !type) continue;
 
-    const params = attributes['params'] ? parseParams(attributes['params']) : {};
+    const params = attributes["params"]
+      ? parseParams(attributes["params"])
+      : {};
     const resolvedPath = resolve(file);
 
     if (type === "function") {
@@ -288,6 +287,64 @@ async function processSelfClosingTags(fileContent: string, filePath: string) {
   return replacements;
 }
 
+export interface DocmachTagMetadata {
+  type: string;
+  file?: string;
+  params?: Record<string, string | number | object>;
+  replacement?: string;
+}
+
+export interface PageMetadata {
+  sourcePath: string;
+  outputPath: string;
+  link: string;
+  docmachTags: DocmachTagMetadata[];
+}
+
+export interface PageTreeNode {
+  name: string;
+  type: "file" | "directory";
+  path: string; // Relative to docs-directory
+  link?: string; // Web URL (files only)
+  sourcePath?: string; // Source .md file (files only)
+  outputPath?: string; // Generated .html file (files only)
+  docmachTags?: DocmachTagMetadata[]; // Files only
+  children?: PageTreeNode[]; // Directories only
+}
+
+function extractDocmachTags(fileContent: string): DocmachTagMetadata[] {
+  const tags: DocmachTagMetadata[] = [];
+
+  // Extract wrapper tags
+  const wrapperRegex = /<docmach\b([^>]*?)\s*([^/])>([\s\S]*?)<\/docmach>/g;
+  let match;
+  while ((match = wrapperRegex.exec(fileContent)) !== null) {
+    const attrStr = match[1].endsWith('"') ? match[1] : match[1] + '"';
+    const attrs = parseAttributes(attrStr);
+    const tag: DocmachTagMetadata = {
+      type: attrs["type"] || "unknown",
+    };
+    if (attrs["file"]) tag.file = attrs["file"];
+    if (attrs["params"]) tag.params = parseParams(attrs["params"]);
+    if (attrs["replacement"]) tag.replacement = attrs["replacement"];
+    tags.push(tag);
+  }
+
+  // Extract self-closing tags
+  const tagRegex = /<docmach([^>]+)\/?\>/g;
+  while ((match = tagRegex.exec(fileContent)) !== null) {
+    const attrs = parseAttributes(match[1]);
+    const tag: DocmachTagMetadata = {
+      type: attrs["type"] || "unknown",
+    };
+    if (attrs["file"]) tag.file = attrs["file"];
+    if (attrs["params"]) tag.params = parseParams(attrs["params"]);
+    tags.push(tag);
+  }
+
+  return tags;
+}
+
 export async function compileFile(filePath: string): Promise<string> {
   let fileContent = await readFile(normalizePath(filePath), "utf8");
   fileContent = md.render(fileContent);
@@ -301,4 +358,13 @@ export async function compileFile(filePath: string): Promise<string> {
     fileContent = fileContent.replace(original, replacement);
   });
   return fileContent;
+}
+
+export async function compileFileWithMetadata(
+  filePath: string
+): Promise<{ content: string; tags: DocmachTagMetadata[] }> {
+  const rawContent = await readFile(normalizePath(filePath), "utf8");
+  const tags = extractDocmachTags(rawContent);
+  const content = await compileFile(filePath);
+  return { content, tags };
 }
