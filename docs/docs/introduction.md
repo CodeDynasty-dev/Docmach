@@ -25,17 +25,30 @@ cd my-blog
 docmach
 ```
 
-## Or just build a single md file
+## Programmatic Usage
+
+Docmach can be used as a library for dynamic content generation:
 
 ```js
 import Docmach from "docmach";
 
-await Docmach(file);
+// Compile a specific file
+await Docmach("docs/my-post.md");
 ```
-This assumes the file exists in the docs folder.
-So, that why you can programmatically use this for a blog engine.
-You can write the file to s3 then the docs folder. then call ```Docmach(file);```
-Then configure Nginx to sever your build folder.
+
+**Use Cases:**
+
+- **Dynamic blog engines** - Generate posts on-demand
+- **CMS integration** - Compile content from external sources
+- **API-driven documentation** - Build docs from API responses
+- **Automated workflows** - Integrate with CI/CD pipelines
+
+**Example workflow:**
+
+1. User creates content via API
+2. Save to S3 or local storage
+3. Call `Docmach(file)` to compile
+4. Serve generated HTML with Nginx or CDN
 
 ## How Docmach Works
 
@@ -46,17 +59,17 @@ Docmach parses all .md files in your input folder, extracting and processing Mar
 Docmach tags work similarly to HTML tags:
 
 ```html
-<docmach 
-type="fragment" 
-file="template.html" 
-params="title=My Page; author=JohnDoe" 
+<docmach
+  type="fragment"
+  file="template.html"
+  params="title=My Page; author=JohnDoe"
 />
 
 <!-- Function parameters example -->
-<docmach 
-type="function" 
-file="author-bio.js" 
-params="title=My Page; author={name: JohnDoe, age: 24, date: 20th March 2015}" 
+<docmach
+  type="function"
+  file="author-bio.js"
+  params="title=My Page; author={name: JohnDoe, age: 24, date: 20th March 2015}"
 />
 ```
 
@@ -67,12 +80,12 @@ Fragment templates allow you to create reusable HTML components:
 ```html
 <!-- template.html -->
 <html>
-   <head>
-      <title>{{ title }}</title>
-   </head>
-   <body>
-      <h2>{{ author }}</h2>
-   </body>
+  <head>
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <h2>{{ author }}</h2>
+  </body>
 </html>
 ```
 
@@ -83,14 +96,14 @@ Function templates enable dynamic content generation:
 ```js
 // in author-bio.js
 export default function (title, author) {
-   return `
+  return `
    <div>
    <h1>by ${title}</h1>
    <h3>by ${author.name}</h3>
    <p>Aged: ${author.age}</p>
    <p>On: ${author.date}</p>
    </div>
-   `
+   `;
 }
 ```
 
@@ -102,7 +115,7 @@ Add the following to your `package.json` file:
 "docmach": {
   "docs-directory": "./docs",
   "build-directory": "./docmach",
-  "assets-folder": "./assets" 
+  "assets-folder": "./assets"
 }
 ```
 
@@ -122,6 +135,6 @@ Designed to be focused on **speed, developer experience, and flexibility**.
 
 <docmach type="function" file="fragments/doc-nav.js" 
 params="prev: {link: /, text: Get started }; next: {link: /docs/quickstart.html, text: Quickstart };" 
-/> 
+/>
 <docmach type="fragment" file="fragments/doc-sidebar-end.html" />
 <docmach type="fragment" file="fragments/footer.html" />

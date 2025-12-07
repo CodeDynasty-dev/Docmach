@@ -67,6 +67,7 @@
   "docmach": {
     "docs-directory": "docs",
     "build-directory": "docmach",
-    "assets-folder": "assets"
+    "assets-folder": "assets",
+    "site-url": "https://docmach.codedynasty.dev"
   }
 }

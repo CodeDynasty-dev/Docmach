@@ -1,0 +1,510 @@
+{
+  "generatedAt": "2025-12-07T15:12:59.216Z",
+  "docsDirectory": "docs",
+  "buildDirectory": "docmach",
+  "totalPages": 8,
+  "tree": {
+    "name": "/",
+    "type": "directory",
+    "path": "/",
+    "children": [
+      {
+        "name": "docs",
+        "type": "directory",
+        "path": "/docs",
+        "children": [
+          {
+            "name": "advanced-features.html",
+            "type": "file",
+            "path": "/docs/advanced-features.html",
+            "link": "/docs/advanced-features.html",
+            "sourcePath": "docs/docs/advanced-features.md",
+            "outputPath": "docmach/docs/advanced-features.html",
+            "docmachTags": [
+              {
+                "type": "fragment",
+                "file": "fragments/head.html",
+                "params": {
+                  "title": "Advanced Features"
+                }
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar.html"
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar-end.html"
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/footer.html"
+              }
+            ]
+          },
+          {
+            "name": "api-reference.html",
+            "type": "file",
+            "path": "/docs/api-reference.html",
+            "link": "/docs/api-reference.html",
+            "sourcePath": "docs/docs/api-reference.md",
+            "outputPath": "docmach/docs/api-reference.html",
+            "docmachTags": [
+              {
+                "type": "fragment",
+                "file": "fragments/head.html",
+                "params": {
+                  "title": "API Reference"
+                }
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar.html"
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar-end.html"
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/footer.html"
+              }
+            ]
+          },
+          {
+            "name": "configuration.html",
+            "type": "file",
+            "path": "/docs/configuration.html",
+            "link": "/docs/configuration.html",
+            "sourcePath": "docs/docs/configuration.md",
+            "outputPath": "docmach/docs/configuration.html",
+            "docmachTags": [
+              {
+                "type": "fragment",
+                "file": "fragments/head.html",
+                "params": {
+                  "title": "Docmach Quickstart"
+                }
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar.html"
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar-end.html"
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/footer.html"
+              }
+            ]
+          },
+          {
+            "name": "examples.html",
+            "type": "file",
+            "path": "/docs/examples.html",
+            "link": "/docs/examples.html",
+            "sourcePath": "docs/docs/examples.md",
+            "outputPath": "docmach/docs/examples.html",
+            "docmachTags": [
+              {
+                "type": "fragment",
+                "file": "fragments/head.html",
+                "params": {
+                  "title": "Examples"
+                }
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar.html"
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar-end.html"
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/footer.html"
+              }
+            ]
+          },
+          {
+            "name": "introduction.html",
+            "type": "file",
+            "path": "/docs/introduction.html",
+            "link": "/docs/introduction.html",
+            "sourcePath": "docs/docs/introduction.md",
+            "outputPath": "docmach/docs/introduction.html",
+            "docmachTags": [
+              {
+                "type": "fragment",
+                "file": "fragments/head.html",
+                "params": {
+                  "title": "introduction"
+                }
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar.html"
+              },
+              {
+                "type": "function",
+                "file": "fragments/doc-nav.js",
+                "params": {
+                  "prev": {
+                    "link": "/",
+                    "text": "Get started"
+                  },
+                  "next": {
+                    "link": "/docs/quickstart.html",
+                    "text": "Quickstart"
+                  }
+                }
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar-end.html"
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/footer.html"
+              }
+            ]
+          },
+          {
+            "name": "quickstart.html",
+            "type": "file",
+            "path": "/docs/quickstart.html",
+            "link": "/docs/quickstart.html",
+            "sourcePath": "docs/docs/quickstart.md",
+            "outputPath": "docmach/docs/quickstart.html",
+            "docmachTags": [
+              {
+                "type": "fragment",
+                "file": "fragments/head.html",
+                "params": {
+                  "title": "Docmach Quickstart"
+                }
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar.html"
+              },
+              {
+                "type": "function",
+                "file": "fragments/doc-nav.js",
+                "params": {
+                  "prev": {
+                    "link": "/docs/introduction.html",
+                    "text": "Introduction"
+                  },
+                  "next": {
+                    "link": "/docs/configuration.html",
+                    "text": "Configurations"
+                  }
+                }
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar-end.html"
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/footer.html"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "post.html",
+        "type": "file",
+        "path": "/post.html",
+        "link": "/post.html",
+        "sourcePath": "docs/post.md",
+        "outputPath": "docmach/post.html",
+        "docmachTags": [
+          {
+            "type": "fragment",
+            "file": "fragments/head.html",
+            "params": {
+              "title": "introduction"
+            }
+          },
+          {
+            "type": "fragment",
+            "file": "fragments/blog-start.html"
+          },
+          {
+            "type": "fragment",
+            "file": "fragments/blog-end.html"
+          },
+          {
+            "type": "fragment",
+            "file": "fragments/footer.html"
+          }
+        ]
+      },
+      {
+        "name": "post2.html",
+        "type": "file",
+        "path": "/post2.html",
+        "link": "/post2.html",
+        "sourcePath": "docs/post2.md",
+        "outputPath": "docmach/post2.html",
+        "docmachTags": [
+          {
+            "type": "wrapper",
+            "file": "fragments/post-wrapper.html",
+            "params": {
+              "title": "post 2"
+            },
+            "replacement": "replacement"
+          },
+          {
+            "type": "wrapper",
+            "file": "fragments/post-wrapper.html",
+            "params": {
+              "title": "post 2"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "pages": [
+    {
+      "sourcePath": "docs/post2.md",
+      "outputPath": "docmach/post2.html",
+      "link": "/post2.html",
+      "docmachTags": [
+        {
+          "type": "wrapper",
+          "file": "fragments/post-wrapper.html",
+          "params": {
+            "title": "post 2"
+          },
+          "replacement": "replacement"
+        },
+        {
+          "type": "wrapper",
+          "file": "fragments/post-wrapper.html",
+          "params": {
+            "title": "post 2"
+          }
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/docs/quickstart.md",
+      "outputPath": "docmach/docs/quickstart.html",
+      "link": "/docs/quickstart.html",
+      "docmachTags": [
+        {
+          "type": "fragment",
+          "file": "fragments/head.html",
+          "params": {
+            "title": "Docmach Quickstart"
+          }
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar.html"
+        },
+        {
+          "type": "function",
+          "file": "fragments/doc-nav.js",
+          "params": {
+            "prev": {
+              "link": "/docs/introduction.html",
+              "text": "Introduction"
+            },
+            "next": {
+              "link": "/docs/configuration.html",
+              "text": "Configurations"
+            }
+          }
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar-end.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/footer.html"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/docs/advanced-features.md",
+      "outputPath": "docmach/docs/advanced-features.html",
+      "link": "/docs/advanced-features.html",
+      "docmachTags": [
+        {
+          "type": "fragment",
+          "file": "fragments/head.html",
+          "params": {
+            "title": "Advanced Features"
+          }
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar-end.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/footer.html"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/docs/examples.md",
+      "outputPath": "docmach/docs/examples.html",
+      "link": "/docs/examples.html",
+      "docmachTags": [
+        {
+          "type": "fragment",
+          "file": "fragments/head.html",
+          "params": {
+            "title": "Examples"
+          }
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar-end.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/footer.html"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/docs/api-reference.md",
+      "outputPath": "docmach/docs/api-reference.html",
+      "link": "/docs/api-reference.html",
+      "docmachTags": [
+        {
+          "type": "fragment",
+          "file": "fragments/head.html",
+          "params": {
+            "title": "API Reference"
+          }
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar-end.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/footer.html"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/docs/introduction.md",
+      "outputPath": "docmach/docs/introduction.html",
+      "link": "/docs/introduction.html",
+      "docmachTags": [
+        {
+          "type": "fragment",
+          "file": "fragments/head.html",
+          "params": {
+            "title": "introduction"
+          }
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar.html"
+        },
+        {
+          "type": "function",
+          "file": "fragments/doc-nav.js",
+          "params": {
+            "prev": {
+              "link": "/",
+              "text": "Get started"
+            },
+            "next": {
+              "link": "/docs/quickstart.html",
+              "text": "Quickstart"
+            }
+          }
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar-end.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/footer.html"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/docs/configuration.md",
+      "outputPath": "docmach/docs/configuration.html",
+      "link": "/docs/configuration.html",
+      "docmachTags": [
+        {
+          "type": "fragment",
+          "file": "fragments/head.html",
+          "params": {
+            "title": "Docmach Quickstart"
+          }
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar-end.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/footer.html"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/post.md",
+      "outputPath": "docmach/post.html",
+      "link": "/post.html",
+      "docmachTags": [
+        {
+          "type": "fragment",
+          "file": "fragments/head.html",
+          "params": {
+            "title": "introduction"
+          }
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/blog-start.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/blog-end.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/footer.html"
+        }
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Docmach Quickstart</title> 
+    <title>Advanced Features</title> 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -162,122 +162,128 @@
       <div class="container mx-auto px-6 py-12 max-w-5xl mt-16">
         <div class="prose prose-invert max-w-none mx-auto md:mx-0">
 
-<h1>Quickstart</h1>
-<p>Get started with Docmach in a few simple steps.</p>
-<h2>Installation</h2>
-<pre><code class="language-bash"><span class="hljs-comment"># Install locally</span>
-npm i docmach
-npx docmach
-
-<span class="hljs-comment"># Or install globally</span>
-npm i docmach -g
-docmach
-</code></pre>
-<h2>Create a New Project</h2>
-<pre><code class="language-bash"><span class="hljs-built_in">mkdir</span> my-docs
-<span class="hljs-built_in">cd</span> my-docs
-</code></pre>
-<h2>Basic Configuration</h2>
-<p>Add the following to your <code>package.json</code> file:</p>
-<pre><code class="language-json"><span class="hljs-attr">&quot;docmach&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./docs&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./docmach&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./assets&quot;</span>
+<h1>Advanced Features</h1>
+<p>Docmach provides powerful features for building sophisticated documentation sites and blogs.</p>
+<h2>Build Manifest</h2>
+<p>Every build generates a <code>docmach-manifest.json</code> file containing complete metadata about your site:</p>
+<pre><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;generatedAt&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2025-12-07T13:33:30.482Z&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;pages&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;sourcePath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docs/post.md&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;outputPath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docmach/post.html&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;link&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/post.html&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;docmachTags&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+        <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;fragment&quot;</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;file&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;fragments/head.html&quot;</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;params&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;title&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;My Post&quot;</span> <span class="hljs-punctuation">}</span>
+        <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">]</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
-<h2>Create Your First Document</h2>
-<p>Create a file called <code>index.md</code> in your docs directory:</p>
-<pre><code class="language-markdown"><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;fragment&quot;</span> <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;template.html&quot;</span> <span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title=My First Docmach Page&quot;</span>&gt;</span></span>
-
-<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;wrapper&quot;</span> <span class="hljs-attr">replacement</span>=<span class="hljs-string">&quot;replacement&quot;</span> <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;fragments/post-wrapper.html&quot;</span> <span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title: post 2;&quot;</span>&gt;</span></span>
-
-<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span></span>Nice h1 tag<span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span>
-
-<span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">docmach</span>&gt;</span></span>
-
-<span class="hljs-section"># Hello Docmach!</span>
-
-This is my first page created with Docmach.
-
-<span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">docmach</span>&gt;</span></span>
-</code></pre>
-<h2>Start the Development Server</h2>
-<pre><code class="language-bash">docmach
-</code></pre>
-<h2>Build for Production</h2>
-<pre><code class="language-bash">docmach build
-</code></pre>
-<p>This command:</p>
+<h3>Use Cases for Manifest</h3>
 <ul>
-<li>Compiles all Markdown files to HTML</li>
-<li>Copies assets to build directory</li>
-<li>Generates <code>docmach-manifest.json</code></li>
-<li>Compiles Tailwind CSS</li>
+<li><strong>Auto-generate navigation</strong> - Build dynamic menus from all pages</li>
+<li><strong>Create sitemaps</strong> - Generate XML sitemaps for SEO</li>
+<li><strong>Analyze dependencies</strong> - See which templates are used where</li>
+<li><strong>Build search indexes</strong> - Create client-side search functionality</li>
+<li><strong>Generate RSS feeds</strong> - Auto-create feeds from blog posts</li>
 </ul>
-<h2>Visualize Your Site Structure</h2>
-<pre><code class="language-bash">docmach <span class="hljs-built_in">print</span>
+<h2>Wrapper Tags</h2>
+<p>Wrappers provide a powerful way to compose layouts:</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span>
+  <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;wrapper&quot;</span>
+  <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;fragments/article-layout.html&quot;</span>
+  <span class="hljs-attr">replacement</span>=<span class="hljs-string">&quot;content&quot;</span>
+  <span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title: My Article; author: John Doe&quot;</span>
+&gt;</span>
+  # Article Content This Markdown content will be rendered and inserted into the
+  layout. ## Section 1 Your content here...
+<span class="hljs-tag">&lt;/<span class="hljs-name">docmach</span>&gt;</span>
 </code></pre>
-<p>Displays a tree view of all generated pages:</p>
-<pre><code>Docmach site structure
-┬
-├── /docs/
-  ├── /introduction.html
-  ├── /quickstart.html
-├── /index.html
+<p><strong>Layout file (article-layout.html):</strong></p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">article</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;prose&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>{{ title }}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;author&quot;</span>&gt;</span>By {{ author }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;content&quot;</span>&gt;</span>{{ content }}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">article</span>&gt;</span>
 </code></pre>
+<h2>Function Templates</h2>
+<p>Functions enable dynamic content generation with full JavaScript capabilities:</p>
+<pre><code class="language-js"><span class="hljs-comment">// fragments/blog-list.js</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">params</span>) {
+  <span class="hljs-keyword">const</span> { posts, limit = <span class="hljs-number">10</span> } = params;
+
+  <span class="hljs-keyword">return</span> posts
+    .<span class="hljs-title function_">slice</span>(<span class="hljs-number">0</span>, limit)
+    .<span class="hljs-title function_">map</span>(
+      <span class="hljs-function">(<span class="hljs-params">post</span>) =&gt;</span> <span class="hljs-string">`
+    &lt;article&gt;
+      &lt;h2&gt;&lt;a href=&quot;<span class="hljs-subst">${post.link}</span>&quot;&gt;<span class="hljs-subst">${post.title}</span>&lt;/a&gt;&lt;/h2&gt;
+      &lt;time&gt;<span class="hljs-subst">${post.date}</span>&lt;/time&gt;
+      &lt;p&gt;<span class="hljs-subst">${post.excerpt}</span>&lt;/p&gt;
+    &lt;/article&gt;
+  `</span>
+    )
+    .<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+}
+</code></pre>
+<p><strong>Usage:</strong></p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span>
+  <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;function&quot;</span>
+  <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;fragments/blog-list.js&quot;</span>
+  <span class="hljs-attr">params</span>=<span class="hljs-string">&quot;posts: {title: Post 1, link: /post1.html, date: 2025-01-01}; limit: 5&quot;</span>
+/&gt;</span>
+</code></pre>
+<h2>Nested Parameters</h2>
+<p>Docmach supports complex nested object parameters:</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span>
+  <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;function&quot;</span>
+  <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;fragments/author-card.js&quot;</span>
+  <span class="hljs-attr">params</span>=<span class="hljs-string">&quot;author: {name: John Doe, bio: Developer, social: {twitter: @johndoe, github: johndoe}}&quot;</span>
+/&gt;</span>
+</code></pre>
+<h2>Template Caching</h2>
+<p>Docmach uses an LRU cache (max 100 entries) for templates:</p>
+<ul>
+<li><strong>Fast rebuilds</strong> - Templates are cached in memory</li>
+<li><strong>Dependency tracking</strong> - Changes to templates trigger rebuilds of dependent pages</li>
+<li><strong>Incremental updates</strong> - Only affected files are recompiled</li>
+</ul>
 <h2>Programmatic API</h2>
-<p>Use Docmach as a library:</p>
+<p>Use Docmach as a library for dynamic content:</p>
 <pre><code class="language-js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Docmach</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;docmach&quot;</span>;
 
-<span class="hljs-comment">// Compile specific file</span>
+<span class="hljs-comment">// Compile a single file</span>
 <span class="hljs-keyword">await</span> <span class="hljs-title class_">Docmach</span>(<span class="hljs-string">&quot;docs/my-post.md&quot;</span>);
+
+<span class="hljs-comment">// Perfect for:</span>
+<span class="hljs-comment">// - Dynamic blog engines</span>
+<span class="hljs-comment">// - CMS integrations</span>
+<span class="hljs-comment">// - On-demand page generation</span>
+<span class="hljs-comment">// - API-driven documentation</span>
 </code></pre>
-<p>Perfect for:</p>
+<h2>Live Reload</h2>
+<p>Development server features:</p>
 <ul>
-<li>Dynamic blog engines</li>
-<li>CMS integrations</li>
-<li>On-demand page generation</li>
+<li><strong>WebSocket-based</strong> - Instant updates without polling</li>
+<li><strong>Smart injection</strong> - Live reload script auto-injected before <code>&lt;/body&gt;</code></li>
+<li><strong>Auto port selection</strong> - Finds available port starting from 4000</li>
+<li><strong>Throttled rebuilds</strong> - Batches rapid changes (250ms throttle)</li>
 </ul>
-<h2>View Your Site</h2>
-<p>Open your browser and navigate to <code>http://localhost:4000</code></p>
-<h2>Next Steps</h2>
+<h2>Asset Management</h2>
+<p>Intelligent asset handling:</p>
 <ul>
-<li>Create more Markdown files in your docs directory</li>
-<li>Customize templates in your fragments directory</li>
-<li>Add function templates for dynamic content</li>
-<li>Explore custom themes and Tailwind CSS options</li>
+<li><strong>Incremental copying</strong> - Only changed files are copied</li>
+<li><strong>Timestamp comparison</strong> - Skips unchanged assets</li>
+<li><strong>Automatic directory creation</strong> - Mirrors source structure</li>
+<li><strong>Supports all file types</strong> - Images, CSS, JS, fonts, etc.</li>
 </ul>
-<div class="container mx-auto px-6 py-8 max-w-4xl border-t border-white/10">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Previous Post -->
-        <a href="/docs/introduction.html" class="group relative overflow-hidden rounded-xl bg-white/5 p-6 transition-all hover:bg-white/10">
-            <div class="flex items-center gap-4">
-                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/10 text-orange-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-400">Previous</p>
-                    <h3 class="text-lg font-medium text-white group-hover:text-orange-400 transition-colors">Introduction</h3>
-                </div>
-            </div>
-        </a>
-        <a href="/docs/configuration.html" class="group relative overflow-hidden rounded-xl bg-white/5 p-6 transition-all hover:bg-white/10">
-            <div class="flex items-center gap-4 justify-end">
-                <div>
-                    <p class="text-sm text-gray-400 text-right">Next</p>
-                    <h3 class="text-lg font-medium text-white group-hover:text-orange-400 transition-colors">Configurations</h3>
-                </div>
-                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/10 text-orange-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </div>
-            </div>
-        </a>
-    </div>
-</div>
 </div>
 </div>
 </main>

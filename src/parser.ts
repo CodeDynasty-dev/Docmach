@@ -27,6 +27,7 @@ import {
   open,
   opendir,
   readdir,
+  readFile,
   stat,
   utimes,
   writeFile,
@@ -43,6 +44,7 @@ type configType = {
   "docs-directory": string;
   "build-directory": string;
   "assets-folder": string;
+  "site-url"?: string;
   root: string;
 };
 
@@ -206,6 +208,57 @@ function buildPageTree(
   return root;
 }
 
+async function generateSitemap(
+  metadata: PageMetadata[],
+  config: configType
+): Promise<void> {
+  const sitemapPath = join(config["build-directory"], "sitemap.xml");
+  const now = new Date().toISOString();
+
+  // Get base URL from config, package.json, or use placeholder
+  let baseUrl = "https://example.com";
+
+  // Priority 1: Use site-url from docmach config if provided
+  if (config["site-url"]) {
+    baseUrl = config["site-url"].replace(/\/$/, "");
+  } else {
+    // Priority 2: Fall back to homepage from package.json
+    try {
+      const packageJsonPath = join(cwd(), "package.json");
+      const packageData = await readFile(
+        normalizePath(packageJsonPath),
+        "utf8"
+      );
+      const pkg = JSON.parse(packageData);
+      if (pkg.homepage) {
+        // Remove trailing slash and any URL fragments (#readme, etc.)
+        baseUrl = pkg.homepage.replace(/\/$/, "").split("#")[0].split("?")[0];
+      }
+    } catch (_e) {
+      // Use default if package.json not found or no homepage
+    }
+  }
+
+  const urlEntries = metadata
+    .map((page) => {
+      return `  <url>
+    <loc>${baseUrl}${page.link}</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+    })
+    .join("\n");
+
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urlEntries}
+</urlset>`;
+
+  await writeFile(normalizePath(sitemapPath), sitemap);
+  console.log(`Generated sitemap: ${relative(cwd(), sitemapPath)}`);
+}
+
 async function generateManifest(
   metadata: PageMetadata[],
   config: configType
@@ -342,9 +395,10 @@ export const parseDocmachFIles = async (config: configType, file?: string) => {
   }
   const metadata = await parseFiles(files, config);
 
-  // Generate manifest only during full builds (not incremental file updates)
+  // Generate manifest and sitemap only during full builds (not incremental file updates)
   if (!file) {
     await generateManifest(metadata, config);
+    await generateSitemap(metadata, config);
   }
 
   return files;

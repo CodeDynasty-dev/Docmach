@@ -18,6 +18,44 @@ const md = new MarkdownIt({
   },
 });
 
+// Helper to protect code blocks from docmach tag processing
+function protectCodeBlocks(content: string): {
+  protectedContent: string;
+  codeBlocks: Map<string, string>;
+} {
+  const codeBlocks = new Map<string, string>();
+  let index = 0;
+
+  // Protect fenced code blocks (```...```)
+  let protectedContent = content.replace(/```[\s\S]*?```/g, (match) => {
+    const placeholder = `___CODE_BLOCK_${index}___`;
+    codeBlocks.set(placeholder, match);
+    index++;
+    return placeholder;
+  });
+
+  // Protect inline code (`...`)
+  protectedContent = protectedContent.replace(/`[^`\n]+`/g, (match) => {
+    const placeholder = `___INLINE_CODE_${index}___`;
+    codeBlocks.set(placeholder, match);
+    index++;
+    return placeholder;
+  });
+
+  return { protectedContent, codeBlocks };
+}
+
+function restoreCodeBlocks(
+  content: string,
+  codeBlocks: Map<string, string>
+): string {
+  let restored = content;
+  codeBlocks.forEach((original, placeholder) => {
+    restored = restored.replace(placeholder, original);
+  });
+  return restored;
+}
+
 class LRUCache<K, V> {
   private maxSize: number;
   private cache: Map<K, V>;
@@ -315,10 +353,13 @@ export interface PageTreeNode {
 function extractDocmachTags(fileContent: string): DocmachTagMetadata[] {
   const tags: DocmachTagMetadata[] = [];
 
+  // Protect code blocks before extracting tags
+  const { protectedContent } = protectCodeBlocks(fileContent);
+
   // Extract wrapper tags
   const wrapperRegex = /<docmach\b([^>]*?)\s*([^/])>([\s\S]*?)<\/docmach>/g;
   let match;
-  while ((match = wrapperRegex.exec(fileContent)) !== null) {
+  while ((match = wrapperRegex.exec(protectedContent)) !== null) {
     const attrStr = match[1].endsWith('"') ? match[1] : match[1] + '"';
     const attrs = parseAttributes(attrStr);
     const tag: DocmachTagMetadata = {
@@ -332,7 +373,7 @@ function extractDocmachTags(fileContent: string): DocmachTagMetadata[] {
 
   // Extract self-closing tags
   const tagRegex = /<docmach([^>]+)\/?\>/g;
-  while ((match = tagRegex.exec(fileContent)) !== null) {
+  while ((match = tagRegex.exec(protectedContent)) !== null) {
     const attrs = parseAttributes(match[1]);
     const tag: DocmachTagMetadata = {
       type: attrs["type"] || "unknown",
@@ -347,17 +388,44 @@ function extractDocmachTags(fileContent: string): DocmachTagMetadata[] {
 
 export async function compileFile(filePath: string): Promise<string> {
   let fileContent = await readFile(normalizePath(filePath), "utf8");
-  fileContent = md.render(fileContent);
+
+  // Protect code blocks from docmach tag processing
+  const { protectedContent, codeBlocks } = protectCodeBlocks(fileContent);
+
+  // Store HTML fragments with placeholders to prevent markdown from escaping them
+  const htmlFragments = new Map<string, string>();
+  let placeholderIndex = 0;
+
+  // Process docmach tags and replace with placeholders (on protected content)
+  let processedContent = protectedContent;
   const replacements: {
     original: string;
     replacement: string;
   }[] = [];
-  replacements.push(...(await processSelfClosingTags(fileContent, filePath)));
-  replacements.push(...(await processWrapperTags(fileContent, filePath)));
+  replacements.push(
+    ...(await processSelfClosingTags(processedContent, filePath))
+  );
+  replacements.push(...(await processWrapperTags(processedContent, filePath)));
+
   replacements.reverse().forEach(({ original, replacement }) => {
-    fileContent = fileContent.replace(original, replacement);
+    const placeholder = `<!--DOCMACH_PLACEHOLDER_${placeholderIndex}-->`;
+    htmlFragments.set(placeholder, replacement);
+    processedContent = processedContent.replace(original, placeholder);
+    placeholderIndex++;
   });
-  return fileContent;
+
+  // Restore code blocks before markdown rendering
+  processedContent = restoreCodeBlocks(processedContent, codeBlocks);
+
+  // Render markdown (placeholders won't be escaped)
+  processedContent = md.render(processedContent);
+
+  // Restore HTML fragments
+  htmlFragments.forEach((html, placeholder) => {
+    processedContent = processedContent.replace(placeholder, html);
+  });
+
+  return processedContent;
 }
 
 export async function compileFileWithMetadata(

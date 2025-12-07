@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Docmach Quickstart</title> 
+    <title>API Reference</title> 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -162,122 +162,201 @@
       <div class="container mx-auto px-6 py-12 max-w-5xl mt-16">
         <div class="prose prose-invert max-w-none mx-auto md:mx-0">
 
-<h1>Quickstart</h1>
-<p>Get started with Docmach in a few simple steps.</p>
-<h2>Installation</h2>
-<pre><code class="language-bash"><span class="hljs-comment"># Install locally</span>
-npm i docmach
-npx docmach
-
-<span class="hljs-comment"># Or install globally</span>
-npm i docmach -g
-docmach
-</code></pre>
-<h2>Create a New Project</h2>
-<pre><code class="language-bash"><span class="hljs-built_in">mkdir</span> my-docs
-<span class="hljs-built_in">cd</span> my-docs
-</code></pre>
-<h2>Basic Configuration</h2>
-<p>Add the following to your <code>package.json</code> file:</p>
-<pre><code class="language-json"><span class="hljs-attr">&quot;docmach&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./docs&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./docmach&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./assets&quot;</span>
+<h1>API Reference</h1>
+<p>Complete reference for Docmach configuration, tags, and programmatic usage.</p>
+<h2>Configuration</h2>
+<p>Configure Docmach in your <code>package.json</code>:</p>
+<pre><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;docmach&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docs&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docmach&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;assets&quot;</span>
+  <span class="hljs-punctuation">}</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
-<h2>Create Your First Document</h2>
-<p>Create a file called <code>index.md</code> in your docs directory:</p>
-<pre><code class="language-markdown"><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;fragment&quot;</span> <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;template.html&quot;</span> <span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title=My First Docmach Page&quot;</span>&gt;</span></span>
-
-<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;wrapper&quot;</span> <span class="hljs-attr">replacement</span>=<span class="hljs-string">&quot;replacement&quot;</span> <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;fragments/post-wrapper.html&quot;</span> <span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title: post 2;&quot;</span>&gt;</span></span>
-
-<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span></span>Nice h1 tag<span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span>
-
-<span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">docmach</span>&gt;</span></span>
-
-<span class="hljs-section"># Hello Docmach!</span>
-
-This is my first page created with Docmach.
-
-<span class="language-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">docmach</span>&gt;</span></span>
+<h3>Configuration Options</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>docs-directory</code></td>
+<td>string</td>
+<td><code>&quot;.&quot;</code> (root)</td>
+<td>Source directory containing Markdown files</td>
+</tr>
+<tr>
+<td><code>build-directory</code></td>
+<td>string</td>
+<td><code>&quot;./docmach&quot;</code></td>
+<td>Output directory for generated HTML</td>
+</tr>
+<tr>
+<td><code>assets-folder</code></td>
+<td>string</td>
+<td><code>&quot;&quot;</code> (none)</td>
+<td>Directory with static assets to copy to output</td>
+</tr>
+</tbody>
+</table>
+<h2>Docmach Tag Syntax</h2>
+<h3>Fragment Tag</h3>
+<p>Self-closing tag for HTML templates with variable substitution:</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span>
+  <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;fragment&quot;</span>
+  <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;path/to/template.html&quot;</span>
+  <span class="hljs-attr">params</span>=<span class="hljs-string">&quot;key1: value1; key2: value2&quot;</span>
+/&gt;</span>
 </code></pre>
-<h2>Start the Development Server</h2>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li><code>type</code>: Must be <code>&quot;fragment&quot;</code></li>
+<li><code>file</code>: Path to HTML template file (relative to project root)</li>
+<li><code>params</code>: Semicolon-separated key-value pairs (optional)</li>
+</ul>
+<p><strong>Template syntax:</strong></p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>{{ key1 }}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{{ key2 }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+<h3>Function Tag</h3>
+<p>Self-closing tag for JavaScript-generated content:</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span>
+  <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;function&quot;</span>
+  <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;path/to/function.js&quot;</span>
+  <span class="hljs-attr">params</span>=<span class="hljs-string">&quot;key1: value1; key2: value2&quot;</span>
+/&gt;</span>
+</code></pre>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li><code>type</code>: Must be <code>&quot;function&quot;</code></li>
+<li><code>file</code>: Path to JavaScript module (relative to project root)</li>
+<li><code>params</code>: Parameters passed to function (optional)</li>
+</ul>
+<p><strong>Function signature:</strong></p>
+<pre><code class="language-js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">params</span>) {
+  <span class="hljs-comment">// params = { key1: &quot;value1&quot;, key2: &quot;value2&quot; }</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-string">`&lt;div&gt;Generated HTML&lt;/div&gt;`</span>;
+}
+</code></pre>
+<h3>Wrapper Tag</h3>
+<p>Wrapping tag for composing layouts around Markdown content:</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span>
+  <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;wrapper&quot;</span>
+  <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;path/to/layout.html&quot;</span>
+  <span class="hljs-attr">replacement</span>=<span class="hljs-string">&quot;placeholder&quot;</span>
+  <span class="hljs-attr">params</span>=<span class="hljs-string">&quot;key: value&quot;</span>
+&gt;</span>
+  # Markdown content here This content will be rendered and inserted into {{
+  placeholder }}
+<span class="hljs-tag">&lt;/<span class="hljs-name">docmach</span>&gt;</span>
+</code></pre>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li><code>type</code>: Must be <code>&quot;wrapper&quot;</code></li>
+<li><code>file</code>: Path to HTML layout template</li>
+<li><code>replacement</code>: Name of placeholder in template where content will be inserted</li>
+<li><code>params</code>: Parameters for template variables (optional)</li>
+</ul>
+<h2>Parameter Syntax</h2>
+<h3>Simple Values</h3>
+<pre><code class="language-html">params=&quot;title: My Page; author: John Doe; count: 42&quot;
+</code></pre>
+<p>Results in:</p>
+<pre><code class="language-js">{ <span class="hljs-attr">title</span>: <span class="hljs-string">&quot;My Page&quot;</span>, <span class="hljs-attr">author</span>: <span class="hljs-string">&quot;John Doe&quot;</span>, <span class="hljs-attr">count</span>: <span class="hljs-number">42</span> }
+</code></pre>
+<h3>Nested Objects</h3>
+<pre><code class="language-html">params=&quot;user: {name: John, age: 30, email: john@example.com}&quot;
+</code></pre>
+<p>Results in:</p>
+<pre><code class="language-js">{ <span class="hljs-attr">user</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;John&quot;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">30</span>, <span class="hljs-attr">email</span>: <span class="hljs-string">&quot;john@example.com&quot;</span> } }
+</code></pre>
+<h3>Mixed Parameters</h3>
+<pre><code class="language-html">params=&quot;title: My Post; author: {name: John Doe, bio: Developer}; published:
+true&quot;
+</code></pre>
+<p>Results in:</p>
+<pre><code class="language-js">{
+  <span class="hljs-attr">title</span>: <span class="hljs-string">&quot;My Post&quot;</span>,
+  <span class="hljs-attr">author</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;John Doe&quot;</span>, <span class="hljs-attr">bio</span>: <span class="hljs-string">&quot;Developer&quot;</span> },
+  <span class="hljs-attr">published</span>: <span class="hljs-literal">true</span>
+}
+</code></pre>
+<h2>CLI Commands</h2>
+<h3>Development Server</h3>
 <pre><code class="language-bash">docmach
 </code></pre>
-<h2>Build for Production</h2>
+<p>Starts development server with:</p>
+<ul>
+<li>Live reload via WebSocket</li>
+<li>File watching for auto-rebuild</li>
+<li>Serves on <code>http://localhost:4000</code> (or next available port)</li>
+</ul>
+<h3>Production Build</h3>
 <pre><code class="language-bash">docmach build
 </code></pre>
-<p>This command:</p>
+<p>Builds site for production:</p>
 <ul>
-<li>Compiles all Markdown files to HTML</li>
-<li>Copies assets to build directory</li>
+<li>Compiles all Markdown files</li>
+<li>Copies assets</li>
 <li>Generates <code>docmach-manifest.json</code></li>
 <li>Compiles Tailwind CSS</li>
 </ul>
-<h2>Visualize Your Site Structure</h2>
+<h3>Print Site Structure</h3>
 <pre><code class="language-bash">docmach <span class="hljs-built_in">print</span>
 </code></pre>
-<p>Displays a tree view of all generated pages:</p>
-<pre><code>Docmach site structure
-┬
-├── /docs/
-  ├── /introduction.html
-  ├── /quickstart.html
-├── /index.html
-</code></pre>
+<p>Displays all pages in the build directory.</p>
 <h2>Programmatic API</h2>
-<p>Use Docmach as a library:</p>
+<h3>Import and Use</h3>
 <pre><code class="language-js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Docmach</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;docmach&quot;</span>;
 
 <span class="hljs-comment">// Compile specific file</span>
-<span class="hljs-keyword">await</span> <span class="hljs-title class_">Docmach</span>(<span class="hljs-string">&quot;docs/my-post.md&quot;</span>);
+<span class="hljs-keyword">await</span> <span class="hljs-title class_">Docmach</span>(<span class="hljs-string">&quot;docs/my-page.md&quot;</span>);
 </code></pre>
-<p>Perfect for:</p>
-<ul>
-<li>Dynamic blog engines</li>
-<li>CMS integrations</li>
-<li>On-demand page generation</li>
-</ul>
-<h2>View Your Site</h2>
-<p>Open your browser and navigate to <code>http://localhost:4000</code></p>
-<h2>Next Steps</h2>
-<ul>
-<li>Create more Markdown files in your docs directory</li>
-<li>Customize templates in your fragments directory</li>
-<li>Add function templates for dynamic content</li>
-<li>Explore custom themes and Tailwind CSS options</li>
-</ul>
-<div class="container mx-auto px-6 py-8 max-w-4xl border-t border-white/10">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Previous Post -->
-        <a href="/docs/introduction.html" class="group relative overflow-hidden rounded-xl bg-white/5 p-6 transition-all hover:bg-white/10">
-            <div class="flex items-center gap-4">
-                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/10 text-orange-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-400">Previous</p>
-                    <h3 class="text-lg font-medium text-white group-hover:text-orange-400 transition-colors">Introduction</h3>
-                </div>
-            </div>
-        </a>
-        <a href="/docs/configuration.html" class="group relative overflow-hidden rounded-xl bg-white/5 p-6 transition-all hover:bg-white/10">
-            <div class="flex items-center gap-4 justify-end">
-                <div>
-                    <p class="text-sm text-gray-400 text-right">Next</p>
-                    <h3 class="text-lg font-medium text-white group-hover:text-orange-400 transition-colors">Configurations</h3>
-                </div>
-                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/10 text-orange-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </div>
-            </div>
-        </a>
-    </div>
-</div>
+<h3>Use Cases</h3>
+<p><strong>Dynamic Blog Engine:</strong></p>
+<pre><code class="language-js"><span class="hljs-comment">// User creates post via API</span>
+<span class="hljs-keyword">const</span> postContent = <span class="hljs-keyword">await</span> <span class="hljs-title function_">saveToS3</span>(userPost);
+<span class="hljs-keyword">await</span> <span class="hljs-title function_">writeFile</span>(<span class="hljs-string">&quot;docs/posts/new-post.md&quot;</span>, postContent);
+<span class="hljs-keyword">await</span> <span class="hljs-title class_">Docmach</span>(<span class="hljs-string">&quot;docs/posts/new-post.md&quot;</span>);
+<span class="hljs-comment">// Serve from build directory with Nginx</span>
+</code></pre>
+<p><strong>CMS Integration:</strong></p>
+<pre><code class="language-js"><span class="hljs-comment">// On content update webhook</span>
+app.<span class="hljs-title function_">post</span>(<span class="hljs-string">&quot;/webhook/content-update&quot;</span>, <span class="hljs-title function_">async</span> (req, res) =&gt; {
+  <span class="hljs-keyword">const</span> { filePath } = req.<span class="hljs-property">body</span>;
+  <span class="hljs-keyword">await</span> <span class="hljs-title class_">Docmach</span>(filePath);
+  res.<span class="hljs-title function_">json</span>({ <span class="hljs-attr">success</span>: <span class="hljs-literal">true</span> });
+});
+</code></pre>
+<h2>Build Manifest Schema</h2>
+<p>Generated at <code>{build-directory}/docmach-manifest.json</code>:</p>
+<pre><code class="language-typescript"><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Manifest</span> {
+  <span class="hljs-attr">generatedAt</span>: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// ISO 8601 timestamp</span>
+  <span class="hljs-attr">pages</span>: <span class="hljs-title class_">PageMetadata</span>[];
+}
+
+<span class="hljs-keyword">interface</span> <span class="hljs-title class_">PageMetadata</span> {
+  <span class="hljs-attr">sourcePath</span>: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// Relative path to source .md file</span>
+  <span class="hljs-attr">outputPath</span>: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// Relative path to generated .html file</span>
+  <span class="hljs-attr">link</span>: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// URL path (relative to /)</span>
+  <span class="hljs-attr">docmachTags</span>: <span class="hljs-title class_">DocmachTag</span>[];
+}
+
+<span class="hljs-keyword">interface</span> <span class="hljs-title class_">DocmachTag</span> {
+  <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;fragment&quot;</span> | <span class="hljs-string">&quot;function&quot;</span> | <span class="hljs-string">&quot;wrapper&quot;</span>;
+  <span class="hljs-attr">file</span>?: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// Template/function file path</span>
+  <span class="hljs-attr">params</span>?: <span class="hljs-title class_">Record</span>&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">any</span>&gt;;
+  <span class="hljs-attr">replacement</span>?: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// Wrapper only</span>
+}
+</code></pre>
 </div>
 </div>
 </main>

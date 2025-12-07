@@ -32,7 +32,7 @@ Add the following to your `package.json` file:
 "docmach": {
   "docs-directory": "./docs",
   "build-directory": "./docmach",
-  "assets-folder": "./assets" 
+  "assets-folder": "./assets"
 }
 ```
 
@@ -43,7 +43,6 @@ Create a file called `index.md` in your docs directory:
 ```markdown
 <docmach type="fragment" file="template.html" params="title=My First Docmach Page">
 
- 
 <docmach type="wrapper" replacement="replacement" file="fragments/post-wrapper.html" params="title: post 2;">
 
 <h1>Nice h1 tag</h1>
@@ -62,23 +61,53 @@ This is my first page created with Docmach.
 ```bash
 docmach
 ```
-## Or just build a single md file
 
-```js
-import Docmach from "docmach";
+## Build for Production
 
-await Docmach(file);
+```bash
+docmach build
 ```
-This assumes the file exists in the docs folder.
-So, that why you can programmatically use this for a blog engine.
-You can write the file to s3 then the docs folder. then call ```Docmach(file);```
-Then configure Nginx to sever your build folder.
 
-## Visualize the pages in your site.
+This command:
+
+- Compiles all Markdown files to HTML
+- Copies assets to build directory
+- Generates `docmach-manifest.json`
+- Compiles Tailwind CSS
+
+## Visualize Your Site Structure
 
 ```bash
 docmach print
 ```
+
+Displays a tree view of all generated pages:
+
+```
+Docmach site structure
+┬
+├── /docs/
+  ├── /introduction.html
+  ├── /quickstart.html
+├── /index.html
+```
+
+## Programmatic API
+
+Use Docmach as a library:
+
+```js
+import Docmach from "docmach";
+
+// Compile specific file
+await Docmach("docs/my-post.md");
+```
+
+Perfect for:
+
+- Dynamic blog engines
+- CMS integrations
+- On-demand page generation
 
 ## View Your Site
 

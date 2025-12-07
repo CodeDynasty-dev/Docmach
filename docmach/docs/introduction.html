@@ -9,66 +9,159 @@
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
 </head>
-
 <body class="bg-[#0A0A0A]">
-<div class="">
- 
+  <div class="">
     <!-- Sidebar Navigation -->
-<aside class="w-64 fixed h-screen bg-[#161616] border-r border-white/10 overflow-y-auto hidden md:grid">
-        <div class="p-6">
-            <div class="flex items-center gap-3 mb-8">
-                <a href="../index.html" class="flex gap-4">
-                    <img src="/logo.png" alt="docmach" class="w-30" >  
-                </a>
-            </div>
-            
-            <!-- Documentation Navigation -->
-            <nav class="space-y-8">
-                <div>
-                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Getting Started</h2>
-                    <ul class="space-y-2">
-                        <li><a href="/docs/introduction.html" class="text-gray-300 hover:text-orange-400 block transition-colors">Introduction</a></li> 
-                        <li><a href="/docs/quickstart.html" class="text-gray-300 hover:text-orange-400 block transition-colors">Quick Start</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Core Concepts</h2>
-                    <ul class="space-y-2">
-                        <li><a href="/docs/configuration.html" class="text-gray-300 hover:text-orange-400 block transition-colors">Configuration</a></li>
-                        <li><a href="#markdown" class="text-gray-300 hover:text-orange-400 block transition-colors">Docmach Syntax</a></li>
-                    </ul>
-                </div> 
-                <div class="opacity-[0.6] cursor-not-allowed" title="Coming Soon">
-                    <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">Advanced</h2>
-                    <ul class="space-y-2  pointer-events-none">
-                        <li><a href="#plugins" class="text-gray-300 hover:text-orange-400 block transition-colors">Plugins</a></li> 
-                        <li><a href="#deployment" class="text-gray-300 hover:text-orange-400 block transition-colors">Deployment</a></li>
-                    </ul>
-                </div>
-            </nav>
+    <aside
+      class="w-64 fixed h-screen bg-[#161616] border-r border-white/10 overflow-y-auto hidden md:grid">
+      <div class="p-6">
+        <div class="flex items-center gap-3 mb-8">
+          <a href="../index.html" class="flex gap-4">
+            <img src="/logo.png" alt="docmach" class="w-30" />
+          </a>
         </div>
+
+        <!-- Documentation Navigation -->
+        <nav class="space-y-8">
+          <div>
+            <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">
+              Getting Started
+            </h2>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="/docs/introduction.html"
+                  class="text-gray-300 hover:text-orange-400 block transition-colors">Introduction</a               >
+              </li>
+              <li>
+                <a
+                  href="/docs/quickstart.html"
+                  class="text-gray-300 hover:text-orange-400 block transition-colors"
+                  >Quick Start</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">
+              Core Concepts
+            </h2>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="/docs/configuration.html"
+                  class="text-gray-300 hover:text-orange-400 block transition-colors"
+                  >Configuration</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/docs/examples.html"
+                  class="text-gray-300 hover:text-orange-400 block transition-colors"
+                  >Examples</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">
+              Advanced
+            </h2>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="/docs/advanced-features.html"
+                  class="text-gray-300 hover:text-orange-400 block transition-colors"
+                  >Advanced Features</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/docs/api-reference.html"
+                  class="text-gray-300 hover:text-orange-400 block transition-colors"
+                  >API Reference</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2 class="text-sm font-semibold text-gray-400 uppercase mb-3">
+              Project
+            </h2>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="https://github.com/CodeDynasty-dev/Docmach/blob/main/ROADMAP.md"
+                  class="text-gray-300 hover:text-orange-400 block transition-colors"
+                  >Roadmap</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://github.com/CodeDynasty-dev/Docmach/blob/main/CONTRIBUTING.md"
+                  class="text-gray-300 hover:text-orange-400 block transition-colors"
+                  >Contributing</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://github.com/CodeDynasty-dev/Docmach/blob/main/CHANGELOG.md"
+                  class="text-gray-300 hover:text-orange-400 block transition-colors"
+                  >Changelog</a
+                >
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </aside>
     <!-- Main Content -->
-    <main class="md:ml-64 flex-1 pt-16 min-h-screen" >
-            <!-- Floating Navigation -->
-        <nav class="max-w-[90vw] flex justify-center w-full lg:w-fit fixed top-8 left-1/2 transform -translate-x-1/2 backdrop-blur-lg bg-white/10 rounded-full px-8 py-4 z-50">
-        <div class="flex items-center space-x-6 md:space-x-8 ">
-            <a href="/" class="text-white hover:text-orange-400 transition-colors hidden lg:block">Home</a>
-            <a href="../docs/introduction.html" class="text-white hover:text-orange-400 transition-colors hidden lg:block">Docs</a>
-            <img src="/logo.png" alt="docmach" class="w-30 -translate-y-1" > 
-                            <div class="relative md:grid">
-                        <input type="search" 
-                               placeholder="Search documentation..." 
-                               class="w-[180px] lg:w-64 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500">
-                    </div>
-            <a href="https://github.com/CodeDynasty-dev/Docmach" class="text-white hover:text-orange-400 transition-colors hidden lg:block">GitHub</a>
-            <a href="../blog.html" class="text-white hover:text-orange-400 transition-colors hidden lg:block">Blog</a>
+    <main class="md:ml-64 flex-1 pt-16 min-h-screen">
+      <!-- Floating Navigation -->
+      <nav
+        class="max-w-[90vw] flex justify-center w-full lg:w-fit fixed top-8 left-1/2 transform -translate-x-1/2 backdrop-blur-lg bg-white/10 rounded-full px-8 py-4 z-50"
+      >
+        <div class="flex items-center space-x-6 md:space-x-8">
+          <a
+            href="/"
+            class="text-white hover:text-orange-400 transition-colors hidden lg:block"
+            >Home</a
+          >
+          <a
+            href="../docs/introduction.html"
+            class="text-white hover:text-orange-400 transition-colors hidden lg:block"
+            >Docs</a
+          >
+          <img src="/logo.png" alt="docmach" class="w-30 -translate-y-1" />
+          <div class="relative md:grid">
+            <input
+              type="search"
+              placeholder="Search documentation..."
+              class="w-[180px] lg:w-64 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+          <a
+            href="https://github.com/CodeDynasty-dev/Docmach"
+            class="text-white hover:text-orange-400 transition-colors hidden lg:block"
+            >GitHub</a
+          >
+          <a
+            href="../blog.html"
+            class="text-white hover:text-orange-400 transition-colors hidden lg:block"
+            >Blog</a
+          >
         </div>
-    </nav>
-        <!-- Documentation Content -->
-        <div class="container mx-auto px-6 py-12 max-w-5xl mt-16">
-            <div class="prose prose-invert max-w-none mx-auto md:mx-0">
+      </nav>
+      <!-- Documentation Content -->
+      <div class="container mx-auto px-6 py-12 max-w-5xl mt-16">
+          >
+        </div>
+      </nav>
+      <!-- Documentation Content -->
+      <div class="container mx-auto px-6 py-12 max-w-5xl mt-16">
+        <div class="prose prose-invert max-w-none mx-auto md:mx-0">
+
 <h1>Docmach - Markdown Compiler for Blogs &amp; Project Documentation</h1>
 <p><strong>Docmach</strong> is a <strong>Markdown-powered</strong> static site generator designed for <strong>modern blogs and project documentation</strong>. It integrates <strong>the simplicity of Markdown and Tailwind CSS</strong> to generate sites with minimal effort.</p>
 <h2>Why Choose Docmach</h2>
@@ -88,56 +181,68 @@ npm i -g docmach
 <span class="hljs-built_in">cd</span> my-blog
 docmach
 </code></pre>
-<h2>Or just build a single md file</h2>
+<h2>Programmatic Usage</h2>
+<p>Docmach can be used as a library for dynamic content generation:</p>
 <pre><code class="language-js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Docmach</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;docmach&quot;</span>;
 
-<span class="hljs-keyword">await</span> <span class="hljs-title class_">Docmach</span>(file);
+<span class="hljs-comment">// Compile a specific file</span>
+<span class="hljs-keyword">await</span> <span class="hljs-title class_">Docmach</span>(<span class="hljs-string">&quot;docs/my-post.md&quot;</span>);
 </code></pre>
-<p>This assumes the file exists in the docs folder.
-So, that why you can programmatically use this for a blog engine.
-You can write the file to s3 then the docs folder. then call <code>Docmach(file);</code>
-Then configure Nginx to sever your build folder.</p>
+<p><strong>Use Cases:</strong></p>
+<ul>
+<li><strong>Dynamic blog engines</strong> - Generate posts on-demand</li>
+<li><strong>CMS integration</strong> - Compile content from external sources</li>
+<li><strong>API-driven documentation</strong> - Build docs from API responses</li>
+<li><strong>Automated workflows</strong> - Integrate with CI/CD pipelines</li>
+</ul>
+<p><strong>Example workflow:</strong></p>
+<ol>
+<li>User creates content via API</li>
+<li>Save to S3 or local storage</li>
+<li>Call <code>Docmach(file)</code> to compile</li>
+<li>Serve generated HTML with Nginx or CDN</li>
+</ol>
 <h2>How Docmach Works</h2>
 <p>Docmach parses all .md files in your input folder, extracting and processing Markdown and HTML content. It uses special Docmach tag to apply templates and functions.</p>
 <h3>Docmach Tag</h3>
 <p>Docmach tags work similarly to HTML tags:</p>
-<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span> 
-<span class="hljs-attr">type</span>=<span class="hljs-string">&quot;fragment&quot;</span> 
-<span class="hljs-attr">file</span>=<span class="hljs-string">&quot;template.html&quot;</span> 
-<span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title=My Page; author=JohnDoe&quot;</span> 
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span>
+  <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;fragment&quot;</span>
+  <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;template.html&quot;</span>
+  <span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title=My Page; author=JohnDoe&quot;</span>
 /&gt;</span>
 
 <span class="hljs-comment">&lt;!-- Function parameters example --&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">docmach</span> 
-<span class="hljs-attr">type</span>=<span class="hljs-string">&quot;function&quot;</span> 
-<span class="hljs-attr">file</span>=<span class="hljs-string">&quot;author-bio.js&quot;</span> 
-<span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title=My Page; author={name: JohnDoe, age: 24, date: 20th March 2015}&quot;</span> 
+<span class="hljs-tag">&lt;<span class="hljs-name">docmach</span>
+  <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;function&quot;</span>
+  <span class="hljs-attr">file</span>=<span class="hljs-string">&quot;author-bio.js&quot;</span>
+  <span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title=My Page; author={name: JohnDoe, age: 24, date: 20th March 2015}&quot;</span>
 /&gt;</span>
 </code></pre>
 <h2>Using Fragment Templates</h2>
 <p>Fragment templates allow you to create reusable HTML components:</p>
 <pre><code class="language-html"><span class="hljs-comment">&lt;!-- template.html --&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
-   <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>{{ title }}<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
-   <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
-   <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>{{ author }}<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
-   <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>{{ title }}<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>{{ author }}<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
 </code></pre>
 <h2>Using Function Templates</h2>
 <p>Function templates enable dynamic content generation:</p>
 <pre><code class="language-js"><span class="hljs-comment">// in author-bio.js</span>
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">title, author</span>) {
-   <span class="hljs-keyword">return</span> <span class="hljs-string">`
+  <span class="hljs-keyword">return</span> <span class="hljs-string">`
    &lt;div&gt;
    &lt;h1&gt;by <span class="hljs-subst">${title}</span>&lt;/h1&gt;
    &lt;h3&gt;by <span class="hljs-subst">${author.name}</span>&lt;/h3&gt;
    &lt;p&gt;Aged: <span class="hljs-subst">${author.age}</span>&lt;/p&gt;
    &lt;p&gt;On: <span class="hljs-subst">${author.date}</span>&lt;/p&gt;
    &lt;/div&gt;
-   `</span>
+   `</span>;
 }
 </code></pre>
 <h2>Configuration</h2>
@@ -145,7 +250,7 @@ Then configure Nginx to sever your build folder.</p>
 <pre><code class="language-json"><span class="hljs-attr">&quot;docmach&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
   <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./docs&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./docmach&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./assets&quot;</span> 
+  <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./assets&quot;</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
 <h2>About Docmach</h2>
@@ -161,7 +266,7 @@ Then configure Nginx to sever your build folder.</p>
 <li><strong>SEO &amp; Accessibility Built-In</strong> – Generates clean, semantic HTML optimized for search engines</li>
 </ul>
 <p>Designed to be focused on <strong>speed, developer experience, and flexibility</strong>.</p>
-<p><div class="container mx-auto px-6 py-8 max-w-4xl border-t border-white/10">
+<div class="container mx-auto px-6 py-8 max-w-4xl border-t border-white/10">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Previous Post -->
         <a href="/" class="group relative overflow-hidden rounded-xl bg-white/5 p-6 transition-all hover:bg-white/10">
@@ -192,78 +297,180 @@ Then configure Nginx to sever your build folder.</p>
         </a>
     </div>
 </div>
-            </div>
-            </div>
-
-    </main>
 </div>
 </div>
-    <!-- Footer -->
-    <footer class="relative overflow-hidden border-t border-white/10 bg-gradient-to-b from-[#1A1A1A] to-[#0A0A0A]">
-        <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div class="container mx-auto px-6 py-16 relative z-10">
-            <div class="flex flex-col md:flex-row justify-between items-start gap-12">
-                <!-- Brand Section -->
-                <div class="space-y-6 md:w-1/3">
-                    <div class="flex items-center gap-3"> 
-                        <img src="/logo.png" alt="docmach" class="w-30" >
-                    </div>
-                    <p class="text-gray-400">Transform your documentation into an immersive experience with our modern markdown compiler.</p>
-                </div>
+</main>
+</div>
 
-                <!-- Quick Links -->
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-8 md:w-2/3">
-                    <div class="space-y-4">
-                        <h3 class="text-white font-semibold">Documentation</h3>
-                        <ul class="space-y-2">
-                            <li><a href="docs/quickstart.html" class="text-gray-400 hover:text-orange-400 transition-colors">Quick Start</a></li>
-                            <li><a href="docs/introduction.html" class="text-gray-400 hover:text-orange-400 transition-colors">Documentation</a></li>
-                        </ul>
-                    </div>
-                    <div class="space-y-4">
-                        <h3 class="text-white font-semibold">Resources</h3>
-                        <ul class="space-y-2">
-                            <li><a href="blog.html" class="text-gray-400 hover:text-orange-400 transition-colors">Blog</a></li>
-                            <li><a href="https://github.com/CodeDynasty-dev/Docmach/tree/main/docs" class="text-gray-400 hover:text-orange-400 transition-colors">Examples</a></li>
-                        </ul>
-                    </div>
-                    <div class="space-y-4">
-                        <h3 class="text-white font-semibold">Connect</h3>
-                        <ul class="space-y-2">
-                            <li><a href="https://github.com/CodeDynasty-dev/Docmach" class="text-gray-400 hover:text-orange-400 transition-colors inline-flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
-                                </svg>
-                                GitHub
-                            </a></li>
-                            <li><a href="https://discord.gg/j3W86Zcq4s" class="text-gray-400 hover:text-orange-400 transition-colors inline-flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
-                                </svg>
-                                Discord
-                            </a></li>
-                            <li><a href="https://x.com/codedynasty" class="text-gray-400 hover:text-orange-400 transition-colors inline-flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-                                </svg>
-                                Twitter
-                            </a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-gray-400 text-sm">&copy; 2025 Docmach. All rights reserved.</p>
-                <div class="flex items-center gap-6">
-                    <a href="privacy" class="text-gray-400 hover:text-orange-400 text-sm transition-colors">Privacy Policy</a>
-                    <a href="terms" class="text-gray-400 hover:text-orange-400 text-sm transition-colors">Terms of Service</a>
-                </div>
-            </div>
+</div>
+<!-- Footer -->
+<footer
+  class="relative overflow-hidden border-t border-white/10 bg-gradient-to-b from-[#1A1A1A] to-[#0A0A0A]"
+>
+  <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+  <div class="container mx-auto px-6 py-16 relative z-10">
+    <div class="flex flex-col md:flex-row justify-between items-start gap-12">
+      <!-- Brand Section -->
+      <div class="space-y-6 md:w-1/3">
+        <div class="flex items-center gap-3">
+          <img src="/logo.png" alt="docmach" class="w-30">
         </div>
-    </footer>
-    </body>
+        <p class="text-gray-400">
+          Transform your documentation into an immersive experience with our
+          modern markdown compiler.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-8 md:w-2/3">
+        <div class="space-y-4">
+          <h3 class="text-white font-semibold">Documentation</h3>
+          <ul class="space-y-2">
+            <li>
+              <a
+                href="docs/introduction.html"
+                class="text-gray-400 hover:text-orange-400 transition-colors"
+              >Introduction</a>
+            </li>
+            <li>
+              <a
+                href="docs/quickstart.html"
+                class="text-gray-400 hover:text-orange-400 transition-colors"
+              >Quick Start</a>
+            </li>
+            <li>
+              <a
+                href="docs/configuration.html"
+                class="text-gray-400 hover:text-orange-400 transition-colors"
+              >Configuration</a>
+            </li>
+            <li>
+              <a
+                href="docs/advanced-features.html"
+                class="text-gray-400 hover:text-orange-400 transition-colors"
+              >Advanced</a>
+            </li>
+            <li>
+              <a
+                href="docs/api-reference.html"
+                class="text-gray-400 hover:text-orange-400 transition-colors"
+              >API Reference</a>
+            </li>
+          </ul>
+        </div>
+        <div class="space-y-4">
+          <h3 class="text-white font-semibold">Resources</h3>
+          <ul class="space-y-2">
+            <li>
+              <a
+                href="docs/examples.html"
+                class="text-gray-400 hover:text-orange-400 transition-colors"
+              >Examples</a>
+            </li>
+            <li>
+              <a
+                href="blog.html"
+                class="text-gray-400 hover:text-orange-400 transition-colors"
+              >Blog</a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/CodeDynasty-dev/Docmach/blob/main/ROADMAP.md"
+                class="text-gray-400 hover:text-orange-400 transition-colors"
+              >Roadmap</a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/CodeDynasty-dev/Docmach/blob/main/CONTRIBUTING.md"
+                class="text-gray-400 hover:text-orange-400 transition-colors"
+              >Contributing</a>
+            </li>
+          </ul>
+        </div>
+        <div class="space-y-4">
+          <h3 class="text-white font-semibold">Connect</h3>
+          <ul class="space-y-2">
+            <li>
+              <a
+                href="https://github.com/CodeDynasty-dev/Docmach"
+                class="text-gray-400 hover:text-orange-400 transition-colors inline-flex items-center gap-2"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                    clip-rule="evenodd"
+                  >
+                  </path>
+                </svg>
+                GitHub
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://discord.gg/j3W86Zcq4s"
+                class="text-gray-400 hover:text-orange-400 transition-colors inline-flex items-center gap-2"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"
+                  />
+                </svg>
+                Discord
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://x.com/codedynasty"
+                class="text-gray-400 hover:text-orange-400 transition-colors inline-flex items-center gap-2"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                  >
+                  </path>
+                </svg>
+                Twitter
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div
+      class="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4"
+    >
+      <p class="text-gray-400 text-sm">
+        &copy; 2025 Docmach. All rights reserved.
+      </p>
+      <div class="flex items-center gap-6">
+        <a
+          href="privacy"
+          class="text-gray-400 hover:text-orange-400 text-sm transition-colors"
+        >Privacy Policy</a>
+        <a
+          href="terms"
+          class="text-gray-400 hover:text-orange-400 text-sm transition-colors"
+        >Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
 </html>
 
-
-
-</p>
