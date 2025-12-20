@@ -28,7 +28,7 @@ function protectCodeBlocks(content: string): {
 
   // Protect fenced code blocks (```...```)
   let protectedContent = content.replace(/```[\s\S]*?```/g, (match) => {
-    const placeholder = `___CODE_BLOCK_${index}___`;
+    const placeholder = `DOCMACH_CODE_BLOCK_${index}`;
     codeBlocks.set(placeholder, match);
     index++;
     return placeholder;
@@ -36,7 +36,7 @@ function protectCodeBlocks(content: string): {
 
   // Protect inline code (`...`)
   protectedContent = protectedContent.replace(/`[^`\n]+`/g, (match) => {
-    const placeholder = `___INLINE_CODE_${index}___`;
+    const placeholder = `DOCMACH_INLINE_CODE_${index}`;
     codeBlocks.set(placeholder, match);
     index++;
     return placeholder;
@@ -152,7 +152,11 @@ function parseParams(
   return params;
 }
 
-async function processWrapperTags(fileContent: string, filePath: string) {
+async function processWrapperTags(
+  fileContent: string,
+  filePath: string,
+  codeBlocks: Map<string, string>
+) {
   const replacements: { original: string; replacement: string }[] = [];
   const wrapperRegex = /<docmach\b([^>]*?)\s*([^/])>([\s\S]*?)<\/docmach>/g;
 
@@ -212,6 +216,7 @@ async function processWrapperTags(fileContent: string, filePath: string) {
             );
           });
         }
+        innerContent = restoreCodeBlocks(innerContent, codeBlocks);
         innerContent = md.render(innerContent);
         const replaced = templateContent.replace(
           new RegExp(`{{\\s*${attrs["replacement"]}\\s*}}`),
@@ -405,7 +410,9 @@ export async function compileFile(filePath: string): Promise<string> {
   replacements.push(
     ...(await processSelfClosingTags(processedContent, filePath))
   );
-  replacements.push(...(await processWrapperTags(processedContent, filePath)));
+  replacements.push(
+    ...(await processWrapperTags(processedContent, filePath, codeBlocks))
+  );
 
   replacements.reverse().forEach(({ original, replacement }) => {
     const placeholder = `<!--DOCMACH_PLACEHOLDER_${placeholderIndex}-->`;
