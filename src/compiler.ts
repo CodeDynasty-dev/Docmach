@@ -47,13 +47,21 @@ function protectCodeBlocks(content: string): {
 
 function restoreCodeBlocks(
   content: string,
-  codeBlocks: Map<string, string>
+  codeBlocks: Map<string, string>,
 ): string {
-  let restored = content;
-  codeBlocks.forEach((original, placeholder) => {
-    restored = restored.replace(placeholder, original);
+  // Build a single regex that matches all placeholders
+  const placeholders = Array.from(codeBlocks.keys());
+  if (placeholders.length === 0) return content;
+
+  // Escape special regex characters in placeholders
+  const escapedPlaceholders = placeholders.map((p) =>
+    p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+  );
+  const regex = new RegExp(`(${escapedPlaceholders.join("|")})`, "g");
+
+  return content.replace(regex, (match) => {
+    return codeBlocks.get(match) || match;
   });
-  return restored;
 }
 
 class LRUCache<K, V> {
@@ -209,12 +217,13 @@ async function processWrapperTags(
       if (templateContent) {
         const params = attrs["params"] ? parseParams(attrs["params"]) : {};
         if (params) {
-          Object.entries(params).forEach(([key, value]) => {
-            templateContent = templateContent!.replace(
-              new RegExp(`{{\\s*${key}\\s*}}`, "g"),
-              String(value)
-            );
-          });
+          // Replace all parameter placeholders in a single pass
+          templateContent = templateContent.replace(
+            /{{\s*(\w+)\s*}}/g,
+            (_, key) => {
+              return String(params[key] ?? "");
+            },
+          );
         }
         innerContent = restoreCodeBlocks(innerContent, codeBlocks);
         innerContent = md.render(innerContent);
@@ -317,12 +326,13 @@ async function processSelfClosingTags(fileContent: string, filePath: string) {
         templateCache.set(resolvedPath, frag);
       }
       if (params) {
-        Object.entries(params).forEach(([key, value]) => {
-          fragmentContent = fragmentContent.replace(
-            new RegExp(`{{\\s*${key}\\s*}}`, "g"),
-            String(value)
-          );
-        });
+        // Replace all parameter placeholders in a single pass
+        fragmentContent = fragmentContent.replace(
+          /{{\s*(\w+)\s*}}/g,
+          (_, key) => {
+            return String(params[key] ?? "");
+          },
+        );
       }
       replacements.push({ original: tagFull, replacement: fragmentContent });
     }

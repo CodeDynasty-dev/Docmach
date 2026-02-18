@@ -14,6 +14,7 @@
 
 // native
 import { mkdir, open, readFile, rm, stat } from "fs/promises";
+import { existsSync } from "fs";
 import { extname, join, resolve } from "path";
 import { createReadStream } from "node:fs";
 import { exec } from "child_process";
@@ -124,7 +125,7 @@ function logHttpError(
   url: string,
   statusCode: number,
   message: string,
-  error?: any
+  error?: any,
 ): void {
   const errorLog = {
     method,
@@ -135,7 +136,7 @@ function logHttpError(
   };
 
   console.error(
-    `[${errorLog.method} ${errorLog.url} - ${errorLog.statusCode}: ${errorLog.message}`
+    `[${errorLog.method} ${errorLog.url} - ${errorLog.statusCode}: ${errorLog.message}`,
   );
   if (errorLog.error) {
     console.error("Error Details:", String(errorLog.error));
@@ -182,7 +183,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 const css_command = `npx tailwindcss -c tailwind.config.js -o "${normalizePath(
-  join(config["build-directory"], "/bundle.css")
+  join(config["build-directory"], "/bundle.css"),
 )}"`;
 
 function buildCSS() {
@@ -218,7 +219,7 @@ function broadcastReload() {
         if (client.readyState === WebSocket.OPEN) {
           client.send("reload");
         }
-      }
+      },
     );
   }, 5);
 }
@@ -268,12 +269,23 @@ async function main() {
   }
   await buildCSS();
 
-  const watcher = chokidar.watch(root, {
-    ignored: [".git", "node_modules", "**/node_modules", "**/.git"],
-    ignoreInitial: true,
-    ignorePermissionErrors: true,
-    awaitWriteFinish: true,
-  });
+  const watcher = chokidar.watch(
+    [
+      config["docs-directory"],
+      config["assets-folder"],
+      normalizePath(join(cwd(), "fragments")),
+    ].filter((path) => path && existsSync(path)),
+    {
+      ignored: ["**/node_modules/**", "**/.git/**", config["build-directory"]],
+      ignoreInitial: true,
+      ignorePermissionErrors: true,
+      usePolling: true,
+      awaitWriteFinish: {
+        stabilityThreshold: 200,
+        pollInterval: 100,
+      },
+    },
+  );
   const changesCompiler = async (file: string) => {
     if (parsing) return;
     try {
