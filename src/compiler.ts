@@ -55,7 +55,7 @@ function restoreCodeBlocks(
 
   // Escape special regex characters in placeholders
   const escapedPlaceholders = placeholders.map((p) =>
-    p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
   );
   const regex = new RegExp(`(${escapedPlaceholders.join("|")})`, "g");
 
@@ -218,13 +218,12 @@ async function processWrapperTags(
       if (templateContent) {
         const params = attrs["params"] ? parseParams(attrs["params"]) : {};
         if (params) {
-          // Replace all parameter placeholders in a single pass
-          templateContent = templateContent.replace(
-            /{{\s*(\w+)\s*}}/g,
-            (_, key) => {
-              return String(params[key] ?? "");
-            },
-          );
+          Object.entries(params).forEach(([key, value]) => {
+            templateContent = templateContent!.replace(
+              new RegExp(`{{\\s*${key}\\s*}}`, "g"),
+              String(value),
+            );
+          });
         }
         innerContent = restoreCodeBlocks(innerContent, codeBlocks);
         innerContent = md.render(innerContent);
