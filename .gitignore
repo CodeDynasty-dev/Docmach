@@ -1,14 +1,9 @@
-node_modules
-*/node_modules
-**/node_modules
-**/package-lock.json
-*/package-lock.json
+node_modules 
 **/dist
 */dist
 lib
 .env 
-/.git
-/node_modules
+/.git 
 .dockerignore
 .env
 Dockerfile
