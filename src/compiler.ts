@@ -7,7 +7,7 @@ import { normalizePath } from "./parser";
 
 const md = new MarkdownIt({
   html: true,
-  typographer: true,
+  typographer: false, // Disabled for lower memory usage
   highlight: function (str: string, lang: string): string {
     if (lang && hljs.getLanguage(lang)) {
       try {
@@ -68,7 +68,8 @@ class LRUCache<K, V> {
   private maxSize: number;
   private cache: Map<K, V>;
 
-  constructor(maxSize: number = 100) {
+  constructor(maxSize: number = 10) {
+    // Reduced from 100 to 20 for lower memory usage
     this.maxSize = maxSize;
     this.cache = new Map<K, V>();
   }
@@ -109,7 +110,7 @@ export const templateCache = new LRUCache<
     content: any;
     dependentMDs: Set<string>;
   }
->();
+>(20);
 
 // Helper: Parse attributes string into a key/value object.
 function parseAttributes(attrString: string): Record<string, string> {
@@ -124,7 +125,7 @@ function parseAttributes(attrString: string): Record<string, string> {
 }
 
 function parseParams(
-  paramsStr: string
+  paramsStr: string,
 ): Record<string, string | number | object> {
   const params: Record<string, string | number | object> = {};
   const regex = /(\w+):\s*(\{[^}]*\}|\S[^;]*)/g; // Match full objects or single values
@@ -163,7 +164,7 @@ function parseParams(
 async function processWrapperTags(
   fileContent: string,
   filePath: string,
-  codeBlocks: Map<string, string>
+  codeBlocks: Map<string, string>,
 ) {
   const replacements: { original: string; replacement: string }[] = [];
   const wrapperRegex = /<docmach\b([^>]*?)\s*([^/])>([\s\S]*?)<\/docmach>/g;
@@ -184,14 +185,14 @@ async function processWrapperTags(
     if (templateCache.has(resolvedPath)) {
       loadedTemplates.set(
         resolvedPath,
-        templateCache.get(resolvedPath)!.content
+        templateCache.get(resolvedPath)!.content,
       );
       return;
     }
     try {
       const fragmentContent = await readFile(
         normalizePath(resolvedPath),
-        "utf8"
+        "utf8",
       );
       loadedTemplates.set(resolvedPath, fragmentContent);
       const frag = {
@@ -229,14 +230,14 @@ async function processWrapperTags(
         innerContent = md.render(innerContent);
         const replaced = templateContent.replace(
           new RegExp(`{{\\s*${attrs["replacement"]}\\s*}}`),
-          innerContent
+          innerContent,
         );
         replacements.push({ original: fullMatch, replacement: replaced });
       }
     } else {
       if (!attrs["replacement"]) {
         console.error(
-          "Docmach: a wrapper tag must have a replacement attribute!"
+          "Docmach: a wrapper tag must have a replacement attribute!",
         );
       }
     }
@@ -263,7 +264,7 @@ async function processSelfClosingTags(fileContent: string, filePath: string) {
     if (templateCache.has(resolvedPath)) {
       loadedFunctions.set(
         resolvedPath,
-        templateCache.get(resolvedPath)!.content
+        templateCache.get(resolvedPath)!.content,
       );
       return;
     }
@@ -418,10 +419,10 @@ export async function compileFile(filePath: string): Promise<string> {
     replacement: string;
   }[] = [];
   replacements.push(
-    ...(await processSelfClosingTags(processedContent, filePath))
+    ...(await processSelfClosingTags(processedContent, filePath)),
   );
   replacements.push(
-    ...(await processWrapperTags(processedContent, filePath, codeBlocks))
+    ...(await processWrapperTags(processedContent, filePath, codeBlocks)),
   );
 
   replacements.reverse().forEach(({ original, replacement }) => {
@@ -446,10 +447,15 @@ export async function compileFile(filePath: string): Promise<string> {
 }
 
 export async function compileFileWithMetadata(
-  filePath: string
+  filePath: string,
 ): Promise<{ content: string; tags: DocmachTagMetadata[] }> {
   const rawContent = await readFile(normalizePath(filePath), "utf8");
   const tags = extractDocmachTags(rawContent);
   const content = await compileFile(filePath);
   return { content, tags };
+}
+
+// Clear template cache to free memory after build
+export function clearTemplateCache() {
+  templateCache["cache"].clear();
 }

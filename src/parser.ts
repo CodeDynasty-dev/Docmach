@@ -51,7 +51,7 @@ type configType = {
 const allowedFiles = /.md/;
 async function getTextFiles(
   source: string,
-  config: configType
+  config: configType,
 ): Promise<string[]> {
   const output: string[] = [];
   try {
@@ -73,7 +73,7 @@ async function getTextFiles(
     console.error(`Error reading directory: ${source.slice(0, 50)}...`);
     if (config["docs-directory"] === config["root"]) {
       console.warn(
-        "Please specify docmach `docs-directory` key in your `package.json` file \n Currently set to'.'."
+        "Please specify docmach `docs-directory` key in your `package.json` file \n Currently set to'.'.",
       );
     }
   }
@@ -103,41 +103,39 @@ function ensureFileSync(filePath: string) {
 }
 async function parseFiles(
   files: string[],
-  config: configType
+  config: configType,
 ): Promise<PageMetadata[]> {
   const metadata: PageMetadata[] = [];
 
-  await Promise.all(
-    files.map(async (file) => {
-      const { content, tags } = await compileFileWithMetadata(file);
-      const outputPath = resolve(
-        cwd(),
-        file.replace(config["docs-directory"], config["build-directory"])
-      ).replace(".md", ".html");
+  // Process files sequentially to reduce memory usage
+  for (const file of files) {
+    const { content, tags } = await compileFileWithMetadata(file);
+    const outputPath = resolve(
+      cwd(),
+      file.replace(config["docs-directory"], config["build-directory"]),
+    ).replace(".md", ".html");
 
-      ensureFileSync(outputPath);
-      await writeFile(normalizePath(outputPath), content);
+    ensureFileSync(outputPath);
+    await writeFile(normalizePath(outputPath), content);
 
-      // Generate relative link from build directory
-      const link =
-        "/" +
-        relative(config["build-directory"], outputPath).replace(/\\/g, "/");
+    // Generate relative link from build directory
+    const link =
+      "/" + relative(config["build-directory"], outputPath).replace(/\\/g, "/");
 
-      metadata.push({
-        sourcePath: relative(cwd(), file),
-        outputPath: relative(cwd(), outputPath),
-        link,
-        docmachTags: tags,
-      });
-    })
-  );
+    metadata.push({
+      sourcePath: relative(cwd(), file),
+      outputPath: relative(cwd(), outputPath),
+      link,
+      docmachTags: tags,
+    });
+  }
 
   return metadata;
 }
 
 function buildPageTree(
   metadata: PageMetadata[],
-  config: configType
+  config: configType,
 ): PageTreeNode {
   const root: PageTreeNode = {
     name: "/",
@@ -158,7 +156,7 @@ function buildPageTree(
     for (let i = 0; i < pathParts.length - 1; i++) {
       const dirName = pathParts[i];
       let childDir = currentNode.children?.find(
-        (child) => child.name === dirName && child.type === "directory"
+        (child) => child.name === dirName && child.type === "directory",
       );
 
       if (!childDir) {
@@ -210,7 +208,7 @@ function buildPageTree(
 
 async function generateSitemap(
   metadata: PageMetadata[],
-  config: configType
+  config: configType,
 ): Promise<void> {
   const sitemapPath = join(config["build-directory"], "sitemap.xml");
   const now = new Date().toISOString();
@@ -227,7 +225,7 @@ async function generateSitemap(
       const packageJsonPath = join(cwd(), "package.json");
       const packageData = await readFile(
         normalizePath(packageJsonPath),
-        "utf8"
+        "utf8",
       );
       const pkg = JSON.parse(packageData);
       if (pkg.homepage) {
@@ -261,7 +259,7 @@ ${urlEntries}
 
 async function generateManifest(
   metadata: PageMetadata[],
-  config: configType
+  config: configType,
 ): Promise<void> {
   const manifestPath = join(config["build-directory"], "docmach-manifest.json");
 
@@ -280,7 +278,7 @@ async function generateManifest(
 
   await writeFile(
     normalizePath(manifestPath),
-    JSON.stringify(manifest, null, 2)
+    JSON.stringify(manifest, null, 2),
   );
   console.log(`Generated manifest: ${relative(cwd(), manifestPath)}`);
 }
@@ -299,7 +297,7 @@ const getList = async (config: configType, file?: string) => {
 
 async function copyChangedFiles(
   sourceDir: string,
-  destinationDir: string
+  destinationDir: string,
 ): Promise<void> {
   async function processFile(srcPath: string, destPath: string): Promise<void> {
     try {
@@ -316,7 +314,7 @@ async function copyChangedFiles(
       if (shouldCopy) {
         await pipeline(
           createReadStream(normalizePath(srcPath)),
-          createWriteStream(normalizePath(destPath))
+          createWriteStream(normalizePath(destPath)),
         );
         await utimes(normalizePath(destPath), srcStat.atime, srcStat.mtime);
       }
@@ -330,17 +328,16 @@ async function copyChangedFiles(
     const entries: Dirent[] = await readdir(normalizePath(src), {
       withFileTypes: true,
     });
-    await Promise.all(
-      entries.map(async (entry) => {
-        const srcPath = join(src, entry.name);
-        const destPath = join(dest, entry.name);
-        if (entry.isDirectory()) {
-          return processDirectory(srcPath, destPath);
-        } else {
-          return processFile(srcPath, destPath);
-        }
-      })
-    );
+    // Process files sequentially to reduce memory usage
+    for (const entry of entries) {
+      const srcPath = join(src, entry.name);
+      const destPath = join(dest, entry.name);
+      if (entry.isDirectory()) {
+        await processDirectory(srcPath, destPath);
+      } else {
+        await processFile(srcPath, destPath);
+      }
+    }
   }
   await processDirectory(sourceDir, destinationDir);
 }
@@ -359,11 +356,11 @@ export const parseDocmachFIles = async (config: configType, file?: string) => {
           await handle.close();
           const sourceDir = path.relative(
             cwd(),
-            normalizePath(config["assets-folder"])
+            normalizePath(config["assets-folder"]),
           );
           const destinationDir = path.relative(
             cwd(),
-            normalizePath(config["build-directory"])
+            normalizePath(config["build-directory"]),
           );
           await copyChangedFiles(sourceDir, destinationDir);
         } catch (_e) {
@@ -379,15 +376,15 @@ export const parseDocmachFIles = async (config: configType, file?: string) => {
       await handle.close();
       const sourceDir = path.relative(
         cwd(),
-        normalizePath(config["assets-folder"])
+        normalizePath(config["assets-folder"]),
       );
       const destinationDir = path.relative(
         cwd(),
-        normalizePath(config["build-directory"])
+        normalizePath(config["build-directory"]),
       );
       await copyChangedFiles(
         normalizePath(sourceDir),
-        normalizePath(destinationDir)
+        normalizePath(destinationDir),
       );
     } catch (_e) {
       // Assets folder doesn't exist
@@ -399,6 +396,9 @@ export const parseDocmachFIles = async (config: configType, file?: string) => {
   if (!file) {
     await generateManifest(metadata, config);
     await generateSitemap(metadata, config);
+    // Clear template cache to free memory after build
+    const { clearTemplateCache } = await import("./compiler.ts");
+    clearTemplateCache();
   }
 
   return files;
