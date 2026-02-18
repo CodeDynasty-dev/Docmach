@@ -22,7 +22,7 @@ import { cwd } from "process";
 import http from "http";
 import net from "net";
 // packages
-import { WebSocketServer, WebSocket } from "ws";
+import { WebSocket, WebSocketServer } from "ws";
 import chokidar from "chokidar";
 import Mime from "mime/lite";
 // files
@@ -182,9 +182,11 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-const css_command = `npx tailwindcss -c tailwind.config.js -o "${normalizePath(
-  join(config["build-directory"], "/bundle.css"),
-)}"`;
+const css_command = `npx tailwindcss -c tailwind.config.js -o "${
+  normalizePath(
+    join(config["build-directory"], "/bundle.css"),
+  )
+}"`;
 
 function buildCSS() {
   return new Promise((resolve) => {
@@ -296,8 +298,9 @@ async function main() {
           !file.includes(".md") ||
           !templateCache.has(file)
         )
-      )
+      ) {
         return;
+      }
     } catch (_e) {}
     if (templateCache.has(file)) {
       const deps = templateCache.get(file)!;

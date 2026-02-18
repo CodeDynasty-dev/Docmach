@@ -35,7 +35,7 @@ import {
 import { pipeline } from "stream/promises";
 import { cwd } from "node:process";
 import { join } from "path";
-import path, { resolve, relative } from "node:path";
+import path, { relative, resolve } from "node:path";
 //
 import { compileFileWithMetadata } from "./compiler.ts";
 import type { PageMetadata, PageTreeNode } from "./compiler.ts";
@@ -119,8 +119,8 @@ async function parseFiles(
     await writeFile(normalizePath(outputPath), content);
 
     // Generate relative link from build directory
-    const link =
-      "/" + relative(config["build-directory"], outputPath).replace(/\\/g, "/");
+    const link = "/" +
+      relative(config["build-directory"], outputPath).replace(/\\/g, "/");
 
     metadata.push({
       sourcePath: relative(cwd(), file),
@@ -287,8 +287,9 @@ const getList = async (config: configType, file?: string) => {
   if (
     file &&
     (!allowedFiles.test(file) || !file.includes(config["docs-directory"]))
-  )
+  ) {
     return [];
+  }
   if (file) {
     return await getTextFile(file);
   }
@@ -406,8 +407,9 @@ export const parseDocmachFIles = async (config: configType, file?: string) => {
 
 // utils/paths.ts
 export function detectOS(): "windows" | "linux" | "darwin" | "unknown" {
-  const platform =
-    typeof process !== "undefined" ? process.platform : "unknown";
+  const platform = typeof process !== "undefined"
+    ? process.platform
+    : "unknown";
   // @ts-expect-error
   if (platform === "win32" || platform === "windows") return "windows";
   if (platform === "linux") return "linux";

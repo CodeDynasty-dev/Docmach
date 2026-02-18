@@ -55,7 +55,7 @@ function restoreCodeBlocks(
 
   // Escape special regex characters in placeholders
   const escapedPlaceholders = placeholders.map((p) =>
-    p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+    p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
   );
   const regex = new RegExp(`(${escapedPlaceholders.join("|")})`, "g");
 
