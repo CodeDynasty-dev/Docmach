@@ -1,262 +1,125 @@
 # Docmach Roadmap
 
-Strategic plan for evolving Docmach into a feature-rich, production-ready static site generator.
+**Docmach aims to be the SQLite and git of markdown publishing.** Boring on the surface, correct underneath, trustworthy forever. This roadmap is not a list of features — it is a list of _load-bearing decisions_, ordered by priority.
 
-## Version 1.1 - Enhanced Developer Experience (Q1 2026)
+> No dates in this document. Order is priority. If something below is done out of order, the order was wrong.
 
-### Plugin System
-
-- **Plugin API** - Allow third-party extensions
-- **Hook system** - Pre/post build hooks, file processing hooks
-- **Plugin registry** - Official plugin marketplace
-- **Core plugins:**
-  - SEO optimizer (meta tags, Open Graph, Twitter Cards)
-  - Sitemap generator
-  - RSS feed generator
-  - Search index builder
-
-### Improved CLI
-
-- **Interactive init** - `docmach init` wizard for project setup
-- **Template scaffolding** - Pre-built templates for blogs, docs, portfolios
-- **Better error messages** - Helpful suggestions and stack traces
-- **Progress indicators** - Visual feedback during builds
-- **Verbose mode** - `--verbose` flag for debugging
-
-### Configuration Enhancements
-
-- **Multiple config formats** - Support `docmach.config.js`, `docmach.config.ts`
-- **Environment variables** - Override config with env vars
-- **Config validation** - Schema validation with helpful errors
-- **Per-page frontmatter** - Override global config per file
-
-## Version 1.2 - Content Management (Q2 2026)
-
-### Frontmatter Support
-
-```markdown
----
-title: My Post
-date: 2026-01-15
-author: John Doe
-tags: [javascript, tutorial]
-draft: false
 ---
 
-# Content here
-```
+## The Doctrine
 
-- **Metadata extraction** - Parse YAML/TOML frontmatter
-- **Manifest integration** - Include frontmatter in manifest
-- **Conditional rendering** - Skip drafts in production
-- **Custom fields** - User-defined metadata
+Every item below must pass three tests before it enters the core:
 
-### Collections & Taxonomies
+1. **Data outlives code.** A site built with Docmach 1.x must open in Docmach 100.x with zero migration. The _storage formats_ (Markdown, frontmatter, manifest, content graph) are the only things that live forever.
+2. **Standards over invention.** CommonMark/GFM compliance, standard YAML frontmatter, predictable URLs, documented JSON formats. Docmach invents exactly one syntax — the `<docmach>` tag — and it is specified, versioned, and stable.
+3. **Small core, everything else a plugin.** The core does three things: **parse markdown → build the content graph → render files.** Nothing else. Themes, SEO, RSS, search, analytics, CMS adapters: plugins.
 
-- **Auto-collections** - Group pages by directory or frontmatter
-- **Tags & categories** - Built-in taxonomy support
-- **Pagination** - Automatic page splitting for large collections
-- **Sorting & filtering** - Query collections by date, tags, etc.
+## The Laws
 
-### Content Helpers
+Non-negotiable. Apply to every version, forever. Breaking any law requires a supermajority of the community, not a maintainer's decision.
 
-- **Table of contents** - Auto-generate from headings
-- **Reading time** - Calculate estimated reading time
-- **Related posts** - Suggest similar content
-- **Excerpt generation** - Auto-extract summaries
+- **Backward compatibility is law.** Semantic versioning. A written deprecation policy: features are marked deprecated for at least one major version before removal, with migration guides.
+- **The formats are the public API.** The manifest, the content graph, and the `<docmach>` tag specification are documented, versioned public artifacts. Anyone may write a new renderer for a Docmach site without permission.
+- **Any version reads any site.** Unknown frontmatter fields, unknown tags, unknown manifest fields are preserved, not rejected.
+- **The compiler is replaceable; the output is forever.** A Docmach site is plain files: HTML, CSS, JSON, XML. No proprietary runtime is required to serve it.
+- **The memory constraint is a design constraint.** Docmach was born on an 8GB laptop compiling 3,000 pages under ~200 MB peak RSS. Peak memory is tracked in benchmarks like build time. Regressions in memory are regressions.
 
-## Version 1.3 - Performance & Optimization (Q3 2026)
+---
 
-### Build Performance
+## Track 1 — Foundations for the Ecosystem (v1.1, next)
 
-- **Parallel processing** - Multi-threaded compilation
-- **Smart caching** - Content-addressed cache for templates
-- **Partial rebuilds** - Only rebuild changed dependency trees
-- **Build profiling** - Identify slow templates/functions
+The plugin system is the most strategic feature in Docmach — more than frontmatter, more than performance. It must be designed around the AST and the content graph, **not** around string post-processing, or the ecosystem is locked into the fragile layer.
 
-### Output Optimization
+- **Plugin API + hook system.** Hooks receive structured data (tokens/graph nodes/metadata), not strings. Pre/post build hooks, per-file processing hooks.
+- **Core plugins prove the API.** Sitemap, RSS feed, search index, SEO meta — all move out of core and become official plugins. If a core plugin can't be written with the public API, the API is wrong.
+- **CLI polish.** `docmach init` scaffolding, helpful errors with suggestions, progress indicators, `--verbose`.
+- **Config done right.** `docmach.config.json` (documented, versionable) as primary; `docmach.config.js`/`.ts` as escape hatch. Schema validation. The `package.json` `docmach` key is deprecated with a migration path.
 
-- **Image optimization** - Auto-resize and compress images
-- **Asset bundling** - Combine and minify CSS/JS
-- **Critical CSS** - Inline above-the-fold styles
-- **Lazy loading** - Defer off-screen images
-- **HTML minification** - Remove whitespace and comments
+## Track 2 — The Content Graph (v1.2)
 
-### CDN Integration
+Files are the database; the graph is the interface to it. This is the centerpiece of Docmach's data model and the reason collections, i18n, search, and related-posts are all cheap later.
 
-- **Deploy commands** - `docmach deploy --provider=netlify`
-- **Asset fingerprinting** - Cache-busting hashes
-- **Prerendering** - Generate static HTML for SPAs
-- **Edge functions** - Support for serverless functions
+- **Frontmatter.** Standard YAML, parsed at discovery time. Unknown fields preserved.
+- **Content graph as core artifact.** Parse every file once → extract metadata (frontmatter, headings, links, tags, references) → build a persistent, queryable graph. Supported by a documented, versioned storage format.
+- **The manifest becomes a projection of the graph.** `docmach-manifest.json` keeps backward compatibility, but its shape is now derived, documented, and versioned.
+- **Collections & taxonomies.** Grouping by directory or frontmatter, tags/categories, pagination, sorting/filtering — built _on the graph_, not on the render loop.
+- **Content helpers as graph plugins.** Table of contents, reading time, related posts, excerpt generation.
 
-## Version 2.0 - Advanced Features (Q4 2026)
+## Track 3 — The Compiler (v1.3)
 
-### Internationalization (i18n)
+The current string-manipulation pipeline is Docmach's biggest architectural debt. It cannot be made fully correct (nested structures break regex parsing) and it blocks caching, parallelism, and diagnostics.
 
-- **Multi-language support** - Separate content per locale
-- **Translation helpers** - Manage translations in JSON/YAML
-- **Language switcher** - Auto-generate language navigation
-- **RTL support** - Right-to-left language layouts
+- **AST-first rendering.** Parse Markdown to a token tree; process `<docmach>` tags as a proper parse pass over the tree; render once. Correct nesting, diagnostics with line numbers, no more placeholder-restore chains.
+- **Persistent, content-addressed cache.** Cache key = hash of (file content + fragment versions + config). Stored in `.docmach-cache/`. Cold builds compile everything; warm builds compile nothing; partial rebuilds become trivial.
+- **Worker execution for user code.** `function` fragments and plugin code run in worker threads with timeouts and isolated failure. One bad user template can no longer hang the build.
+- **Parallel compilation.** Multi-worker rendering, enabled by the AST + cache work. Sequential remains the fallback on low-memory machines.
+- **Build profiling.** Identify slow templates/functions; report peak memory per build.
 
-### Component System
+## Track 4 — Platform Hygiene (v1.4)
 
-- **Reusable components** - Define once, use everywhere
-- **Props & slots** - Pass data and content to components
-- **Scoped styles** - Component-specific CSS
-- **Component library** - Pre-built UI components
+- **CommonMark/GFM compliance suite.** Run the official test suites in CI. Docmach invents one syntax; everything else follows the spec.
+- **Watch mode done right.** Native filesystem events where available; polling only as documented fallback.
+- **Cross-runtime.** Node LTS first-class, Bun first-class, Deno explored. No runtime-specific APIs in core paths.
+- **100% TypeScript, comprehensive tests.** Unit, integration, e2e; performance benchmarks (build time + peak memory for 3k/30k pages) tracked like any regression.
 
-### Data Sources
+## Track 5 — Stable Interfaces (v2.0)
 
-- **External data** - Fetch from APIs during build
-- **Database integration** - Query SQL/NoSQL databases
-- **GraphQL support** - Query GraphQL endpoints
-- **CSV/JSON imports** - Use data files in templates
+Version 2.0 is not a feature release. It is a **promise release**: the interfaces below become semver-locked and backed by the compatibility law.
 
-### Advanced Templating
+- **Plugin API v1.** Stable across major versions. A plugin written for v2.0 compiles a v100 site.
+- **Programmatic API.** Use Docmach as an embeddable library — the SQLite model. `parse → graph → render` as a documented three-call interface.
+- **i18n via the graph.** Locale directories, language switchers, RTL — all graph queries, no core magic.
+- **Component system via plugins.** Props & slots over the AST; Web Components supported; no framework lock-in in core.
 
-- **Template inheritance** - Extend base layouts
-- **Partial includes** - Reusable template snippets
-- **Conditional rendering** - If/else logic in templates
-- **Loops & iteration** - Render lists dynamically
-- **Filters & transforms** - Format data in templates
+---
 
-## Version 2.1 - Ecosystem & Integrations (2027)
+## Everything Else Belongs in Plugins
 
-### CMS Integrations
+These are valuable and explicitly **out of core**. The plugin ecosystem (official or community) is where they live:
 
-- **Headless CMS adapters:**
-  - Contentful
-  - Sanity
-  - Strapi
-  - Ghost
-  - WordPress (REST API)
+| Area             | Examples                                                                                     |
+| ---------------- | -------------------------------------------------------------------------------------------- |
+| Data             | CMS adapters (Contentful, Sanity, Strapi, Ghost, WordPress), external APIs, CSV/JSON imports |
+| Frameworks       | React/Vue/Svelte in Markdown, Web Components                                                 |
+| Optimization     | Image resizing, HTML minification, asset bundling, critical CSS, asset fingerprinting        |
+| Deployment       | `deploy` commands per provider, CDN integrations, edge prerendering                          |
+| Quality          | Link checker, accessibility checker, content linting, visual regression                      |
+| Developer tools  | VS Code extension, browser DevTools, template debugger                                       |
+| Hybrid rendering | Server-rendered islands, incremental regeneration                                            |
+| Analytics & AI   | Content analytics, auto-tagging, SEO suggestions, A/B testing                                |
+| Enterprise       | Multi-site management, access control, workflow automation, audit logging                    |
+| Themes           | Theme marketplace, starter templates, component libraries                                    |
 
-### Framework Integrations
+If any of these ever needs a core change, that indicates a missing hook — the fix is the hook, not the feature.
 
-- **React components** - Use React in Markdown
-- **Vue components** - Embed Vue components
-- **Svelte components** - Integrate Svelte
-- **Web Components** - Custom elements support
+## Non-Goals
 
-### Developer Tools
+Docmach will refuse these in core, forever:
 
-- **VS Code extension** - Syntax highlighting, snippets, preview
-- **Browser DevTools** - Inspect Docmach metadata
-- **Debug mode** - Step through template rendering
-- **Performance profiler** - Analyze build performance
-
-### Testing & Quality
-
-- **Link checker** - Validate internal/external links
-- **Accessibility checker** - WCAG compliance testing
-- **Visual regression** - Screenshot comparison
-- **Content linting** - Style guide enforcement
-
-## Version 3.0 - Next Generation (2028+)
-
-### Hybrid Rendering
-
-- **Static + Dynamic** - Mix static and server-rendered pages
-- **Incremental Static Regeneration** - Update pages on-demand
-- **Edge rendering** - Render at CDN edge
-- **Client-side hydration** - Progressive enhancement
-
-### AI-Powered Features
-
-- **Content suggestions** - AI-generated related content
-- **Auto-tagging** - ML-based tag suggestions
-- **SEO optimization** - AI-powered meta descriptions
-- **Accessibility fixes** - Auto-fix common issues
-
-### Advanced Analytics
-
-- **Build analytics** - Track build times and bottlenecks
-- **Content analytics** - Most viewed pages, engagement
-- **Performance monitoring** - Core Web Vitals tracking
-- **A/B testing** - Built-in experimentation framework
-
-### Enterprise Features
-
-- **Multi-site management** - Manage multiple sites from one config
-- **Role-based access** - Content permissions
-- **Workflow automation** - Approval processes
-- **Audit logging** - Track all changes
-- **Backup & restore** - Automated backups
-
-## Community & Ecosystem
-
-### Documentation
-
-- **Interactive tutorials** - Step-by-step guides
-- **Video courses** - YouTube series
-- **Example sites** - Showcase gallery
-- **Best practices** - Performance and SEO guides
-
-### Community Building
-
-- **Discord server** - Real-time support
-- **GitHub Discussions** - Q&A and feature requests
-- **Monthly releases** - Regular updates
-- **Contributor program** - Recognize contributors
-
-### Themes & Templates
-
-- **Theme marketplace** - Buy/sell themes
-- **Starter templates** - Quick project setup
-- **Component library** - Reusable UI components
-- **Design system** - Consistent styling
-
-## Technical Debt & Maintenance
-
-### Code Quality
-
-- **100% TypeScript** - Full type coverage
-- **Comprehensive tests** - Unit, integration, e2e
-- **Performance benchmarks** - Track regression
-- **Security audits** - Regular dependency updates
-
-### Documentation
-
-- **API documentation** - Auto-generated from code
-- **Migration guides** - Smooth version upgrades
-- **Troubleshooting** - Common issues and solutions
-- **Architecture docs** - Internal design decisions
-
-### Compatibility
-
-- **Node.js LTS** - Support latest LTS versions
-- **Bun support** - First-class Bun runtime support
-- **Deno support** - Explore Deno compatibility
-- **Browser support** - Modern browsers only
+- **No markdown dialect.** If your syntax doesn't render in a CommonMark-compliant renderer, it's not markdown.
+- **No proprietary output format or runtime.** Sites are plain files.
+- **No invented templating beyond the `<docmach>` tag.** The tag is specified and stable; nothing else is added to the surface.
+- **No features in core that belong in plugins.** A hook beats a feature. Every core feature is a compatibility promise for decades.
+- **No trend-chasing.** AI, frameworks, and platforms come and go; Markdown, YAML, and static files do not.
 
 ## Success Metrics
 
-- **Performance:** Build times < 1s per page
-- **Adoption:** 10K+ GitHub stars, 1M+ npm downloads/month
-- **Community:** 100+ contributors, 50+ plugins
-- **Quality:** 90+ Lighthouse scores for generated sites
-- **Reliability:** 99.9% uptime for documentation site
+- **Durability:** every site built with v1.1 opens in v2.x unchanged. Every site built with v2.x opens in v3.x unchanged.
+- **Stability:** plugin API stable across major versions; deprecations always accompanied by migration guides.
+- **Performance:** each release is faster than the last at equal work; peak memory for 3k pages stays under ~200 MB; 30k pages compiles on a laptop.
+- **Compliance:** 100% of the CommonMark/GFM suite, tracked in CI.
+- **Trust:** users trust Docmach because it has never broken their site. Trust is the metric.
 
 ## Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-**Priority areas:**
-
-1. Plugin system implementation
-2. Frontmatter support
-3. Performance optimization
-4. Documentation improvements
-5. Example sites and templates
+See [CONTRIBUTING.md](CONTRIBUTING.md). Priority areas follow the tracks above, in order.
 
 ## Feedback
 
-Share your ideas and vote on features:
-
-- GitHub Discussions: [github.com/CodeDynasty-dev/Docmach/discussions](https://github.com/CodeDynasty-dev/Docmach/discussions)
-- Discord: [Join our community](#)
+- Issues: https://github.com/CodeDynasty-dev/Docmach/issues
+- Discussions: https://github.com/CodeDynasty-dev/Docmach/discussions
 - Twitter: [@docmach](#)
 
 ---
 
-**Note:** This roadmap is subject to change based on community feedback and priorities. Dates are estimates and may shift based on resources and complexity.
+_This roadmap is subject to reordering based on community feedback — but the Doctrine and the Laws are not negotiable._

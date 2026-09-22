@@ -59,35 +59,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Upcoming Features
 
-See [ROADMAP.md](ROADMAP.md) for planned features:
+See [ROADMAP.md](ROADMAP.md) for the strategic plan and priority tracks:
 
-### Version 1.1 (Q1 2026)
-
-- Plugin system with hooks
-- Interactive CLI with project scaffolding
-- Multiple config format support
-- Enhanced error messages
-
-### Version 1.2 (Q2 2026)
-
-- Frontmatter support (YAML/TOML)
-- Collections and taxonomies
-- Pagination
-- Content helpers (TOC, reading time, related posts)
-
-### Version 1.3 (Q3 2026)
-
-- Parallel processing
-- Image optimization
-- Asset bundling
-- CDN integration
-
-### Version 2.0 (Q4 2026)
-
-- Internationalization (i18n)
-- Component system
-- External data sources
-- Advanced templating features
+1. **Track 1 (v1.1)** — Plugin system + hooks (designed around the AST/content graph), CLI polish, config done right
+2. **Track 2 (v1.2)** — Frontmatter and the content graph; manifest becomes a projection of the graph
+3. **Track 3 (v1.3)** — AST-first compiler, persistent content-addressed cache, worker isolation, parallel compilation
+4. **Track 4 (v1.4)** — CommonMark/GFM compliance, cross-runtime, watch-mode and quality infrastructure
+5. **Track 5 (v2.0)** — Stable, semver-locked plugin and programmatic APIs
 
 ## Migration Guides
 
