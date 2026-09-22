@@ -1,6 +1,6 @@
 # Docmach Roadmap
 
-**Docmach aims to be the SQLite and git of markdown publishing.** Boring on the surface, correct underneath, trustworthy forever. This roadmap is not a list of features — it is a list of _load-bearing decisions_, ordered by priority.
+**Docmach is the cool tool of markdown publishing.** Boring on the surface, correct underneath, trustworthy forever. This roadmap is not a list of features — it is a list of _load-bearing decisions_, ordered by priority.
 
 > No dates in this document. Order is priority. If something below is done out of order, the order was wrong.
 
