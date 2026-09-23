@@ -193,7 +193,7 @@ export default function custom(options) {
 | `page`          | Per page, after the file is written  | Page context                          |
 | `postBuild`     | Once, after the manifest and sitemap | `{ config, pages }`                   |
 
-Two official plugins ship with Docmach: `docmach:rss` and `docmach:search-index`. A failing plugin is logged once and never breaks the build. Full guide: [Plugins](docs/docs/plugins.md).
+Two official plugins ship with Docmach: `docmach:rss` and `docmach:search-index`. A failing plugin is logged once and never breaks the build, and invalid plugin references are skipped with a warning. Full guide: [Plugins](docs/docs/plugins.md).
 
 ## Why Choose Docmach?
 

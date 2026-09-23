@@ -16,9 +16,24 @@ import { cwd } from "node:process";
 const h1Pattern = /<h1[^>]*>([\s\S]*?)<\/h1>/i;
 const titlePattern = /<title[^>]*>([\s\S]*?)<\/title>/i;
 const paragraphPattern = /<p[^>]*>([\s\S]*?)<\/p>/i;
+const entityPattern = /&(#39|amp|lt|gt|quot|apos|nbsp);/g;
+const entities = {
+  "#39": "'",
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+  nbsp: " ",
+};
 
+// strip tags, then decode entities so the index holds readable text
 function toText(html) {
-  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(entityPattern, (match, name) => entities[name] ?? match)
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 export default function searchIndex(options = {}) {
@@ -30,7 +45,12 @@ export default function searchIndex(options = {}) {
       async postBuild({ config, pages }) {
         const index = [];
         for (const page of pages) {
-          const html = await readFile(join(cwd(), page.outputPath), "utf8");
+          let html = "";
+          try {
+            html = await readFile(join(cwd(), page.outputPath), "utf8");
+          } catch (_e) {
+            // page removed between the build and the index
+          }
           const title = toText(
             html.match(h1Pattern)?.[1] ??
               html.match(titlePattern)?.[1] ??

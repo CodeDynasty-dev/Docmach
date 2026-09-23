@@ -14,9 +14,24 @@ import { cwd } from "node:process";
 
 const h1Pattern = /<h1[^>]*>([\s\S]*?)<\/h1>/i;
 const titlePattern = /<title[^>]*>([\s\S]*?)<\/title>/i;
+const entityPattern = /&(#39|amp|lt|gt|quot|apos|nbsp);/g;
+const entities = {
+  "#39": "'",
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+  nbsp: " ",
+};
 
+// strip tags, then decode entities so text is escaped exactly once on output
 function toText(html) {
-  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(entityPattern, (match, name) => entities[name] ?? match)
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function escapeXml(value) {
@@ -24,7 +39,8 @@ function escapeXml(value) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 export default function rss(options = {}) {
@@ -58,7 +74,12 @@ export default function rss(options = {}) {
 
         const items = [];
         for (const { page, updated } of entries.slice(0, limit)) {
-          const html = await readFile(join(cwd(), page.outputPath), "utf8");
+          let html = "";
+          try {
+            html = await readFile(join(cwd(), page.outputPath), "utf8");
+          } catch (_e) {
+            // page removed between the build and the feed, fall back to the link
+          }
           const title = toText(html.match(h1Pattern)?.[1] ?? "") ||
             toText(html.match(titlePattern)?.[1] ?? "") || page.link;
           const url = `${baseUrl}${page.link}`;
@@ -74,7 +95,7 @@ export default function rss(options = {}) {
 <rss version="2.0">
   <channel>
     <title>${escapeXml(options.title ?? "Docmach site")}</title>
-    <link>${baseUrl}</link>
+    <link>${escapeXml(baseUrl)}</link>
     <description>${escapeXml(options.description ?? "")}</description>
 ${items.join("\n")}
   </channel>

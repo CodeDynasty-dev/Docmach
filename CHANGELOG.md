@@ -9,9 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Plugin system** - `plugins` config option accepting `"docmach:name"`, relative file paths, or installed packages, with optional per-plugin `options`
+- **Plugin system** - `plugins` config option accepting `"docmach:name"`, relative file paths, or installed packages (ESM or CommonJS), with optional per-plugin `options`
 - Build hooks: `preBuild`, `transformHtml`, `page`, and `postBuild`. Hooks receive structured data (config, page metadata, generated html)
 - Per-plugin error isolation: a failing hook is reported once per build and never aborts it
+- Invalid plugin references are reported and skipped instead of failing the build
+- The build directory is created before `preBuild` runs, so hooks can write into it on fresh builds
 - Official plugins: `docmach:rss` (RSS 2.0 feed) and `docmach:search-index` (client-side search JSON)
 - Plugin types (`DocmachPlugin`, `PageContext`, `PluginReference`, and others) exported from the package
 

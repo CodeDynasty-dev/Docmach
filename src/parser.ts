@@ -40,6 +40,7 @@ import path, { relative, resolve } from "node:path";
 import { compileFileWithMetadata } from "./compiler.ts";
 import type { PageMetadata, PageTreeNode } from "./compiler.ts";
 import { plugins } from "./plugins.ts";
+import type { PluginReference } from "./plugins.ts";
 
 export type configType = {
   "docs-directory": string;
@@ -47,6 +48,7 @@ export type configType = {
   "assets-folder": string;
   "site-url"?: string;
   root: string;
+  plugins?: PluginReference[];
 };
 
 const allowedFiles = /.md/;
@@ -367,6 +369,10 @@ async function copyChangedFiles(
 export const parseDocmachFIles = async (config: configType, file?: string) => {
   // Lifecycle hooks only run on full builds, incremental updates stay cheap
   if (!file) {
+    // The build directory exists before preBuild runs, so hooks can write to it
+    mkdirSync(normalizePath(resolve(cwd(), config["build-directory"])), {
+      recursive: true,
+    });
     await plugins.runPreBuild({ config });
   }
   const files = await getList(config, file);

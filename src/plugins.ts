@@ -5,9 +5,10 @@
  * data (config, page metadata, generated html) instead of raw tag strings,
  * so plugins stay stable as the compiler evolves.
  */
-import { isAbsolute, join } from "node:path";
+import { dirname, isAbsolute, join } from "node:path";
+import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { createRequire } from "node:module";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { cwd } from "node:process";
 import type { configType } from "./parser.ts";
 import type { DocmachTagMetadata, PageMetadata } from "./compiler.ts";
@@ -50,7 +51,9 @@ export type DocmachPlugin = {
   hooks: PluginHooks;
 };
 
-export type DocmachPluginFactory = (options: PluginOptions) => DocmachPlugin;
+export type DocmachPluginFactory = (
+  options: PluginOptions,
+) => DocmachPlugin | Promise<DocmachPlugin>;
 
 class PluginManager {
   private loaded = new Map<string, DocmachPlugin>();
@@ -60,15 +63,36 @@ class PluginManager {
     return [...this.loaded.values()].map((plugin) => plugin.name);
   }
 
-  async load(references: PluginReference[] = [], base = cwd()): Promise<void> {
-    for (const reference of references) {
+  async load(
+    references: PluginReference | PluginReference[] = [],
+    base = cwd(),
+  ): Promise<void> {
+    // a hand written config can hold anything, never let a bad entry break a build
+    const list = Array.isArray(references) ? references : [references];
+    for (const reference of list) {
+      if (
+        reference === null ||
+        (typeof reference !== "string" && typeof reference !== "object")
+      ) {
+        console.warn(
+          `Docmach: ignoring invalid plugin reference "${String(reference)}".`,
+        );
+        continue;
+      }
       const path = typeof reference === "string" ? reference : reference.path;
       const options = typeof reference === "string"
         ? {}
         : reference.options ?? {};
-      if (!path || this.loaded.has(path)) continue;
+      if (typeof path !== "string" || !path) {
+        console.warn('Docmach: ignoring a plugin reference without a "path".');
+        continue;
+      }
       try {
-        const module = await import(this.resolve(path, base));
+        // deduplicate by resolved url so "./plugins/x.js" and its absolute
+        // path never load the same plugin twice
+        const url = this.resolve(path, base);
+        if (this.loaded.has(url)) continue;
+        const module = await import(url);
         const entry = module.default ?? module;
         // A plugin is either { name, hooks } or a factory returning one.
         const plugin = typeof entry === "function" ? await entry(options) : entry;
@@ -80,7 +104,7 @@ class PluginManager {
         if (!plugin.hooks) {
           console.warn(`Docmach: plugin "${plugin.name}" has no hooks.`);
         }
-        this.loaded.set(path, { name: plugin.name, hooks: plugin.hooks ?? {} });
+        this.loaded.set(url, { name: plugin.name, hooks: plugin.hooks ?? {} });
       } catch (error) {
         console.error(`Docmach: failed to load plugin "${path}":`, error);
       }
@@ -142,17 +166,102 @@ class PluginManager {
   private resolve(path: string, base: string): string {
     // official plugins bundled with Docmach: "docmach:rss"
     if (path.startsWith("docmach:")) {
-      return new URL(
-        `../plugins/${path.slice("docmach:".length)}.js`,
-        import.meta.url,
-      ).href;
+      const file = fileURLToPath(
+        new URL(
+          `../plugins/${path.slice("docmach:".length)}.js`,
+          import.meta.url,
+        ),
+      );
+      return this.toUrl(file);
     }
     if (path.startsWith(".") || isAbsolute(path)) {
-      return pathToFileURL(isAbsolute(path) ? path : join(base, path)).href;
+      return this.toUrl(isAbsolute(path) ? path : join(base, path));
     }
     // installed package: resolve from the user's project, not from Docmach
+    return this.toUrl(this.resolvePackage(path, base));
+  }
+
+  // Canonical file url, so two spellings of the same file (e.g. "/tmp" and
+  // its real path "/private/tmp" on macOS) still load the plugin once
+  private toUrl(file: string): string {
+    try {
+      return pathToFileURL(realpathSync(file)).href;
+    } catch (_e) {
+      // missing file, let the import report it
+      return pathToFileURL(file).href;
+    }
+  }
+
+  // require.resolve cannot see ESM-only packages (`exports` with no
+  // require/default condition), so fall back to reading the entry by hand
+  private resolvePackage(path: string, base: string): string {
     const require = createRequire(join(base, "package.json"));
-    return pathToFileURL(require.resolve(path)).href;
+    try {
+      return require.resolve(path);
+    } catch (error) {
+      const manual = this.resolveEsmPackage(path, base);
+      if (!manual) throw error;
+      return manual;
+    }
+  }
+
+  // Walk up node_modules to find the package directory
+  private resolveEsmPackage(name: string, base: string): string | undefined {
+    const parts = name.split("/");
+    const packageName = name.startsWith("@")
+      ? parts.slice(0, 2).join("/")
+      : parts[0];
+    const subpath = "." + name.slice(packageName.length);
+    let dir = base;
+    while (true) {
+      const packageDir = join(dir, "node_modules", packageName);
+      if (existsSync(join(packageDir, "package.json"))) {
+        try {
+          const pkg = JSON.parse(
+            readFileSync(join(packageDir, "package.json"), "utf8"),
+          );
+          const entry = this.pickExport(pkg.exports, subpath) ??
+            pkg.module ?? pkg.main;
+          if (typeof entry === "string") return join(packageDir, entry);
+        } catch (_e) {
+          // unreadable package.json, report the original resolve error
+        }
+        return undefined;
+      }
+      const parent = dirname(dir);
+      if (parent === dir) return undefined;
+      dir = parent;
+    }
+  }
+
+  // Pick the entry an ESM import would use: subpath maps, condition objects,
+  // and plain string exports
+  private pickExport(
+    exportsField: unknown,
+    subpath: string,
+  ): string | undefined {
+    if (typeof exportsField === "string") {
+      return subpath === "." ? exportsField : undefined;
+    }
+    if (Array.isArray(exportsField)) {
+      for (const value of exportsField) {
+        const picked = this.pickExport(value, subpath);
+        if (picked) return picked;
+      }
+      return undefined;
+    }
+    if (!exportsField || typeof exportsField !== "object") return undefined;
+    const entries = exportsField as Record<string, unknown>;
+    // a map of subpaths, e.g. { ".": "./index.js", "./cli": "./cli.js" }
+    if (Object.keys(entries).some((key) => key.startsWith("."))) {
+      return this.pickExport(entries[subpath], subpath);
+    }
+    // a condition object, e.g. { import: "./index.js", default: "./index.js" }
+    for (const condition of ["import", "default", "require", "module", "node"]) {
+      const picked = this.pickExport(entries[condition], subpath);
+      if (picked) return picked;
+    }
+    return undefined;
   }
 }
 
