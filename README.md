@@ -10,6 +10,7 @@
 - **Live Reload & Watch Mode** – Instant preview with WebSocket-based hot reload
 - **Incremental Builds** – Smart caching and dependency tracking for fast rebuilds
 - **Build Manifest** – Auto-generated JSON manifest with page metadata and tag information
+- **Plugin System** – Extend builds through hooks (`preBuild`, `transformHtml`, `page`, `postBuild`)
 - **Programmatic API** – Use Docmach as a library for dynamic content generation
 - **Simple Configuration** – Minimal setup required to get started
 
@@ -46,6 +47,7 @@ Add the following to your `package.json` file:
 | **docs-directory**  | Directory containing your Markdown files     | Root directory |
 | **build-directory** | Output directory for the generated site      | `./docmach`    |
 | **assets-folder**   | Directory with assets to be copied to output | None           |
+| **plugins**         | Plugins to load: `"docmach:name"`, file paths, or installed packages | None |
 
 ## 🧩 How Docmach Works
 
@@ -145,6 +147,54 @@ Docmach automatically generates `docmach-manifest.json` during builds, containin
 
 Perfect for building navigation, sitemaps, or analyzing your site structure.
 
+## Plugins
+
+Plugins extend the build through hooks that receive structured data (config, page metadata, generated html).
+
+```json
+"docmach": {
+  "plugins": [
+    "docmach:rss",
+    "docmach:search-index",
+    { "path": "./plugins/custom.js", "options": { "badge": "BETA" } }
+  ]
+}
+```
+
+A plugin is a module exporting `{ name, hooks }`, or a factory returning one:
+
+```js
+// plugins/custom.js
+export default function custom(options) {
+  return {
+    name: "custom",
+    hooks: {
+      preBuild() {
+        console.log("build started");
+      },
+      transformHtml(page) {
+        return page.html.replace("</body>", `<p>${options.badge}</p></body>`);
+      },
+      page(page) {
+        console.log("written", page.outputPath);
+      },
+      postBuild({ pages }) {
+        console.log(`${pages.length} pages built`);
+      },
+    },
+  };
+}
+```
+
+| Hook            | Runs                                 | Receives                              |
+| --------------- | ------------------------------------ | ------------------------------------- |
+| `preBuild`      | Once, before files are discovered    | `{ config }`                          |
+| `transformHtml` | Per page, before the file is written | Page context, return a string to replace the html |
+| `page`          | Per page, after the file is written  | Page context                          |
+| `postBuild`     | Once, after the manifest and sitemap | `{ config, pages }`                   |
+
+Two official plugins ship with Docmach: `docmach:rss` and `docmach:search-index`. A failing plugin is logged once and never breaks the build. Full guide: [Plugins](docs/docs/plugins.md).
+
 ## Why Choose Docmach?
 
 - **Live Reload That Actually Works** 🔄 – See changes instantly
@@ -158,7 +208,6 @@ See [ROADMAP.md](ROADMAP.md) for planned features and future direction.
 
 **Upcoming features:**
 
-- Plugin system for extensibility
 - Frontmatter support (YAML/TOML)
 - Collections and taxonomies
 - i18n support
@@ -184,6 +233,7 @@ npm run watch
 - [Configuration](docs/docs/configuration.md)
 - [Advanced Features](docs/docs/advanced-features.md)
 - [API Reference](docs/docs/api-reference.md)
+- [Plugins](docs/docs/plugins.md)
 
 ## License
 

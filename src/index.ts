@@ -30,6 +30,8 @@ import { normalizePath, parseDocmachFIles } from "./parser.ts";
 import { relative } from "node:path";
 import { Print } from "./print.ts";
 import { templateCache } from "./compiler.ts";
+import { plugins } from "./plugins.ts";
+import type { PluginReference } from "./plugins.ts";
 
 let usesAsCli = false;
 // Only execute main() when used as a CLI
@@ -71,6 +73,7 @@ let config = {
   "build-directory": "./docmach",
   "assets-folder": "",
   root,
+  plugins: [] as PluginReference[],
 };
 
 try {
@@ -93,6 +96,9 @@ if (process.argv[2] === "print") {
   Print(config["build-directory"]);
   process.exit(0);
 }
+
+// Load the plugins declared in the docmach configuration.
+await plugins.load(config.plugins, cwd());
 
 // Get command-line arguments: port and root directory.
 
@@ -341,3 +347,15 @@ if (process.argv[2] === "build") {
 }
 
 export default Docmach;
+
+// Plugin authoring types
+export type {
+  BuildContext,
+  DocmachPlugin,
+  DocmachPluginFactory,
+  PageContext,
+  PluginHooks,
+  PluginOptions,
+  PluginReference,
+  PostBuildContext,
+} from "./plugins.ts";

@@ -3,7 +3,7 @@ import { resolve } from "path";
 import hljs from "highlight.js";
 import MarkdownIt from "markdown-it";
 import { readFile } from "fs/promises";
-import { normalizePath } from "./parser";
+import { normalizePath } from "./parser.ts";
 
 const md = new MarkdownIt({
   html: true,

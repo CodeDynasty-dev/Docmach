@@ -16,6 +16,8 @@ These apply to every version.
 
 The plugin system is the highest-priority item. It must be designed around the AST and the content graph, not string post-processing, so the ecosystem does not inherit the current compiler's limitations.
 
+Status: the plugin API has landed with the `plugins` config option and four hooks (`preBuild`, `transformHtml`, `page`, `postBuild`) receiving structured contexts, plus error isolation. `docmach:rss` and `docmach:search-index` are the first official plugins. Remaining: designing hooks for the content graph (v1.2), moving sitemap and SEO out of core, and CLI work.
+
 - **Plugin API and hooks.** Hooks receive structured data (tokens, graph nodes, metadata), not strings.
 - **Core plugins prove the API.** Sitemap, RSS, search index, and SEO move out of core and become official plugins. If a core plugin cannot be written with the public API, the API changes first.
 - **CLI.** `docmach init`, improved error messages, progress indicators, `--verbose`.

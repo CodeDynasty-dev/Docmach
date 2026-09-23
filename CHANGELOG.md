@@ -5,6 +5,28 @@ All notable changes to Docmach will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Plugin system** - `plugins` config option accepting `"docmach:name"`, relative file paths, or installed packages, with optional per-plugin `options`
+- Build hooks: `preBuild`, `transformHtml`, `page`, and `postBuild`. Hooks receive structured data (config, page metadata, generated html)
+- Per-plugin error isolation: a failing hook is reported once per build and never aborts it
+- Official plugins: `docmach:rss` (RSS 2.0 feed) and `docmach:search-index` (client-side search JSON)
+- Plugin types (`DocmachPlugin`, `PageContext`, `PluginReference`, and others) exported from the package
+
+### Changed
+
+- `parseDocmachFIles` runs `preBuild` at the start of full builds and `postBuild` after the manifest and sitemap are written
+- `configType` is exported from the parser
+- `package.json` now ships the `plugins` directory and a `types` entry
+
+### Documentation
+
+- Added `docs/docs/plugins.md` - plugin guide, hook reference, and official plugin options
+- README: added a Plugins section and configuration option
+- API reference: added the `plugins` option and a hook summary
+
 ## [1.0.20] - 2025-12-07
 
 ### Added

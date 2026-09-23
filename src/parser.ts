@@ -39,8 +39,9 @@ import path, { relative, resolve } from "node:path";
 //
 import { compileFileWithMetadata } from "./compiler.ts";
 import type { PageMetadata, PageTreeNode } from "./compiler.ts";
+import { plugins } from "./plugins.ts";
 
-type configType = {
+export type configType = {
   "docs-directory": string;
   "build-directory": string;
   "assets-folder": string;
@@ -115,16 +116,36 @@ async function parseFiles(
       file.replace(config["docs-directory"], config["build-directory"]),
     ).replace(".md", ".html");
 
-    ensureFileSync(outputPath);
-    await writeFile(normalizePath(outputPath), content);
-
     // Generate relative link from build directory
     const link = "/" +
       relative(config["build-directory"], outputPath).replace(/\\/g, "/");
 
+    const sourcePath = relative(cwd(), file);
+    const relativeOutputPath = relative(cwd(), outputPath);
+
+    // Give transformHtml hooks a chance to rewrite the page before it hits disk
+    const html = await plugins.runTransformHtml({
+      sourcePath,
+      outputPath: relativeOutputPath,
+      link,
+      docmachTags: tags,
+      html: content,
+    });
+
+    ensureFileSync(outputPath);
+    await writeFile(normalizePath(outputPath), html);
+
+    await plugins.runPage({
+      sourcePath,
+      outputPath: relativeOutputPath,
+      link,
+      docmachTags: tags,
+      html,
+    });
+
     metadata.push({
-      sourcePath: relative(cwd(), file),
-      outputPath: relative(cwd(), outputPath),
+      sourcePath,
+      outputPath: relativeOutputPath,
       link,
       docmachTags: tags,
     });
@@ -344,6 +365,10 @@ async function copyChangedFiles(
 }
 
 export const parseDocmachFIles = async (config: configType, file?: string) => {
+  // Lifecycle hooks only run on full builds, incremental updates stay cheap
+  if (!file) {
+    await plugins.runPreBuild({ config });
+  }
   const files = await getList(config, file);
   if (files.length === 0) {
     if (file) {
@@ -397,6 +422,7 @@ export const parseDocmachFIles = async (config: configType, file?: string) => {
   if (!file) {
     await generateManifest(metadata, config);
     await generateSitemap(metadata, config);
+    await plugins.runPostBuild({ config, pages: metadata });
     // Clear template cache to free memory after build
     const { clearTemplateCache } = await import("./compiler.ts");
     clearTemplateCache();
