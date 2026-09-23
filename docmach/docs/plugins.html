@@ -204,7 +204,7 @@
 <tr>
 <td>Installed package</td>
 <td><code>&quot;docmach-plugin-sitemap&quot;</code></td>
-<td>A package in your <code>node_modules</code></td>
+<td>A package in your <code>node_modules</code>, ESM or CommonJS</td>
 </tr>
 <tr>
 <td>With options</td>
@@ -213,7 +213,7 @@
 </tr>
 </tbody>
 </table>
-<p>Plugins load once when Docmach starts, in the order they are listed. Restart the dev server after changing the plugin list.</p>
+<p>Plugins load once when Docmach starts, in the order they are listed. Restart the dev server after changing the plugin list. References that are not a string, a <code>{ path }</code> object, or a valid plugin module are reported and skipped, so a typo in the list never fails a build.</p>
 <h2>Official Plugins</h2>
 <h3>RSS</h3>
 <p>Generates an RSS 2.0 feed of the most recently updated pages. Titles come from each page's first <code>&lt;h1&gt;</code>, falling back to <code>&lt;title&gt;</code>, then the link.</p>
@@ -362,8 +362,9 @@
 <h3>Notes</h3>
 <ul>
 <li>Plugin code runs in the build process and is trusted like your own site code.</li>
-<li>Plugins receive relative paths (<code>sourcePath</code>, <code>outputPath</code>). Join them with <code>cwd()</code> to read or write files.</li>
-<li>Local plugin files can be plain <code>.js</code> or <code>.ts</code> when your runtime supports it. Node runs <code>docmach</code>0 as is; to use TypeScript plugin files, run Docmach with a TypeScript-aware loader.</li>
+<li>Page context paths (<code>sourcePath</code>, <code>outputPath</code>) are relative to <code>cwd()</code>, so join them with <code>cwd()</code> to read or write files. Config paths (<code>docmach</code>0, <code>docmach</code>1, <code>docmach</code>2, <code>docmach</code>3) are already absolute, use them as is.</li>
+<li>The build directory exists by the time <code>docmach</code>4 runs, so hooks can write into it on a fresh build.</li>
+<li>Local plugin files can be plain <code>docmach</code>5 or <code>docmach</code>6 when your runtime supports it. Node runs <code>docmach</code>7 as is; to use TypeScript plugin files, run Docmach with a TypeScript-aware loader.</li>
 </ul>
 </div>
 </div>

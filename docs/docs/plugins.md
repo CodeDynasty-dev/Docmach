@@ -29,10 +29,10 @@ A plugin reference can be:
 | -------------------- | ------------------------------ | -------------------------------------------- |
 | Official plugin      | `"docmach:rss"`                | Plugin bundled with Docmach                  |
 | Local file           | `"./plugins/custom.js"`        | Path relative to your project root           |
-| Installed package    | `"docmach-plugin-sitemap"`     | A package in your `node_modules`             |
+| Installed package    | `"docmach-plugin-sitemap"`     | A package in your `node_modules`, ESM or CommonJS |
 | With options         | `{ "path": "...", "options": {} }` | Same as above, options passed to the factory |
 
-Plugins load once when Docmach starts, in the order they are listed. Restart the dev server after changing the plugin list.
+Plugins load once when Docmach starts, in the order they are listed. Restart the dev server after changing the plugin list. References that are not a string, a `{ path }` object, or a valid plugin module are reported and skipped, so a typo in the list never fails a build.
 
 ## Official Plugins
 
@@ -139,7 +139,8 @@ const plugin: DocmachPlugin = {
 ### Notes
 
 - Plugin code runs in the build process and is trusted like your own site code.
-- Plugins receive relative paths (`sourcePath`, `outputPath`). Join them with `cwd()` to read or write files.
+- Page context paths (`sourcePath`, `outputPath`) are relative to `cwd()`, so join them with `cwd()` to read or write files. Config paths (`docs-directory`, `build-directory`, `assets-folder`, `root`) are already absolute, use them as is.
+- The build directory exists by the time `preBuild` runs, so hooks can write into it on a fresh build.
 - Local plugin files can be plain `.js` or `.ts` when your runtime supports it. Node runs `.js` as is; to use TypeScript plugin files, run Docmach with a TypeScript-aware loader.
 
 <docmach type="fragment" file="fragments/doc-sidebar-end.html" />
