@@ -83,6 +83,13 @@
                   >API Reference</a
                 >
               </li>
+              <li>
+                <a
+                  href="/docs/plugins.html"
+                  class="text-gray-300 hover:text-orange-400 block transition-colors"
+                  >Plugins</a
+                >
+              </li>
             </ul>
           </div>
           <div>
@@ -166,7 +173,8 @@
   <span class="hljs-attr">&quot;docmach&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docs&quot;</span><span class="hljs-punctuation">,</span>
     <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docmach&quot;</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;assets&quot;</span>
+    <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;assets&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;plugins&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;docmach:rss&quot;</span><span class="hljs-punctuation">]</span>
   <span class="hljs-punctuation">}</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
@@ -199,8 +207,53 @@
 <td><code>&quot;&quot;</code> (none)</td>
 <td>Directory with static assets to copy to output</td>
 </tr>
+<tr>
+<td><code>plugins</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Plugins to load: <code>&quot;docmach:name&quot;</code>, file paths, or installed packages</td>
+</tr>
 </tbody>
 </table>
+<h2>Plugins</h2>
+<p>Plugins extend the build through hooks, configured as an array of references:</p>
+<pre><code class="language-json"><span class="hljs-attr">&quot;plugins&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+  <span class="hljs-string">&quot;docmach:rss&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./plugins/custom.js&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;options&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;badge&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BETA&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">]</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>Runs</th>
+<th>Receives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>preBuild</code></td>
+<td>Once, before files are discovered</td>
+<td><code>{ config }</code></td>
+</tr>
+<tr>
+<td><code>transformHtml</code></td>
+<td>Per page, before the file is written</td>
+<td>Page context, return a string to replace the html</td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td>Per page, after the file is written</td>
+<td>Page context</td>
+</tr>
+<tr>
+<td><code>postBuild</code></td>
+<td>Once, after the manifest and sitemap</td>
+<td><code>{ config, pages }</code></td>
+</tr>
+</tbody>
+</table>
+<p>Two plugins are bundled and referenced as <code>docmach:rss</code> and <code>docmach:search-index</code>. See the <a href="plugins.html">Plugins</a> guide for the full hook and context reference.</p>
 <h2>Docmach Tag Syntax</h2>
 <h3>Fragment Tag</h3>
 <p>Self-closing tag for HTML templates with variable substitution:</p>
@@ -272,261 +325,116 @@
 <pre><code class="language-html">params=&quot;user: {name: John, age: 30, email: john@example.com}&quot;
 </code></pre>
 <p>Results in:</p>
-<pre><code class="language-js">{ <span class="hljs-attr">user</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;John&quot;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">30</span>, <span class="hljs-attr">email</span>: <span class="hljs-string">&quot;john@example.com&quot;</span> } }
-</code></pre>
-<h3>Mixed Parameters</h3>
-<pre><code class="language-html">params=&quot;title: My Post; author: {name: John Doe, bio: Developer}; published:
-true&quot;
-</code></pre>
-<p>Results in:</p>
-<pre><code class="language-js">{
-  <span class="hljs-attr">title</span>: <span class="hljs-string">&quot;My Post&quot;</span>,
-  <span class="hljs-attr">author</span>: { <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;John Doe&quot;</span>, <span class="hljs-attr">bio</span>: <span class="hljs-string">&quot;Developer&quot;</span> },
-  <span class="hljs-attr">published</span>: <span class="hljs-literal">true</span>
-}
-</code></pre>
-<h2>CLI Commands</h2>
-<h3>Development Server</h3>
-<pre><code class="language-bash">docmach
-</code></pre>
-<p>Starts development server with:</p>
-<ul>
-<li>Live reload via WebSocket</li>
-<li>File watching for auto-rebuild</li>
-<li>Serves on <code>http://localhost:4000</code> (or next available port)</li>
-</ul>
-<h3>Production Build</h3>
-<pre><code class="language-bash">docmach build
-</code></pre>
-<p>Builds site for production:</p>
-<ul>
-<li>Compiles all Markdown files</li>
-<li>Copies assets</li>
-<li>Generates <code>docmach-manifest.json</code></li>
-<li>Compiles Tailwind CSS</li>
-</ul>
-<h3>Print Site Structure</h3>
-<pre><code class="language-bash">docmach <span class="hljs-built_in">print</span>
-</code></pre>
-<p>Displays all pages in the build directory.</p>
-<h2>Programmatic API</h2>
-<h3>Import and Use</h3>
-<pre><code class="language-js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">Docmach</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;docmach&quot;</span>;
+<pre><code class="language-json"><span class="hljs-attr">&quot;plugins&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+  <span class="hljs-string">&quot;docmach:rss&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./plugins/custom.js&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;options&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;badge&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BETA&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">]</span>
+```<span class="hljs-number">0</span>
 
-<span class="hljs-comment">// Compile specific file</span>
-<span class="hljs-keyword">await</span> <span class="hljs-title class_">Docmach</span>(<span class="hljs-string">&quot;docs/my-page.md&quot;</span>);
+### Mixed Parameters
+
+```json
+<span class="hljs-attr">&quot;plugins&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+  <span class="hljs-string">&quot;docmach:rss&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./plugins/custom.js&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;options&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;badge&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BETA&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">]</span>
+```<span class="hljs-number">1</span>
+
+Results in<span class="hljs-punctuation">:</span>
+
+```json
+<span class="hljs-attr">&quot;plugins&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+  <span class="hljs-string">&quot;docmach:rss&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./plugins/custom.js&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;options&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;badge&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BETA&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">]</span>
+```<span class="hljs-number">2</span>
+
+## CLI Commands
+
+### Development Server
+
+```json
+<span class="hljs-attr">&quot;plugins&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+  <span class="hljs-string">&quot;docmach:rss&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./plugins/custom.js&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;options&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;badge&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BETA&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">]</span>
+```<span class="hljs-number">3</span>
+
+Starts development server with<span class="hljs-punctuation">:</span>
+
+- Live reload via WebSocket
+- File watching for auto-rebuild
+- Serves on `http<span class="hljs-punctuation">:</span><span class="hljs-comment">//localhost:4000` (or next available port)</span>
+
+### Production Build
+
+```json
+<span class="hljs-attr">&quot;plugins&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+  <span class="hljs-string">&quot;docmach:rss&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./plugins/custom.js&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;options&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;badge&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BETA&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">]</span>
+```<span class="hljs-number">4</span>
+
+Builds site for production<span class="hljs-punctuation">:</span>
+
+- Compiles all Markdown files
+- Copies assets
+- Generates `docmach-manifest.json`
+- Compiles Tailwind CSS
+
+### Print Site Structure
+
+```json
+<span class="hljs-attr">&quot;plugins&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+  <span class="hljs-string">&quot;docmach:rss&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./plugins/custom.js&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;options&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;badge&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BETA&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">]</span>
+```<span class="hljs-number">5</span>
+
+Displays all pages in the build directory.
+
+## Programmatic API
+
+### Import and Use
+
+```json
+<span class="hljs-attr">&quot;plugins&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+  <span class="hljs-string">&quot;docmach:rss&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./plugins/custom.js&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;options&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;badge&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BETA&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">]</span>
+```<span class="hljs-number">6</span>
+
+### Use Cases
+
+**Dynamic Blog Engine<span class="hljs-punctuation">:</span>**
+
+```json
+<span class="hljs-attr">&quot;plugins&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+  <span class="hljs-string">&quot;docmach:rss&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./plugins/custom.js&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;options&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;badge&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BETA&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">]</span>
+```<span class="hljs-number">7</span>
+
+**CMS Integration<span class="hljs-punctuation">:</span>**
+
+```json
+<span class="hljs-attr">&quot;plugins&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+  <span class="hljs-string">&quot;docmach:rss&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./plugins/custom.js&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;options&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;badge&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BETA&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">]</span>
+```<span class="hljs-number">8</span>
+
+## Build Manifest Schema
+
+Generated at `<span class="hljs-punctuation">{</span>build-directory<span class="hljs-punctuation">}</span>/docmach-manifest.json`<span class="hljs-punctuation">:</span>
+
+```json
+<span class="hljs-attr">&quot;plugins&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+  <span class="hljs-string">&quot;docmach:rss&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./plugins/custom.js&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;options&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;badge&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BETA&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">]</span>
+```<span class="hljs-number">9</span>
+
+&lt;!--DOCMACH_PLACEHOLDER_1--&gt;
+&lt;!--DOCMACH_PLACEHOLDER_0--&gt;
 </code></pre>
-<h3>Use Cases</h3>
-<p><strong>Dynamic Blog Engine:</strong></p>
-<pre><code class="language-js"><span class="hljs-comment">// User creates post via API</span>
-<span class="hljs-keyword">const</span> postContent = <span class="hljs-keyword">await</span> <span class="hljs-title function_">saveToS3</span>(userPost);
-<span class="hljs-keyword">await</span> <span class="hljs-title function_">writeFile</span>(<span class="hljs-string">&quot;docs/posts/new-post.md&quot;</span>, postContent);
-<span class="hljs-keyword">await</span> <span class="hljs-title class_">Docmach</span>(<span class="hljs-string">&quot;docs/posts/new-post.md&quot;</span>);
-<span class="hljs-comment">// Serve from build directory with Nginx</span>
-</code></pre>
-<p><strong>CMS Integration:</strong></p>
-<pre><code class="language-js"><span class="hljs-comment">// On content update webhook</span>
-app.<span class="hljs-title function_">post</span>(<span class="hljs-string">&quot;/webhook/content-update&quot;</span>, <span class="hljs-title function_">async</span> (req, res) =&gt; {
-  <span class="hljs-keyword">const</span> { filePath } = req.<span class="hljs-property">body</span>;
-  <span class="hljs-keyword">await</span> <span class="hljs-title class_">Docmach</span>(filePath);
-  res.<span class="hljs-title function_">json</span>({ <span class="hljs-attr">success</span>: <span class="hljs-literal">true</span> });
-});
-</code></pre>
-<h2>Build Manifest Schema</h2>
-<p>Generated at <code>{build-directory}/docmach-manifest.json</code>:</p>
-<pre><code class="language-typescript"><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Manifest</span> {
-  <span class="hljs-attr">generatedAt</span>: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// ISO 8601 timestamp</span>
-  <span class="hljs-attr">pages</span>: <span class="hljs-title class_">PageMetadata</span>[];
-}
-
-<span class="hljs-keyword">interface</span> <span class="hljs-title class_">PageMetadata</span> {
-  <span class="hljs-attr">sourcePath</span>: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// Relative path to source .md file</span>
-  <span class="hljs-attr">outputPath</span>: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// Relative path to generated .html file</span>
-  <span class="hljs-attr">link</span>: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// URL path (relative to /)</span>
-  <span class="hljs-attr">docmachTags</span>: <span class="hljs-title class_">DocmachTag</span>[];
-}
-
-<span class="hljs-keyword">interface</span> <span class="hljs-title class_">DocmachTag</span> {
-  <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;fragment&quot;</span> | <span class="hljs-string">&quot;function&quot;</span> | <span class="hljs-string">&quot;wrapper&quot;</span>;
-  <span class="hljs-attr">file</span>?: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// Template/function file path</span>
-  <span class="hljs-attr">params</span>?: <span class="hljs-title class_">Record</span>&lt;<span class="hljs-built_in">string</span>, <span class="hljs-built_in">any</span>&gt;;
-  <span class="hljs-attr">replacement</span>?: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// Wrapper only</span>
-}
-</code></pre>
-</div>
-</div>
-</main>
-</div>
-
-</div>
-<!-- Footer -->
-<footer
-  class="relative overflow-hidden border-t border-white/10 bg-gradient-to-b from-[#1A1A1A] to-[#0A0A0A]"
->
-  <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
-  <div class="container mx-auto px-6 py-16 relative z-10">
-    <div class="flex flex-col md:flex-row justify-between items-start gap-12">
-      <!-- Brand Section -->
-      <div class="space-y-6 md:w-1/3">
-        <div class="flex items-center gap-3">
-          <img src="/logo.png" alt="docmach" class="w-30">
-        </div>
-        <p class="text-gray-400">
-          Transform your documentation into an immersive experience with our
-          modern markdown compiler.
-        </p>
-      </div>
-
-      <!-- Quick Links -->
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-8 md:w-2/3">
-        <div class="space-y-4">
-          <h3 class="text-white font-semibold">Documentation</h3>
-          <ul class="space-y-2">
-            <li>
-              <a
-                href="docs/introduction.html"
-                class="text-gray-400 hover:text-orange-400 transition-colors"
-              >Introduction</a>
-            </li>
-            <li>
-              <a
-                href="docs/quickstart.html"
-                class="text-gray-400 hover:text-orange-400 transition-colors"
-              >Quick Start</a>
-            </li>
-            <li>
-              <a
-                href="docs/configuration.html"
-                class="text-gray-400 hover:text-orange-400 transition-colors"
-              >Configuration</a>
-            </li>
-            <li>
-              <a
-                href="docs/advanced-features.html"
-                class="text-gray-400 hover:text-orange-400 transition-colors"
-              >Advanced</a>
-            </li>
-            <li>
-              <a
-                href="docs/api-reference.html"
-                class="text-gray-400 hover:text-orange-400 transition-colors"
-              >API Reference</a>
-            </li>
-          </ul>
-        </div>
-        <div class="space-y-4">
-          <h3 class="text-white font-semibold">Resources</h3>
-          <ul class="space-y-2">
-            <li>
-              <a
-                href="docs/examples.html"
-                class="text-gray-400 hover:text-orange-400 transition-colors"
-              >Examples</a>
-            </li>
-            <li>
-              <a
-                href="blog.html"
-                class="text-gray-400 hover:text-orange-400 transition-colors"
-              >Blog</a>
-            </li>
-            <li>
-              <a
-                href="https://github.com/CodeDynasty-dev/Docmach/blob/main/ROADMAP.md"
-                class="text-gray-400 hover:text-orange-400 transition-colors"
-              >Roadmap</a>
-            </li>
-            <li>
-              <a
-                href="https://github.com/CodeDynasty-dev/Docmach/blob/main/CONTRIBUTING.md"
-                class="text-gray-400 hover:text-orange-400 transition-colors"
-              >Contributing</a>
-            </li>
-          </ul>
-        </div>
-        <div class="space-y-4">
-          <h3 class="text-white font-semibold">Connect</h3>
-          <ul class="space-y-2">
-            <li>
-              <a
-                href="https://github.com/CodeDynasty-dev/Docmach"
-                class="text-gray-400 hover:text-orange-400 transition-colors inline-flex items-center gap-2"
-              >
-                <svg
-                  class="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                    clip-rule="evenodd"
-                  >
-                  </path>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://discord.gg/j3W86Zcq4s"
-                class="text-gray-400 hover:text-orange-400 transition-colors inline-flex items-center gap-2"
-              >
-                <svg
-                  class="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"
-                  />
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://x.com/codedynasty"
-                class="text-gray-400 hover:text-orange-400 transition-colors inline-flex items-center gap-2"
-              >
-                <svg
-                  class="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-                  >
-                  </path>
-                </svg>
-                Twitter
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div
-      class="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4"
-    >
-      <p class="text-gray-400 text-sm">
-        &copy; 2025 Docmach. All rights reserved.
-      </p>
-      <div class="flex items-center gap-6">
-        <a
-          href="privacy"
-          class="text-gray-400 hover:text-orange-400 text-sm transition-colors"
-        >Privacy Policy</a>
-        <a
-          href="terms"
-          class="text-gray-400 hover:text-orange-400 text-sm transition-colors"
-        >Terms of Service</a>
-      </div>
-    </div>
-  </div>
-</footer>
-</body>
-</html>
-

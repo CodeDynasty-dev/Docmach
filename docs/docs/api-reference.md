@@ -14,7 +14,8 @@ Configure Docmach in your `package.json`:
   "docmach": {
     "docs-directory": "docs",
     "build-directory": "docmach",
-    "assets-folder": "assets"
+    "assets-folder": "assets",
+    "plugins": ["docmach:rss"]
   }
 }
 ```
@@ -26,6 +27,27 @@ Configure Docmach in your `package.json`:
 | `docs-directory`  | string | `"."` (root)  | Source directory containing Markdown files     |
 | `build-directory` | string | `"./docmach"` | Output directory for generated HTML            |
 | `assets-folder`   | string | `""` (none)   | Directory with static assets to copy to output |
+| `plugins`         | array  | `[]`          | Plugins to load: `"docmach:name"`, file paths, or installed packages |
+
+## Plugins
+
+Plugins extend the build through hooks, configured as an array of references:
+
+```json
+"plugins": [
+  "docmach:rss",
+  { "path": "./plugins/custom.js", "options": { "badge": "BETA" } }
+]
+```
+
+| Hook            | Runs                                 | Receives                              |
+| --------------- | ------------------------------------ | ------------------------------------- |
+| `preBuild`      | Once, before files are discovered    | `{ config }`                          |
+| `transformHtml` | Per page, before the file is written | Page context, return a string to replace the html |
+| `page`          | Per page, after the file is written  | Page context                          |
+| `postBuild`     | Once, after the manifest and sitemap | `{ config, pages }`                   |
+
+Two plugins are bundled and referenced as `docmach:rss` and `docmach:search-index`. See the [Plugins](plugins.html) guide for the full hook and context reference.
 
 ## Docmach Tag Syntax
 

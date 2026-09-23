@@ -27,9 +27,9 @@
         <div class="prose prose-invert max-w-none mx-auto">
             <h1>Nice h1 tag</h1>
 <h1>The Markdown-Powered Static Site Generator You Actually Want to Use</h1>
-<p><strong>TL;DR</strong>: Docmach is a fast static site generator that lets you write Markdown and get static sites with little config and less effort. It has built-in Tailwind CSS support, live reload, and custom templates that don’t get in your way.</p>
+<p><strong>TL;DR</strong>: Docmach is a fast static site generator that lets you write Markdown and get static sites with little config and less effort. It has built-in Tailwind CSS support, live reload, and custom templates that don't get in your way.</p>
 <h2>The Problem with Existing Static Site Generators</h2>
-<p>We’ve all been there. You want to create a simple blog or documentation site. You try the popular options:</p>
+<p>We've all been there. You want to create a simple blog or documentation site. You try the popular options:</p>
 <ul>
 <li><strong>Docusaurus</strong>: Configuration hell for basic customization</li>
 <li><strong>Jekyll</strong>: Ruby dependencies break on update</li>
@@ -41,36 +41,77 @@
 <p><strong>Docmach</strong> is a Markdown-powered static site generator designed for modern blogs and project documentation. It integrates the simplicity of Markdown and Tailwind CSS to generate sites with minimal effort.</p>
 <p>What makes it different?</p>
 <h2>1. Markdown-First, But Actually Usable</h2>
-<p>Docmach doesn’t just convert Markdown to HTML—it understands context. You can use Docmach tags that work just like HTML:</p>
-<p><em><strong>CODE_BLOCK_0</strong></em></p>
+<p>Docmach doesn't just convert Markdown to HTML—it understands context. You can use Docmach tags that work just like HTML:</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">docmach</span> 
+<span class="hljs-attr">type</span>=<span class="hljs-string">&quot;fragment&quot;</span> 
+<span class="hljs-attr">file</span>=<span class="hljs-string">&quot;template.html&quot;</span> 
+<span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title=My Page; author=JohnDoe&quot;</span> 
+/&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Yes this works, passed as function parameter --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">docmach</span> 
+<span class="hljs-attr">type</span>=<span class="hljs-string">&quot;function&quot;</span> 
+<span class="hljs-attr">file</span>=<span class="hljs-string">&quot;author-bio.js&quot;</span> 
+<span class="hljs-attr">params</span>=<span class="hljs-string">&quot;title=My Page; author={name: JohnDoe, age: 24, date: 20th March 2015}&quot;</span> 
+/&gt;</span>
+</code></pre>
 <p>This means you can mix Markdown with templates, functions, and components—without the mess of custom syntax.</p>
 <h2>2. Tailwind CSS That Just Works</h2>
-<p>Tailwind CSS is built-in, but not forced. Want to use it? Great. Don’t want to? That’s fine too.</p>
+<p>Tailwind CSS is built-in, but not forced. Want to use it? Great. Don't want to? That's fine too.</p>
 <p>Docmach handles the compilation, optimization, and integration automatically. No need for complex PostCSS setups or fighting with purging.</p>
-<h2>3. Live Reload That Doesn’t Break</h2>
-<p>The most frustrating part of many static site generators is the broken live reload. Docmach’s watch mode goes beyond just refreshing the page—it can retry connections, detect stale caches, and ensure your development experience stays smooth.</p>
+<h2>3. Live Reload That Doesn't Break</h2>
+<p>The most frustrating part of many static site generators is the broken live reload. Docmach's watch mode goes beyond just refreshing the page—it can retry connections, detect stale caches, and ensure your development experience stays smooth.</p>
 <h2>4. Two-Minute Setup</h2>
 <p>Get started in seconds:</p>
-<p><em><strong>CODE_BLOCK_1</strong></em></p>
+<pre><code class="language-bash"><span class="hljs-comment"># Install</span>
+npm i docmach -g
+
+<span class="hljs-comment"># Create project &amp; start</span>
+<span class="hljs-built_in">mkdir</span> my-docs
+<span class="hljs-built_in">cd</span> my-docs
+docmach
+</code></pre>
 <p>No boilerplate, no starter templates to clone, no 15-step process. Just install and run.</p>
 <h2>5. Nothing is less simple</h2>
 <p>Docmach offers two simple but powerful templating options:</p>
 <h3>Fragment Templates (HTML with variables)</h3>
-<p><em><strong>CODE_BLOCK_2</strong></em></p>
+<pre><code class="language-html"><span class="hljs-comment">&lt;!-- template.html --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>{{ title }}<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>{{ author }}<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</code></pre>
 <h3>Function Templates (JavaScript power)</h3>
-<p><em><strong>CODE_BLOCK_3</strong></em></p>
+<pre><code class="language-js"><span class="hljs-comment">// author-bio.js</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">title, author</span>) {
+   <span class="hljs-keyword">return</span> <span class="hljs-string">`
+   &lt;div&gt;
+   &lt;h1&gt;by <span class="hljs-subst">${title}</span>&lt;/h1&gt;
+   &lt;h3&gt;by <span class="hljs-subst">${author.name}</span>&lt;/h3&gt;
+   &lt;p&gt;Aged: <span class="hljs-subst">${author.age}</span>&lt;/p&gt;
+   &lt;p&gt;On: <span class="hljs-subst">${author.date}</span>&lt;/p&gt;
+   &lt;/div&gt;
+   `</span>
+}
+</code></pre>
 <p>No weird custom templating languages to learn. Just HTML and JavaScript.</p>
 <h2>Why Switch to Docmach</h2>
 <ul>
 <li><strong>Speed</strong>: Optimized for fast builds, even with thousands of Markdown files</li>
-<li><strong>Developer Experience</strong>: The CLI doesn’t get in your way</li>
+<li><strong>Developer Experience</strong>: The CLI doesn't get in your way</li>
 <li><strong>Flexibility</strong>: Supports both simple blogs and complex documentation</li>
 <li><strong>No Lock-in</strong>: Your content stays as Markdown files you can move anywhere</li>
 <li><strong>Clean Output</strong>: Generates semantic HTML optimized for SEO</li>
 </ul>
 <h2>Try It Now</h2>
-<p><em><strong>CODE_BLOCK_4</strong></em></p>
-<p>Docmach is focused on speed, developer experience, and flexibility. It’s the static site generator I wish existed years ago, so I built it.</p>
+<pre><code class="language-bash">npm i docmach -g
+docmach
+</code></pre>
+<p>Docmach is focused on speed, developer experience, and flexibility. It's the static site generator I wish existed years ago, so I built it.</p>
 <p>Give it a try and let me know what you think in the comments!</p>
 <blockquote>
 <p>Docmach might not be feature-rich as others but it gets simple things done in no time.

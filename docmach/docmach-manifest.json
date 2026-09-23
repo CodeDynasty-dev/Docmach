@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2025-12-07T15:21:50.783Z",
+  "generatedAt": "2026-09-23T17:14:06.247Z",
   "docsDirectory": "docs",
   "buildDirectory": "docmach",
-  "totalPages": 8,
+  "totalPages": 9,
   "tree": {
     "name": "/",
     "type": "directory",
@@ -234,6 +234,35 @@
             ]
           },
           {
+            "name": "plugins.html",
+            "type": "file",
+            "path": "/docs/plugins.html",
+            "link": "/docs/plugins.html",
+            "sourcePath": "docs/docs/plugins.md",
+            "outputPath": "docmach/docs/plugins.html",
+            "docmachTags": [
+              {
+                "type": "fragment",
+                "file": "fragments/head.html",
+                "params": {
+                  "title": "Plugins"
+                }
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar.html"
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/doc-sidebar-end.html"
+              },
+              {
+                "type": "fragment",
+                "file": "fragments/footer.html"
+              }
+            ]
+          },
+          {
             "name": "quickstart.html",
             "type": "file",
             "path": "/docs/quickstart.html",
@@ -282,24 +311,68 @@
   },
   "pages": [
     {
-      "sourcePath": "docs/blog/post2.md",
-      "outputPath": "docmach/blog/post2.html",
-      "link": "/blog/post2.html",
+      "sourcePath": "docs/docs/examples.md",
+      "outputPath": "docmach/docs/examples.html",
+      "link": "/docs/examples.html",
       "docmachTags": [
         {
-          "type": "wrapper",
-          "file": "fragments/post-wrapper.html",
+          "type": "fragment",
+          "file": "fragments/head.html",
           "params": {
-            "title": "post 2"
-          },
-          "replacement": "replacement"
+            "title": "Examples"
+          }
         },
         {
-          "type": "wrapper",
-          "file": "fragments/post-wrapper.html",
+          "type": "fragment",
+          "file": "fragments/doc-sidebar.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar-end.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/footer.html"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/docs/quickstart.md",
+      "outputPath": "docmach/docs/quickstart.html",
+      "link": "/docs/quickstart.html",
+      "docmachTags": [
+        {
+          "type": "fragment",
+          "file": "fragments/head.html",
           "params": {
-            "title": "post 2"
+            "title": "Docmach Quickstart"
           }
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar.html"
+        },
+        {
+          "type": "function",
+          "file": "fragments/doc-nav.js",
+          "params": {
+            "prev": {
+              "link": "/docs/introduction.html",
+              "text": "Introduction"
+            },
+            "next": {
+              "link": "/docs/configuration.html",
+              "text": "Configurations"
+            }
+          }
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/doc-sidebar-end.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/footer.html"
         }
       ]
     },
@@ -370,58 +443,6 @@
       ]
     },
     {
-      "sourcePath": "docs/docs/examples.md",
-      "outputPath": "docmach/docs/examples.html",
-      "link": "/docs/examples.html",
-      "docmachTags": [
-        {
-          "type": "fragment",
-          "file": "fragments/head.html",
-          "params": {
-            "title": "Examples"
-          }
-        },
-        {
-          "type": "fragment",
-          "file": "fragments/doc-sidebar.html"
-        },
-        {
-          "type": "fragment",
-          "file": "fragments/doc-sidebar-end.html"
-        },
-        {
-          "type": "fragment",
-          "file": "fragments/footer.html"
-        }
-      ]
-    },
-    {
-      "sourcePath": "docs/blog/post.md",
-      "outputPath": "docmach/blog/post.html",
-      "link": "/blog/post.html",
-      "docmachTags": [
-        {
-          "type": "fragment",
-          "file": "fragments/head.html",
-          "params": {
-            "title": "introduction"
-          }
-        },
-        {
-          "type": "fragment",
-          "file": "fragments/blog-start.html"
-        },
-        {
-          "type": "fragment",
-          "file": "fragments/blog-end.html"
-        },
-        {
-          "type": "fragment",
-          "file": "fragments/footer.html"
-        }
-      ]
-    },
-    {
       "sourcePath": "docs/docs/configuration.md",
       "outputPath": "docmach/docs/configuration.html",
       "link": "/docs/configuration.html",
@@ -448,34 +469,20 @@
       ]
     },
     {
-      "sourcePath": "docs/docs/quickstart.md",
-      "outputPath": "docmach/docs/quickstart.html",
-      "link": "/docs/quickstart.html",
+      "sourcePath": "docs/docs/plugins.md",
+      "outputPath": "docmach/docs/plugins.html",
+      "link": "/docs/plugins.html",
       "docmachTags": [
         {
           "type": "fragment",
           "file": "fragments/head.html",
           "params": {
-            "title": "Docmach Quickstart"
+            "title": "Plugins"
           }
         },
         {
           "type": "fragment",
           "file": "fragments/doc-sidebar.html"
-        },
-        {
-          "type": "function",
-          "file": "fragments/doc-nav.js",
-          "params": {
-            "prev": {
-              "link": "/docs/introduction.html",
-              "text": "Introduction"
-            },
-            "next": {
-              "link": "/docs/configuration.html",
-              "text": "Configurations"
-            }
-          }
         },
         {
           "type": "fragment",
@@ -506,6 +513,54 @@
         {
           "type": "fragment",
           "file": "fragments/doc-sidebar-end.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/footer.html"
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/blog/post2.md",
+      "outputPath": "docmach/blog/post2.html",
+      "link": "/blog/post2.html",
+      "docmachTags": [
+        {
+          "type": "wrapper",
+          "file": "fragments/post-wrapper.html",
+          "params": {
+            "title": "post 2"
+          },
+          "replacement": "replacement"
+        },
+        {
+          "type": "wrapper",
+          "file": "fragments/post-wrapper.html",
+          "params": {
+            "title": "post 2"
+          }
+        }
+      ]
+    },
+    {
+      "sourcePath": "docs/blog/post.md",
+      "outputPath": "docmach/blog/post.html",
+      "link": "/blog/post.html",
+      "docmachTags": [
+        {
+          "type": "fragment",
+          "file": "fragments/head.html",
+          "params": {
+            "title": "introduction"
+          }
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/blog-start.html"
+        },
+        {
+          "type": "fragment",
+          "file": "fragments/blog-end.html"
         },
         {
           "type": "fragment",

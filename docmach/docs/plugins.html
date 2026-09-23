@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Docmach Quickstart</title> 
+    <title>Plugins</title> 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -165,137 +165,205 @@
       <div class="container mx-auto px-6 py-12 max-w-5xl mt-16">
         <div class="prose prose-invert max-w-none mx-auto md:mx-0">
 
-<h1>Configuration</h1>
-<p>Docmach is configured via the <code>docmach</code> key in your <code>package.json</code> file.</p>
-<h2>Basic Configuration</h2>
+<h1>Plugins</h1>
+<p>Plugins extend the build through hooks. Hooks receive structured data (config, page metadata, generated html), so plugins stay stable as the compiler evolves.</p>
+<h2>Enabling Plugins</h2>
+<p>List your plugins in the <code>docmach</code> key of <code>package.json</code>:</p>
 <pre><code class="language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;my-project&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1.0.0&quot;</span><span class="hljs-punctuation">,</span>
   <span class="hljs-attr">&quot;docmach&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docs&quot;</span><span class="hljs-punctuation">,</span>
     <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docmach&quot;</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;assets&quot;</span>
+    <span class="hljs-attr">&quot;plugins&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+      <span class="hljs-string">&quot;docmach:rss&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-string">&quot;docmach:search-index&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./plugins/custom.js&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;options&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;badge&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;BETA&quot;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">]</span>
   <span class="hljs-punctuation">}</span>
 <span class="hljs-punctuation">}</span>
 </code></pre>
-<h2>Configuration Options</h2>
-<h3>docs-directory</h3>
-<p><strong>Type:</strong> <code>string</code><br>
-<strong>Default:</strong> <code>&quot;.&quot;</code> (project root)</p>
-<p>The directory containing your Markdown source files.</p>
-<pre><code class="language-json"><span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docs&quot;</span>
+<p>A plugin reference can be:</p>
+<table>
+<thead>
+<tr>
+<th>Reference</th>
+<th>Example</th>
+<th>Resolves to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Official plugin</td>
+<td><code>&quot;docmach:rss&quot;</code></td>
+<td>Plugin bundled with Docmach</td>
+</tr>
+<tr>
+<td>Local file</td>
+<td><code>&quot;./plugins/custom.js&quot;</code></td>
+<td>Path relative to your project root</td>
+</tr>
+<tr>
+<td>Installed package</td>
+<td><code>&quot;docmach-plugin-sitemap&quot;</code></td>
+<td>A package in your <code>node_modules</code></td>
+</tr>
+<tr>
+<td>With options</td>
+<td><code>{ &quot;path&quot;: &quot;...&quot;, &quot;options&quot;: {} }</code></td>
+<td>Same as above, options passed to the factory</td>
+</tr>
+</tbody>
+</table>
+<p>Plugins load once when Docmach starts, in the order they are listed. Restart the dev server after changing the plugin list.</p>
+<h2>Official Plugins</h2>
+<h3>RSS</h3>
+<p>Generates an RSS 2.0 feed of the most recently updated pages. Titles come from each page's first <code>&lt;h1&gt;</code>, falling back to <code>&lt;title&gt;</code>, then the link.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td><code>&quot;Docmach site&quot;</code></td>
+<td>Channel title</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>&quot;&quot;</code></td>
+<td>Channel description</td>
+</tr>
+<tr>
+<td><code>output</code></td>
+<td><code>&quot;rss.xml&quot;</code></td>
+<td>File name written to the build directory</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td><code>50</code></td>
+<td>Maximum number of items</td>
+</tr>
+<tr>
+<td><code>site-url</code></td>
+<td>config <code>site-url</code></td>
+<td>Base url for links, required to generate a feed</td>
+</tr>
+</tbody>
+</table>
+<h3>Search Index</h3>
+<p>Writes a JSON index of every page that a static site can fetch and search client side.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>output</code></td>
+<td><code>&quot;search-index.json&quot;</code></td>
+<td>File name written to the build directory</td>
+</tr>
+<tr>
+<td><code>descriptionLength</code></td>
+<td><code>160</code></td>
+<td>Maximum characters of the page excerpt</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> results = <span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(<span class="hljs-string">&quot;/search-index.json&quot;</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> res.<span class="hljs-title function_">json</span>());
+<span class="hljs-comment">// [{ &quot;title&quot;: &quot;First post&quot;, &quot;description&quot;: &quot;...&quot;, &quot;url&quot;: &quot;/blog/post.html&quot;, &quot;source&quot;: &quot;docs/blog/post.md&quot; }]</span>
 </code></pre>
-<p><strong>Examples:</strong></p>
+<h2>Hook Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>Runs</th>
+<th>Receives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>preBuild</code></td>
+<td>Once, before files are discovered</td>
+<td><code>{ config }</code></td>
+</tr>
+<tr>
+<td><code>transformHtml</code></td>
+<td>Per page, before the file is written</td>
+<td>Page context, return a string to replace the html</td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td>Per page, after the file is written</td>
+<td>Page context</td>
+</tr>
+<tr>
+<td><code>postBuild</code></td>
+<td>Once, after the manifest and sitemap</td>
+<td><code>{ config, pages }</code></td>
+</tr>
+</tbody>
+</table>
+<p>The page context looks like this:</p>
+<pre><code class="language-ts"><span class="hljs-keyword">type</span> <span class="hljs-title class_">PageContext</span> = {
+  <span class="hljs-attr">sourcePath</span>: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// &quot;docs/blog/post.md&quot;</span>
+  <span class="hljs-attr">outputPath</span>: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// &quot;docmach/blog/post.html&quot;</span>
+  <span class="hljs-attr">link</span>: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// &quot;/blog/post.html&quot;</span>
+  <span class="hljs-attr">docmachTags</span>: <span class="hljs-title class_">DocmachTagMetadata</span>[];
+  <span class="hljs-attr">html</span>: <span class="hljs-built_in">string</span>; <span class="hljs-comment">// the generated html</span>
+};
+</code></pre>
+<p><code>pages</code> is the same list of page metadata written to <code>docmach-manifest.json</code>. Lifecycle hooks (<code>preBuild</code>, <code>postBuild</code>) only run on full builds, so incremental rebuilds stay cheap.</p>
+<h2>Writing a Plugin</h2>
+<p>A plugin is a module exporting <code>{ name, hooks }</code>, or an options factory returning one. Hook names describe the pipeline stage, nothing more.</p>
+<pre><code class="language-js"><span class="hljs-comment">// plugins/reading-time.js</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">readingTime</span>(<span class="hljs-params">options = {}</span>) {
+  <span class="hljs-keyword">const</span> wordsPerMinute = options.<span class="hljs-property">wordsPerMinute</span> ?? <span class="hljs-number">200</span>;
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;reading-time&quot;</span>,
+    <span class="hljs-attr">hooks</span>: {
+      <span class="hljs-keyword">async</span> <span class="hljs-title function_">transformHtml</span>(<span class="hljs-params">page</span>) {
+        <span class="hljs-keyword">const</span> words = page.<span class="hljs-property">html</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/&lt;[^&gt;]+&gt;/g</span>, <span class="hljs-string">&quot; &quot;</span>).<span class="hljs-title function_">split</span>(<span class="hljs-regexp">/\s+/</span>).<span class="hljs-property">length</span>;
+        <span class="hljs-keyword">const</span> minutes = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(<span class="hljs-number">1</span>, <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(words / wordsPerMinute));
+        <span class="hljs-keyword">return</span> page.<span class="hljs-property">html</span>.<span class="hljs-title function_">replace</span>(
+          <span class="hljs-string">&quot;&lt;/body&gt;&quot;</span>,
+          <span class="hljs-string">`&lt;p class=&quot;reading-time&quot;&gt;<span class="hljs-subst">${minutes}</span> min read&lt;/p&gt;&lt;/body&gt;`</span>,
+        );
+      },
+    },
+  };
+}
+</code></pre>
+<p><code>transformHtml</code> hooks run in the order the plugins are listed. Returning a string replaces the page html, returning nothing leaves it unchanged. Async hooks are awaited, and plugins are executed sequentially, so builds stay orderable and predictable.</p>
+<h3>Error Isolation</h3>
+<p>A hook that throws is reported once per plugin and hook, and the build continues. Other plugins and other pages are unaffected.</p>
+<h3>Watch Mode</h3>
+<p><code>preBuild</code> and <code>postBuild</code> run on full builds only. During watch mode an edited page runs through <code>transformHtml</code> and <code>page</code> again, but the lifecycle hooks and official plugins like <code>docmach:rss</code> do not rerun. Restart Docmach after changing a plugin file's exports or the plugin list.</p>
+<h3>TypeScript</h3>
+<p>Plugin types are exported from the package:</p>
+<pre><code class="language-ts"><span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> { <span class="hljs-title class_">DocmachPlugin</span>, <span class="hljs-title class_">PageContext</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;docmach&quot;</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-attr">plugin</span>: <span class="hljs-title class_">DocmachPlugin</span> = {
+  <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;typed-plugin&quot;</span>,
+  <span class="hljs-attr">hooks</span>: {
+    <span class="hljs-title function_">transformHtml</span>(<span class="hljs-params"><span class="hljs-attr">page</span>: <span class="hljs-title class_">PageContext</span></span>) {
+      <span class="hljs-keyword">return</span> page.<span class="hljs-property">html</span>;
+    },
+  },
+};
+</code></pre>
+<h3>Notes</h3>
 <ul>
-<li><code>&quot;docs&quot;</code> - Use <code>docs/</code> folder</li>
-<li><code>&quot;content&quot;</code> - Use <code>content/</code> folder</li>
-<li><code>&quot;.&quot;</code> - Use project root</li>
-<li><code>&quot;src/pages&quot;</code> - Nested directory</li>
-</ul>
-<h3>build-directory</h3>
-<p><strong>Type:</strong> <code>string</code><br>
-<strong>Default:</strong> <code>&quot;./docmach&quot;</code></p>
-<p>The output directory where generated HTML files will be placed.</p>
-<pre><code class="language-json"><span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docmach&quot;</span>
-</code></pre>
-<p><strong>Examples:</strong></p>
-<ul>
-<li><code>&quot;docmach&quot;</code> - Output to <code>docmach/</code></li>
-<li><code>&quot;dist&quot;</code> - Output to <code>dist/</code></li>
-<li><code>&quot;public&quot;</code> - Output to <code>public/</code></li>
-<li><code>&quot;build/site&quot;</code> - Nested output directory</li>
-</ul>
-<p><strong>Note:</strong> This directory is cleaned on each build.</p>
-<h3>assets-folder</h3>
-<p><strong>Type:</strong> <code>string</code><br>
-<strong>Default:</strong> <code>&quot;&quot;</code> (none)</p>
-<p>Directory containing static assets (images, CSS, JS, fonts) to copy to the build directory.</p>
-<pre><code class="language-json"><span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;assets&quot;</span>
-</code></pre>
-<p><strong>Examples:</strong></p>
-<ul>
-<li><code>&quot;assets&quot;</code> - Copy from <code>assets/</code></li>
-<li><code>&quot;static&quot;</code> - Copy from <code>static/</code></li>
-<li><code>&quot;public&quot;</code> - Copy from <code>public/</code></li>
-</ul>
-<p><strong>Behavior:</strong></p>
-<ul>
-<li>All files are copied to the root of the build directory</li>
-<li>Only changed files are copied (incremental)</li>
-<li>Directory structure is preserved</li>
-</ul>
-<h2>Complete Example</h2>
-<pre><code class="language-json"><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;my-documentation&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1.0.0&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Project documentation&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;scripts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-    <span class="hljs-attr">&quot;dev&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docmach&quot;</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-attr">&quot;build&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docmach build&quot;</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-attr">&quot;preview&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docmach print&quot;</span>
-  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;docmach&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-    <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docs&quot;</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;dist&quot;</span><span class="hljs-punctuation">,</span>
-    <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;static&quot;</span>
-  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;devDependencies&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-    <span class="hljs-attr">&quot;docmach&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;^1.0.20&quot;</span>
-  <span class="hljs-punctuation">}</span>
-<span class="hljs-punctuation">}</span>
-</code></pre>
-<h2>Directory Structure</h2>
-<p>Recommended project structure:</p>
-<pre><code>my-project/
-├── docs/                    # Markdown source files
-│   ├── index.md
-│   ├── getting-started.md
-│   └── docs/
-│       ├── api.md
-│       └── guides.md
-├── fragments/               # Reusable templates
-│   ├── head.html
-│   ├── footer.html
-│   └── nav.js
-├── static/                  # Static assets
-│   ├── images/
-│   ├── styles.css
-│   └── favicon.ico
-├── dist/                    # Generated output (gitignored)
-├── package.json             # Config here
-└── tailwind.config.js       # Optional Tailwind config
-</code></pre>
-<h2>Environment-Specific Configuration</h2>
-<p>While Docmach doesn't natively support environment variables yet, you can use different configs:</p>
-<p><strong>Development:</strong></p>
-<pre><code class="language-json"><span class="hljs-attr">&quot;docmach&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docs&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;dev-build&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;assets&quot;</span>
-<span class="hljs-punctuation">}</span>
-</code></pre>
-<p><strong>Production:</strong></p>
-<pre><code class="language-json"><span class="hljs-attr">&quot;docmach&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">&quot;docs-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;docs&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;build-directory&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;dist&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;assets-folder&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;assets&quot;</span>
-<span class="hljs-punctuation">}</span>
-</code></pre>
-<h2>Validation</h2>
-<p>Docmach validates your configuration on startup:</p>
-<ul>
-<li>Warns if <code>docs-directory</code> doesn't exist</li>
-<li>Creates <code>build-directory</code> if it doesn't exist</li>
-<li>Skips asset copying if <code>assets-folder</code> is empty or doesn't exist</li>
-</ul>
-<h2>Future Configuration Options</h2>
-<p>See <a href="../../ROADMAP.md">ROADMAP.md</a> for planned configuration enhancements:</p>
-<ul>
-<li>Multiple config file formats (<code>.js</code>, <code>.ts</code>)</li>
-<li>Environment variable overrides</li>
-<li>Per-page frontmatter configuration</li>
-<li>Plugin configuration</li>
-<li>Build optimization settings</li>
+<li>Plugin code runs in the build process and is trusted like your own site code.</li>
+<li>Plugins receive relative paths (<code>sourcePath</code>, <code>outputPath</code>). Join them with <code>cwd()</code> to read or write files.</li>
+<li>Local plugin files can be plain <code>.js</code> or <code>.ts</code> when your runtime supports it. Node runs <code>docmach</code>0 as is; to use TypeScript plugin files, run Docmach with a TypeScript-aware loader.</li>
 </ul>
 </div>
 </div>
