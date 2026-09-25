@@ -15,9 +15,10 @@
 // native
 import { mkdir, open, readFile, rm, stat } from "fs/promises";
 import { existsSync } from "fs";
-import { extname, join, resolve } from "path";
+import { dirname, extname, join, resolve } from "path";
 import { createReadStream } from "node:fs";
-import { exec } from "child_process";
+import { spawn } from "child_process";
+import { createRequire } from "node:module";
 import { cwd } from "process";
 import http from "http";
 import net from "net";
@@ -188,22 +189,76 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-const css_command = `npx tailwindcss -c tailwind.config.js -o "${
-  normalizePath(
-    join(config["build-directory"], "/bundle.css"),
-  )
-}"`;
+function resolveTailwindCLI(): { cliBin: string; tailwindCssPath: string } {
+  const req = createRequire(import.meta.url);
+  const cliPkg = req.resolve("@tailwindcss/cli/package.json");
+  const cliBin = join(dirname(cliPkg), "dist/index.mjs");
 
-function buildCSS() {
-  return new Promise((resolve) => {
-    exec(css_command, (err, _stdout, _stderr) => {
-      if (err) {
-        console.error("CSS compilation error:", String(err));
-        resolve(undefined);
-      } else {
-        resolve(undefined);
-      }
+  // In host projects where tailwindcss is at a different version (e.g. v3),
+  // @tailwindcss/cli bundles or nests its own tailwindcss v4 package.
+  // Resolve tailwindcss/index.css relative to @tailwindcss/cli first, falling back to Docmach's require.
+  const cliReq = createRequire(cliPkg);
+  let tailwindCssPath: string;
+  try {
+    tailwindCssPath = cliReq.resolve("tailwindcss/index.css");
+  } catch {
+    tailwindCssPath = req.resolve("tailwindcss/index.css");
+  }
+
+  return { cliBin, tailwindCssPath };
+}
+
+function buildCSS(): Promise<void> {
+  return new Promise((resolvePromise) => {
+    let cliBin: string;
+    let tailwindCssPath: string;
+
+    try {
+      ({ cliBin, tailwindCssPath } = resolveTailwindCLI());
+    } catch (err) {
+      console.error(
+        "CSS compilation error (could not resolve Tailwind):",
+        String(err),
+      );
+      resolvePromise();
+      return;
+    }
+
+    const outputPath = normalizePath(
+      join(config["build-directory"], "/bundle.css"),
+    );
+
+    const child = spawn(
+      process.execPath,
+      [cliBin, "--input", "-", "--output", outputPath],
+      {
+        cwd: cwd(),
+        stdio: ["pipe", "ignore", "pipe"],
+      },
+    );
+
+    let stderr = "";
+    child.stderr.on("data", (chunk) => {
+      stderr += chunk.toString();
     });
+
+    child.on("error", (err) => {
+      console.error("CSS compilation error:", String(err));
+      resolvePromise();
+    });
+
+    child.on("close", (code) => {
+      if (code !== 0) {
+        console.error(
+          "CSS compilation error:",
+          stderr.trim() || `Tailwind CLI exited with code ${code}`,
+        );
+      }
+      resolvePromise();
+    });
+
+    child.stdin.write(`@import "${tailwindCssPath}";\n`);
+    child.stdin.end();
   });
 }
 
@@ -259,9 +314,9 @@ const docmachFunction = async (file?: string) => {
 const Docmach = throttle(docmachFunction, 250);
 
 async function main() {
-  await rm(normalizePath(resolve(cwd(), config["build-directory"])), {
-    recursive: true,
-  }).catch((_e) => {});
+  // await rm(normalizePath(resolve(cwd(), config["build-directory"])), {
+  //   recursive: true,
+  // }).catch((_e) => {});
   await mkdir(normalizePath(config["build-directory"]), {
     recursive: true,
   }).catch((_e) => {});
