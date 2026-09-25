@@ -13,7 +13,7 @@
  */
 
 // native
-import { mkdir, open, readFile, rm, stat } from "fs/promises";
+import { mkdir, open, readFile, rm as _rm, stat } from "fs/promises";
 import { existsSync } from "fs";
 import { dirname, extname, join, resolve } from "path";
 import { createReadStream } from "node:fs";
