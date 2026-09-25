@@ -1,6 +1,6 @@
 {
   "name": "docmach",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Docmach - markdown compiler for blogs & project Documentation 🚀",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
